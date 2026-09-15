@@ -1,0 +1,9 @@
+[gd_resource type="Resource" format=3 uid="uid://bufjyg3lx8fk8"]
+
+[ext_resource type="Script" uid="uid://eytbckc3s3ap" path="res://BaseEnemy.gd" id="1_qoega"]
+[ext_resource type="Texture2D" uid="uid://cdisyg38pjhdl" path="res://Knife Proto.png" id="2_4hnah"]
+
+[resource]
+script = ExtResource("1_qoega")
+name = "Knife"
+texture = ExtResource("2_4hnah")

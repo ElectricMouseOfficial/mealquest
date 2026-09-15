@@ -1,8 +1,23 @@
 [gd_scene format=3 uid="uid://wao33jh2n31h"]
 
 [ext_resource type="Script" uid="uid://bg1d2h1uvwae4" path="res://Battle.gd" id="1_ip7xm"]
+[ext_resource type="Resource" uid="uid://bufjyg3lx8fk8" path="res://Knife.tres" id="2_6t8i5"]
+[ext_resource type="Texture2D" uid="uid://chbsb2380rp0f" path="res://Fridge Proto.png" id="2_i431l"]
 [ext_resource type="Texture2D" uid="uid://cdisyg38pjhdl" path="res://Knife Proto.png" id="2_oxp8w"]
-[ext_resource type="Texture2D" uid="uid://c226x5832hpdf" path="res://Tomato Proto.png" id="3_7sfm4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8lcdg"]
+bg_color = Color(0.8825961, 0.10732099, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_knvjn"]
+bg_color = Color(0.21021196, 0.7166735, 0.15961385, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_7sfm4"]
+load_path = "res://.godot/imported/Tomato Proto.png-ea8a8c50d62b8af0f65dcb43b950be76.ctex"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cvedi"]
 bg_color = Color(0, 0, 0, 1)
@@ -26,11 +41,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ip7xm")
+enemy = ExtResource("2_6t8i5")
 
 [node name="Background" type="TextureRect" parent="." unique_id=803507479]
 layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 648.0
+offset_left = 1.0
+offset_top = 10.0
+offset_right = 1175.0
+offset_bottom = 646.0
+texture = ExtResource("2_i431l")
+expand_mode = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Background" unique_id=860595946]
 layout_mode = 0
@@ -39,12 +59,93 @@ offset_bottom = 40.0
 
 [node name="Enemy" type="TextureRect" parent="." unique_id=131894994]
 layout_mode = 0
-offset_left = 830.0
-offset_top = 216.0
-offset_right = 1046.0
-offset_bottom = 443.0
+offset_left = 746.0
+offset_top = 209.0
+offset_right = 1049.0
+offset_bottom = 468.0
 texture = ExtResource("2_oxp8w")
 expand_mode = 1
+
+[node name="VBoxContainerE" type="VBoxContainer" parent="Enemy" unique_id=1311736064]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -45.5
+offset_top = 123.5
+offset_right = 181.5
+offset_bottom = 139.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="Enemy/VBoxContainerE" unique_id=1271125045]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_8lcdg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_knvjn")
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="Enemy/VBoxContainerE/ProgressBar" unique_id=836580600]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.5
+offset_bottom = 3.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "HP:45/50"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Hero" type="TextureRect" parent="." unique_id=1605867009]
+layout_mode = 0
+offset_left = 123.0
+offset_top = 246.0
+offset_right = 351.0
+offset_bottom = 473.0
+texture = SubResource("CompressedTexture2D_7sfm4")
+expand_mode = 1
+
+[node name="VBoxContainerH" type="VBoxContainer" parent="Hero" unique_id=288932161]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -93.0
+offset_top = 109.5
+offset_right = 93.0
+offset_bottom = 125.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="Hero/VBoxContainerH" unique_id=470735672]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_8lcdg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_knvjn")
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="Hero/VBoxContainerH/ProgressBar" unique_id=764535342]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.5
+offset_bottom = 3.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "HP:45/50"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ActionsPanel" type="Panel" parent="." unique_id=674583537]
 layout_mode = 1
@@ -55,13 +156,13 @@ offset_top = -162.0
 offset_right = 337.0
 grow_vertical = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ActionsPanel" unique_id=779648183]
+[node name="Actions" type="HBoxContainer" parent="ActionsPanel" unique_id=779648183]
 layout_mode = 0
 offset_top = 1.0
 offset_right = 336.0
 offset_bottom = 163.0
 
-[node name="Button" type="Button" parent="ActionsPanel/HBoxContainer" unique_id=1282397259]
+[node name="Button" type="Button" parent="ActionsPanel/Actions" unique_id=1282397259]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_cvedi")
 theme_override_styles/hover = SubResource("StyleBoxFlat_otrq3")
@@ -88,12 +189,3 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 32
 text = "A KNIFE blocks your path!"
-
-[node name="TextureRect" type="TextureRect" parent="." unique_id=2089950316]
-layout_mode = 0
-offset_left = 167.0
-offset_top = 232.0
-offset_right = 356.0
-offset_bottom = 427.0
-texture = ExtResource("3_7sfm4")
-expand_mode = 1
