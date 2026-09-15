@@ -22,9 +22,11 @@ config/icon="res://icon.svg"
 [autoload]
 
 TurnManager="*res://turn_manager.gd"
+State="*uid://bwxmhonleu78w"
 
 [display]
 
+window/size/borderless=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
