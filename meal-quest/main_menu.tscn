@@ -1,12 +1,15 @@
 [gd_scene format=3 uid="uid://bq5h1mue44ggh"]
 
+[ext_resource type="Script" uid="uid://difhkyns328dm" path="res://main_menu.gd" id="1_06t4h"]
+[ext_resource type="Script" uid="uid://1baq1opywugf" path="res://progress_bar.gd" id="2_7vrkn"]
+
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_nsyf1"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n2lyd"]
 texture = SubResource("PlaceholderTexture2D_nsyf1")
 modulate_color = Color(0.62152386, 0.62152386, 0.6215238, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x5fo1"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rhts7"]
 bg_color = Color(1, 1, 1, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
@@ -14,7 +17,28 @@ corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 shadow_size = 5
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rhts7"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_06t4h"]
+bg_color = Color(0.37036446, 0.3703645, 0.37036446, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7vrkn"]
+bg_color = Color(0.7708395, 0.77083945, 0.77083945, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fu7sn"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n2lyd"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yc4dm"]
+bg_color = Color(0.3883625, 0.7010227, 0, 1)
 
 [node name="MainMenu" type="Control" unique_id=1031210757]
 layout_mode = 3
@@ -23,6 +47,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_06t4h")
 
 [node name="Panel" type="Panel" parent="." unique_id=148014582]
 layout_mode = 1
@@ -51,37 +76,57 @@ theme_override_constants/separation = 20
 [node name="Button" type="Button" parent="VBoxContainer" unique_id=1700636474]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.23366272, 0.62285465, 0.35269478, 1)
+theme_override_colors/font_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
+theme_override_colors/font_focus_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
+theme_override_colors/font_pressed_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
+theme_override_colors/font_hover_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
 theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = SubResource("StyleBoxFlat_x5fo1")
-theme_override_styles/hover = SubResource("StyleBoxFlat_rhts7")
+theme_override_styles/normal = SubResource("StyleBoxFlat_rhts7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_06t4h")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_fu7sn")
 text = "Start"
 
 [node name="Button2" type="Button" parent="VBoxContainer" unique_id=275744741]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.23366272, 0.62285465, 0.35269478, 1)
+theme_override_colors/font_focus_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
+theme_override_colors/font_pressed_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
+theme_override_colors/font_hover_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
 theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = SubResource("StyleBoxFlat_x5fo1")
-theme_override_styles/hover = SubResource("StyleBoxFlat_rhts7")
+theme_override_styles/normal = SubResource("StyleBoxFlat_rhts7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_06t4h")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_fu7sn")
 text = "Options"
 
 [node name="Button3" type="Button" parent="VBoxContainer" unique_id=1794586401]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.23366272, 0.62285465, 0.35269478, 1)
+theme_override_colors/font_focus_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
+theme_override_colors/font_pressed_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
+theme_override_colors/font_hover_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
 theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = SubResource("StyleBoxFlat_x5fo1")
-theme_override_styles/hover = SubResource("StyleBoxFlat_rhts7")
+theme_override_styles/normal = SubResource("StyleBoxFlat_rhts7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_06t4h")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_fu7sn")
 text = "Credits"
 
 [node name="Button4" type="Button" parent="VBoxContainer" unique_id=854490719]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.23366272, 0.62285465, 0.35269478, 1)
+theme_override_colors/font_focus_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
+theme_override_colors/font_pressed_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
+theme_override_colors/font_hover_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
 theme_override_font_sizes/font_size = 40
-theme_override_styles/normal = SubResource("StyleBoxFlat_x5fo1")
-theme_override_styles/hover = SubResource("StyleBoxFlat_rhts7")
+theme_override_styles/normal = SubResource("StyleBoxFlat_rhts7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_06t4h")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_fu7sn")
 text = "Quit"
 
 [node name="Label" type="Label" parent="." unique_id=208454098]
@@ -101,3 +146,23 @@ theme_override_font_sizes/font_size = 75
 text = "Meal Quest"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=187376829]
+
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer" unique_id=1561640809]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -185.0
+offset_bottom = 28.0
+grow_horizontal = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_n2lyd")
+theme_override_styles/fill = SubResource("StyleBoxFlat_yc4dm")
+value = 75.0
+show_percentage = false
+script = ExtResource("2_7vrkn")
+
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button3" to="." method="_on_credits_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button4" to="." method="_on_quit_button_pressed"]
