@@ -33,6 +33,89 @@ border_width_right = 1
 border_width_bottom = 1
 border_color = Color(1, 1, 1, 1)
 
+[sub_resource type="Animation" id="Animation_i431l"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Enemy:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_6t8i5"]
+resource_name = "enemy_damaged"
+length = 0.76666665
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Enemy:modulate")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.4, 0.5, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_0npn6"]
+resource_name = "mini_shake"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.53333336),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(-1, -2), Vector2(2, 2), Vector2(-2, 2), Vector2(1, -2), Vector2(-3, -2), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_dw4jg"]
+resource_name = "shake"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Camera2D:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(0, 0), Vector2(39, 28), Vector2(34, -20), Vector2(1, 3)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0npn6"]
+_data = {
+&"RESET": SubResource("Animation_i431l"),
+&"enemy_damaged": SubResource("Animation_6t8i5"),
+&"mini_shake": SubResource("Animation_0npn6"),
+&"shake": SubResource("Animation_dw4jg")
+}
+
 [node name="Battle" type="Control" unique_id=219101860]
 layout_mode = 3
 anchors_preset = 15
@@ -153,21 +236,43 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_top = -162.0
-offset_right = 337.0
+offset_right = 227.0
+offset_bottom = -3.0
 grow_vertical = 0
 
 [node name="Actions" type="HBoxContainer" parent="ActionsPanel" unique_id=779648183]
-layout_mode = 0
-offset_top = 1.0
-offset_right = 336.0
-offset_bottom = 163.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -112.0
+offset_top = -77.5
+offset_right = 112.5
+offset_bottom = 80.5
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
 
 [node name="Button" type="Button" parent="ActionsPanel/Actions" unique_id=1282397259]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_styles/normal = SubResource("StyleBoxFlat_cvedi")
 theme_override_styles/hover = SubResource("StyleBoxFlat_otrq3")
 text = "Roll"
 icon_alignment = 1
+expand_icon = true
+
+[node name="Button2" type="Button" parent="ActionsPanel/Actions" unique_id=503240541]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_cvedi")
+theme_override_styles/hover = SubResource("StyleBoxFlat_otrq3")
+text = "Trichome
+Shield"
+icon_alignment = 1
+expand_icon = true
 
 [node name="Textbox" type="Panel" parent="." unique_id=1278956044]
 layout_mode = 1
@@ -189,3 +294,12 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 32
 text = "A KNIFE blocks your path!"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1566394374]
+libraries/ = SubResource("AnimationLibrary_0npn6")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=9632254]
+anchor_mode = 0
+
+[connection signal="pressed" from="ActionsPanel/Actions/Button" to="." method="_on_Attack_pressed"]
+[connection signal="pressed" from="ActionsPanel/Actions/Button2" to="." method="_on_Defend_pressed"]
