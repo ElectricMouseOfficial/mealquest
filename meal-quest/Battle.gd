@@ -7,6 +7,7 @@ signal textbox_closed
 var current_player_health = 0
 var current_enemy_health = 0
 var is_defending = false
+@onready var damage_numbers_origin = $Enemy/DamageNumbersOrigin
 
 func _ready():
 	set_health($Hero/VBoxContainerH/ProgressBar, State.current_health, State.max_health)
