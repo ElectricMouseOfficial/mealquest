@@ -22,6 +22,7 @@ border_color = Color(0, 0, 0, 1)
 load_path = "res://.godot/imported/Tomato Proto.png-ea8a8c50d62b8af0f65dcb43b950be76.ctex"
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 [sub_resource type="Animation" id="Animation_lcjiy"]
 resource_name = "Hero_Anim"
 length = 4.0
@@ -54,10 +55,14 @@ tracks/1/keys = {
 =======
 [sub_resource type="Animation" id="Animation_mhv3b"]
 >>>>>>> Stashed changes
+=======
+[sub_resource type="Animation" id="Animation_mhv3b"]
+>>>>>>> Stashed changes
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 tracks/0/path = NodePath("VBoxContainerH:position")
 tracks/0/interp = 1
@@ -68,6 +73,8 @@ tracks/0/keys = {
 "update": 0,
 "values": [Vector2(21, 223)]
 =======
+=======
+>>>>>>> Stashed changes
 tracks/0/path = NodePath(".:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
@@ -76,13 +83,20 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [1]
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 tracks/1/path = NodePath("AnimationPlayer:current_animation")
+=======
+tracks/1/path = NodePath(".:position")
+>>>>>>> Stashed changes
 =======
 tracks/1/path = NodePath(".:position")
 >>>>>>> Stashed changes
@@ -92,9 +106,12 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 "update": 1,
 "values": [&""]
 =======
+=======
+>>>>>>> Stashed changes
 "update": 0,
 "values": [Vector2(82, 119)]
 }
@@ -126,14 +143,22 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
 "values": [Vector2(82, 119), Vector2(12, 119), Vector2(672, 119), Vector2(519, -41), Vector2(397, -81), Vector2(275, -41), Vector2(122, 119), Vector2(102, 69), Vector2(82, 119)]
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ol6im"]
 _data = {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 &"Hero_Anim": SubResource("Animation_lcjiy"),
 &"RESET": SubResource("Animation_ol6im")
+=======
+&"RESET": SubResource("Animation_mhv3b"),
+&"Roll": SubResource("Animation_lcjiy")
+>>>>>>> Stashed changes
 =======
 &"RESET": SubResource("Animation_mhv3b"),
 &"Roll": SubResource("Animation_lcjiy")
@@ -269,9 +294,12 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Hero" unique_id=1074196779]
 libraries/ = SubResource("AnimationLibrary_ol6im")
 =======
+=======
+>>>>>>> Stashed changes
 [node name="Tomato" type="Sprite2D" parent="Hero" unique_id=295732655]
 visible = false
 texture_filter = 1
@@ -286,6 +314,9 @@ script = ExtResource("6_0npn6")
 [node name="TomatoAnimation" type="AnimationPlayer" parent="Hero/Tomato" unique_id=2049443822]
 libraries/ = SubResource("AnimationLibrary_ol6im")
 speed_scale = 2.0
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 [node name="ActionsPanel" type="Panel" parent="." unique_id=674583537]
