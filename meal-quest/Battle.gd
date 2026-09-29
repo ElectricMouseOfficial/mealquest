@@ -95,8 +95,12 @@ func display_text(text):
 # --- Moves menu (built in code, so no scene changes needed for the buttons) --
 func _build_moves_menu():
 	moves_menu = VBoxContainer.new()
-	moves_menu.position = Vector2(20, 20)   # adjust to fit your layout
 	add_child(moves_menu)
+	# Anchor to the bottom-left corner with a 20px margin
+	moves_menu.set_anchors_and_offsets_preset(
+		Control.PRESET_BOTTOM_LEFT, Control.PRESET_MODE_MINSIZE, 20)
+	# The menu height changes with the number of moves, so grow upward
+	moves_menu.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	moves_menu.hide()
 
 func show_moves_for(member):
@@ -105,6 +109,7 @@ func show_moves_for(member):
 
 	var title = Label.new()
 	title.text = "%s's turn" % member.name
+	title.add_theme_color_override("font_color", Color.BLACK)
 	moves_menu.add_child(title)
 
 	for move in member.moves:
