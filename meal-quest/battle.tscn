@@ -203,10 +203,10 @@ vertical_alignment = 1
 
 [node name="Hero" type="TextureRect" parent="." unique_id=1605867009]
 layout_mode = 0
-offset_left = 123.0
-offset_top = 246.0
-offset_right = 351.0
-offset_bottom = 473.0
+offset_left = 232.0
+offset_top = 292.0
+offset_right = 400.0
+offset_bottom = 465.0
 texture = SubResource("CompressedTexture2D_7sfm4")
 expand_mode = 1
 
@@ -234,6 +234,96 @@ value = 100.0
 show_percentage = false
 
 [node name="Label" type="Label" parent="Hero/VBoxContainerH/ProgressBar" unique_id=764535342]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.5
+offset_bottom = 3.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "HP:45/50"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ally2" type="TextureRect" parent="." unique_id=1971558417]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 291.0
+offset_right = 239.0
+offset_bottom = 472.0
+texture = SubResource("CompressedTexture2D_7sfm4")
+expand_mode = 1
+
+[node name="VBoxContainerH" type="VBoxContainer" parent="Ally2" unique_id=708496011]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -93.0
+offset_top = 109.5
+offset_right = 93.0
+offset_bottom = 125.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="Ally2/VBoxContainerH" unique_id=746418552]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_8lcdg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_knvjn")
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="Ally2/VBoxContainerH/ProgressBar" unique_id=1154693109]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.5
+offset_bottom = 3.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "HP:45/50"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ally1" type="TextureRect" parent="." unique_id=2034913859]
+layout_mode = 0
+offset_left = 386.0
+offset_top = 297.0
+offset_right = 555.0
+offset_bottom = 467.0
+texture = SubResource("CompressedTexture2D_7sfm4")
+expand_mode = 1
+
+[node name="VBoxContainerH" type="VBoxContainer" parent="Ally1" unique_id=794760652]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -93.0
+offset_top = 109.5
+offset_right = 93.0
+offset_bottom = 125.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="Ally1/VBoxContainerH" unique_id=1182617745]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_8lcdg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_knvjn")
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="Ally1/VBoxContainerH/ProgressBar" unique_id=1096640674]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
