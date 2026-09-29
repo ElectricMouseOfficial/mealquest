@@ -4,6 +4,8 @@
 [ext_resource type="Resource" uid="uid://bufjyg3lx8fk8" path="res://Knife.tres" id="2_6t8i5"]
 [ext_resource type="Texture2D" uid="uid://chbsb2380rp0f" path="res://Fridge Proto.png" id="2_i431l"]
 [ext_resource type="Texture2D" uid="uid://cdisyg38pjhdl" path="res://Knife Proto.png" id="2_oxp8w"]
+[ext_resource type="Texture2D" uid="uid://ca1dr0s4exlne" path="res://Animation_VFX_Import/mealquest-tomato_spreitesheet_test2.png" id="5_dw4jg"]
+[ext_resource type="Script" uid="uid://dlnoisxxc1exb" path="res://tomato.gd" id="6_0npn6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8lcdg"]
 bg_color = Color(0.8825961, 0.10732099, 0, 1)
@@ -19,6 +21,7 @@ border_color = Color(0, 0, 0, 1)
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_7sfm4"]
 load_path = "res://.godot/imported/Tomato Proto.png-ea8a8c50d62b8af0f65dcb43b950be76.ctex"
 
+<<<<<<< Updated upstream
 [sub_resource type="Animation" id="Animation_lcjiy"]
 resource_name = "Hero_Anim"
 length = 4.0
@@ -48,10 +51,14 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_ol6im"]
+=======
+[sub_resource type="Animation" id="Animation_mhv3b"]
+>>>>>>> Stashed changes
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
+<<<<<<< Updated upstream
 tracks/0/path = NodePath("VBoxContainerH:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
@@ -60,24 +67,77 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector2(21, 223)]
+=======
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+>>>>>>> Stashed changes
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
+<<<<<<< Updated upstream
 tracks/1/path = NodePath("AnimationPlayer:current_animation")
+=======
+tracks/1/path = NodePath(".:position")
+>>>>>>> Stashed changes
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
+<<<<<<< Updated upstream
 "update": 1,
 "values": [&""]
+=======
+"update": 0,
+"values": [Vector2(82, 119)]
+}
+
+[sub_resource type="Animation" id="Animation_lcjiy"]
+resource_name = "Roll"
+length = 4.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.0999999, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 2.1, 2.1999998, 2.3, 2.3999999, 2.5, 2.6, 2.7, 2.8, 2.9, 3, 3.1, 3.2, 3.3, 3.3999999, 3.5, 3.6, 3.6999998, 3.8, 3.9, 4, 4.1, 4.2, 4.2999997, 4.3999996),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [1, 2, 3, 4, 5, 6, 8, 9, 10, 4, 5, 6, 8, 9, 10, 4, 5, 6, 8, 9, 10, 4, 5, 6, 8, 9, 10, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2, 2.7, 3.1, 3.45, 3.8, 4.2, 4.35, 4.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(82, 119), Vector2(12, 119), Vector2(672, 119), Vector2(519, -41), Vector2(397, -81), Vector2(275, -41), Vector2(122, 119), Vector2(102, 69), Vector2(82, 119)]
+>>>>>>> Stashed changes
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ol6im"]
 _data = {
+<<<<<<< Updated upstream
 &"Hero_Anim": SubResource("Animation_lcjiy"),
 &"RESET": SubResource("Animation_ol6im")
+=======
+&"RESET": SubResource("Animation_mhv3b"),
+&"Roll": SubResource("Animation_lcjiy")
+>>>>>>> Stashed changes
 }
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cvedi"]
@@ -93,105 +153,6 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(1, 1, 1, 1)
-
-[sub_resource type="Animation" id="Animation_i431l"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Enemy:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 1)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Camera2D:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_6t8i5"]
-resource_name = "enemy_damaged"
-length = 0.76666665
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Enemy:modulate")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.4, 0.5, 0.7),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_mhv3b"]
-resource_name = "enemy_died"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Enemy:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_0npn6"]
-resource_name = "mini_shake"
-length = 0.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Camera2D:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.53333336),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(-1, -2), Vector2(2, 2), Vector2(-2, 2), Vector2(1, -2), Vector2(-3, -2), Vector2(0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_dw4jg"]
-resource_name = "shake"
-length = 0.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Camera2D:position")
-tracks/0/interp = 2
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector2(0, 0), Vector2(0, 0), Vector2(39, 28), Vector2(34, -20), Vector2(1, 3)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_0npn6"]
-_data = {
-&"RESET": SubResource("Animation_i431l"),
-&"enemy_damaged": SubResource("Animation_6t8i5"),
-&"enemy_died": SubResource("Animation_mhv3b"),
-&"mini_shake": SubResource("Animation_0npn6"),
-&"shake": SubResource("Animation_dw4jg")
-}
 
 [node name="Battle" type="Control" unique_id=219101860]
 layout_mode = 3
@@ -307,8 +268,25 @@ text = "HP:45/50"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+<<<<<<< Updated upstream
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Hero" unique_id=1074196779]
 libraries/ = SubResource("AnimationLibrary_ol6im")
+=======
+[node name="Tomato" type="Sprite2D" parent="Hero" unique_id=295732655]
+visible = false
+texture_filter = 1
+position = Vector2(82, 119)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("5_dw4jg")
+hframes = 4
+vframes = 3
+frame = 1
+script = ExtResource("6_0npn6")
+
+[node name="TomatoAnimation" type="AnimationPlayer" parent="Hero/Tomato" unique_id=2049443822]
+libraries/ = SubResource("AnimationLibrary_ol6im")
+speed_scale = 2.0
+>>>>>>> Stashed changes
 
 [node name="ActionsPanel" type="Panel" parent="." unique_id=674583537]
 layout_mode = 1
@@ -374,9 +352,6 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 32
 text = "A KNIFE blocks your path!"
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1566394374]
-libraries/ = SubResource("AnimationLibrary_0npn6")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=9632254]
 anchor_mode = 0
