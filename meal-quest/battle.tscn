@@ -6,14 +6,19 @@
 [ext_resource type="Texture2D" uid="uid://cdisyg38pjhdl" path="res://Knife Proto.png" id="2_oxp8w"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8lcdg"]
-bg_color = Color(0.8825961, 0.10732099, 0, 1)
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_knvjn"]
 bg_color = Color(0.21021196, 0.7166735, 0.15961385, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
 border_color = Color(0, 0, 0, 1)
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_7sfm4"]
@@ -197,6 +202,7 @@ offset_top = -3.5
 offset_bottom = 3.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "HP:45/50"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -242,6 +248,7 @@ offset_top = -3.5
 offset_bottom = 3.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "HP:45/50"
 horizontal_alignment = 1
 vertical_alignment = 1
