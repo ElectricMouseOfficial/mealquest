@@ -14,6 +14,13 @@
 [ext_resource type="Texture2D" uid="uid://swvd0dcfq4o6" path="res://Animation_VFX_Import/Tomato Roll8 Proto.png" id="10_rggsl"]
 [ext_resource type="Texture2D" uid="uid://dm4trbgj4qry4" path="res://Animation_VFX_Import/Tomato Roll9 Proto.png" id="11_fljlq"]
 [ext_resource type="Texture2D" uid="uid://g8ia4n0xqy0f" path="res://Animation_VFX_Import/Tomato Splat VFX Proto.png" id="12_s5g7e"]
+[ext_resource type="Texture2D" uid="uid://ds2wbtcwdc7xm" path="res://Animation_VFX_Import/Knife Slash Proto.png" id="13_pihy1"]
+[ext_resource type="Texture2D" uid="uid://cdvsm2ju7csa8" path="res://Damaged Tomato PNG.png" id="14_rggsl"]
+[ext_resource type="Texture2D" uid="uid://bbfeuik7gs8ro" path="res://Damaged T-Bone PNG.png" id="15_fljlq"]
+[ext_resource type="Texture2D" uid="uid://6mac3ugfq8ga" path="res://Bowl PNG.png" id="16_ix8ov"]
+[ext_resource type="Texture2D" uid="uid://cn8le28qs05wy" path="res://Damaged Bowl PNG.png" id="16_s5g7e"]
+[ext_resource type="Texture2D" uid="uid://btcdt2b5hibk1" path="res://T-Bone PNG.png" id="17_bx4lf"]
+[ext_resource type="Texture2D" uid="uid://cpwxosk4c8bfw" path="res://Damaged Knife PNG.png" id="17_j128n"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8lcdg"]
 bg_color = Color(0.8825961, 0.10732099, 0, 1)
@@ -152,6 +159,13 @@ grow_vertical = 2
 script = ExtResource("1_ip7xm")
 enemy = ExtResource("2_6t8i5")
 tomato_frames = Array[Texture2D]([ExtResource("3_4s0ev"), ExtResource("4_pihy1"), ExtResource("5_slotg"), ExtResource("6_ix8ov"), ExtResource("7_bx4lf"), ExtResource("8_22sa7"), ExtResource("9_aacmo"), ExtResource("10_rggsl"), ExtResource("11_fljlq"), ExtResource("12_s5g7e")])
+knife_frames = Array[Texture2D]([ExtResource("13_pihy1")])
+knife_frame_time = 0.5
+knife_scale = 0.3
+hero_damaged_tex = ExtResource("14_rggsl")
+ally1_damaged_tex = ExtResource("15_fljlq")
+ally2_damaged_tex = ExtResource("16_s5g7e")
+enemy_damaged_tex = ExtResource("17_j128n")
 
 [node name="Background" type="TextureRect" parent="." unique_id=803507479]
 layout_mode = 0
@@ -260,10 +274,10 @@ vertical_alignment = 1
 [node name="Ally2" type="TextureRect" parent="." unique_id=1971558417]
 layout_mode = 0
 offset_left = 53.0
-offset_top = 291.0
-offset_right = 239.0
-offset_bottom = 472.0
-texture = SubResource("CompressedTexture2D_7sfm4")
+offset_top = 341.0
+offset_right = 241.0
+offset_bottom = 463.0
+texture = ExtResource("16_ix8ov")
 expand_mode = 1
 
 [node name="VBoxContainerH" type="VBoxContainer" parent="Ally2" unique_id=708496011]
@@ -304,11 +318,11 @@ vertical_alignment = 1
 
 [node name="Ally1" type="TextureRect" parent="." unique_id=2034913859]
 layout_mode = 0
-offset_left = 386.0
-offset_top = 297.0
-offset_right = 555.0
-offset_bottom = 467.0
-texture = SubResource("CompressedTexture2D_7sfm4")
+offset_left = 396.0
+offset_top = 301.0
+offset_right = 584.0
+offset_bottom = 476.0
+texture = ExtResource("17_bx4lf")
 expand_mode = 1
 
 [node name="VBoxContainerH" type="VBoxContainer" parent="Ally1" unique_id=794760652]
