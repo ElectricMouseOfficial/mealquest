@@ -14,6 +14,15 @@ var taunt_target := -1        # party index the enemy is forced to hit (-1 = non
 var rally_bonus := 1.0        # damage multiplier applied by Rally, resets each round
 var moves_menu: VBoxContainer
 
+#--- Animations ---------------------------------------------------------------
+@export var tomato_frames: Array[Texture2D]   # all 10, in order: 9 roll + 1 splat
+@export var roll_count := 9                   # first 9 = roll, the rest = splat
+@export var roll_time := 0.6                  # seconds to roll to the enemy
+@export var frame_time := 0.08                # seconds per splat frame
+@export var splat_hold := 0.5                 # extra seconds the splat stays on screen
+@export var return_time := 0.4                # seconds to slide back
+@export_range(0.0, 1.0) var impact_x_ratio := 0.3   # where it lands on the enemy (0 = left edge, 0.5 = center)
+
 func _build_party():
 	party = [
 		{
@@ -103,6 +112,56 @@ func _build_moves_menu():
 	moves_menu.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	moves_menu.hide()
 
+# --- Tomato roll -> splat -> return ------------------------------------------
+func play_tomato_attack():
+	var hero = $Hero
+	var bar_box = $Hero/VBoxContainerH   # health bar is a child of Hero, so hide it while the tomato moves
+	var start_pos = hero.global_position
+	var original_texture = hero.texture
+	var roll = tomato_frames.slice(0, roll_count)
+	var splat = tomato_frames.slice(roll_count)
+
+	# Landing point: inside the enemy at impact_x_ratio across, vertically centered.
+	# Subtracting half the hero's size centers the tomato on that point.
+	var enemy_rect = $Enemy.get_global_rect()
+	var target_center = Vector2(
+		enemy_rect.position.x + enemy_rect.size.x * impact_x_ratio,
+		enemy_rect.get_center().y)
+	var target_pos = target_center - hero.size / 2.0
+
+	hero.z_index = 1
+	bar_box.hide()
+
+	# Roll: each roll frame shows once, evenly spread across the trip
+	var tween = create_tween()
+	tween.tween_property(hero, "global_position", target_pos, roll_time) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	var step = roll_time / roll.size()
+	for f in roll:
+		hero.texture = f
+		await get_tree().create_timer(step).timeout
+	if tween.is_running():
+		await tween.finished
+
+	# Splat on impact
+	$AnimationPlayer.play("enemy_damaged")
+	for f in splat:
+		hero.texture = f
+		await get_tree().create_timer(frame_time).timeout
+	await get_tree().create_timer(splat_hold).timeout
+	if $AnimationPlayer.is_playing():
+		await $AnimationPlayer.animation_finished
+
+	# Return
+	hero.texture = original_texture
+	var back = create_tween()
+	back.tween_property(hero, "global_position", start_pos, return_time) \
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	await back.finished
+
+	hero.z_index = 0
+	bar_box.show()
+
 func show_moves_for(member):
 	for child in moves_menu.get_children():
 		child.queue_free()
@@ -126,6 +185,9 @@ func start_player_turn():
 		_party_wiped()
 		return
 	show_moves_for(party[active_index])
+func _apply_enemy_damage(dmg):
+	current_enemy_health = max(0, current_enemy_health - dmg)
+	set_health($Enemy/VBoxContainerE/ProgressBar, current_enemy_health, enemy.health)
 
 func _next_living(from_index: int) -> int:
 	for i in range(from_index, party.size()):
@@ -167,11 +229,15 @@ func _on_move_chosen(move):
 
 func _do_attack(member, move):
 	var dmg = int(member.damage * move.mult * rally_bonus)
+
+	if member.node == "Hero":
+		await play_tomato_attack()
+	else:
+		$AnimationPlayer.play("enemy_damaged")
+		await $AnimationPlayer.animation_finished
+		
 	current_enemy_health = max(0, current_enemy_health - dmg)
 	set_health($Enemy/VBoxContainerE/ProgressBar, current_enemy_health, enemy.health)
-
-	$AnimationPlayer.play("enemy_damaged")
-	await $AnimationPlayer.animation_finished
 
 	display_text("%s dealt %d damage!" % [member.name, dmg])
 	await self.textbox_closed

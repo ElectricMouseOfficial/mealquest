@@ -4,6 +4,16 @@
 [ext_resource type="Resource" uid="uid://bufjyg3lx8fk8" path="res://Knife.tres" id="2_6t8i5"]
 [ext_resource type="Texture2D" uid="uid://chbsb2380rp0f" path="res://Fridge Proto.png" id="2_i431l"]
 [ext_resource type="Texture2D" uid="uid://cdisyg38pjhdl" path="res://Knife Proto.png" id="2_oxp8w"]
+[ext_resource type="Texture2D" uid="uid://cr7fjovskjl32" path="res://Animation_VFX_Import/Tomato Roll1 Proto.png" id="3_4s0ev"]
+[ext_resource type="Texture2D" uid="uid://k8j1bb7iq6di" path="res://Animation_VFX_Import/Tomato Roll2 Proto.png" id="4_pihy1"]
+[ext_resource type="Texture2D" uid="uid://j8c7abjxof0q" path="res://Animation_VFX_Import/Tomato Roll3 Proto.png" id="5_slotg"]
+[ext_resource type="Texture2D" uid="uid://dmmfia8f0sv3r" path="res://Animation_VFX_Import/Tomato Roll4 Proto.png" id="6_ix8ov"]
+[ext_resource type="Texture2D" uid="uid://fe8674ih6rgc" path="res://Animation_VFX_Import/Tomato Roll5 Proto.png" id="7_bx4lf"]
+[ext_resource type="Texture2D" uid="uid://djwojc6i28xof" path="res://Animation_VFX_Import/Tomato Roll6 Proto.png" id="8_22sa7"]
+[ext_resource type="Texture2D" uid="uid://dyjn0j7egkp2a" path="res://Animation_VFX_Import/Tomato Roll7 Proto.png" id="9_aacmo"]
+[ext_resource type="Texture2D" uid="uid://swvd0dcfq4o6" path="res://Animation_VFX_Import/Tomato Roll8 Proto.png" id="10_rggsl"]
+[ext_resource type="Texture2D" uid="uid://dm4trbgj4qry4" path="res://Animation_VFX_Import/Tomato Roll9 Proto.png" id="11_fljlq"]
+[ext_resource type="Texture2D" uid="uid://g8ia4n0xqy0f" path="res://Animation_VFX_Import/Tomato Splat VFX Proto.png" id="12_s5g7e"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8lcdg"]
 bg_color = Color(0.8825961, 0.10732099, 0, 1)
@@ -141,6 +151,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ip7xm")
 enemy = ExtResource("2_6t8i5")
+tomato_frames = Array[Texture2D]([ExtResource("3_4s0ev"), ExtResource("4_pihy1"), ExtResource("5_slotg"), ExtResource("6_ix8ov"), ExtResource("7_bx4lf"), ExtResource("8_22sa7"), ExtResource("9_aacmo"), ExtResource("10_rggsl"), ExtResource("11_fljlq"), ExtResource("12_s5g7e")])
 
 [node name="Background" type="TextureRect" parent="." unique_id=803507479]
 layout_mode = 0
