@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bbu17t6avos1q"
-path="res://.godot/imported/Damaged Knife.jpg-f0ec5ecefd51b63cd6f804d19fa3cd64.ctex"
+uid="uid://cdvsm2ju7csa8"
+path="res://.godot/imported/Damaged Tomato PNG.png-d563dd6564c0ecb93147212f7fbe0085.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Damaged Knife.jpg"
-dest_files=["res://.godot/imported/Damaged Knife.jpg-f0ec5ecefd51b63cd6f804d19fa3cd64.ctex"]
+source_file="res://Damaged Tomato PNG.png"
+dest_files=["res://.godot/imported/Damaged Tomato PNG.png-d563dd6564c0ecb93147212f7fbe0085.ctex"]
 
 [params]
 

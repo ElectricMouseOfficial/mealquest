@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cknp6365ibkpa"
-path="res://.godot/imported/Damaged Tomato.jpg-3cfbfe3b4540fc39adcdd400ade6e223.ctex"
+uid="uid://btcdt2b5hibk1"
+path="res://.godot/imported/T-Bone PNG.png-b15c53f865c108001dfc12e55f8378e5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Damaged Tomato.jpg"
-dest_files=["res://.godot/imported/Damaged Tomato.jpg-3cfbfe3b4540fc39adcdd400ade6e223.ctex"]
+source_file="res://T-Bone PNG.png"
+dest_files=["res://.godot/imported/T-Bone PNG.png-b15c53f865c108001dfc12e55f8378e5.ctex"]
 
 [params]
 

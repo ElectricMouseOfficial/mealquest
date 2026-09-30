@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dyepyjo47q1al"
-path="res://.godot/imported/Damaged Bowl.jpg-ee2551631ed7cb268f4f476706393b0f.ctex"
+uid="uid://cpwxosk4c8bfw"
+path="res://.godot/imported/Damaged Knife PNG.png-b66333880b82a1ee7deee310444c5540.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Damaged Bowl.jpg"
-dest_files=["res://.godot/imported/Damaged Bowl.jpg-ee2551631ed7cb268f4f476706393b0f.ctex"]
+source_file="res://Damaged Knife PNG.png"
+dest_files=["res://.godot/imported/Damaged Knife PNG.png-b66333880b82a1ee7deee310444c5540.ctex"]
 
 [params]
 

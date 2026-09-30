@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c8fe43f0lhxk2"
-path="res://.godot/imported/Damaged T-Bone.jpg-dfbd670ceae30c8ac9dbe30fbe87c055.ctex"
+uid="uid://6mac3ugfq8ga"
+path="res://.godot/imported/Bowl PNG.png-02148b3199793dba10f5a89906834c5f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Damaged T-Bone.jpg"
-dest_files=["res://.godot/imported/Damaged T-Bone.jpg-dfbd670ceae30c8ac9dbe30fbe87c055.ctex"]
+source_file="res://Bowl PNG.png"
+dest_files=["res://.godot/imported/Bowl PNG.png-02148b3199793dba10f5a89906834c5f.ctex"]
 
 [params]
 

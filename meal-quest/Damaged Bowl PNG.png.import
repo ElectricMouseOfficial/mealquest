@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://tgxm1ofsbgvu"
-path="res://.godot/imported/Bowl.jpg-4264e54659ede86101d6cb99c5fda894.ctex"
+uid="uid://cn8le28qs05wy"
+path="res://.godot/imported/Damaged Bowl PNG.png-d54392a9e887900ee83d3a86aad36a4c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Bowl.jpg"
-dest_files=["res://.godot/imported/Bowl.jpg-4264e54659ede86101d6cb99c5fda894.ctex"]
+source_file="res://Damaged Bowl PNG.png"
+dest_files=["res://.godot/imported/Damaged Bowl PNG.png-d54392a9e887900ee83d3a86aad36a4c.ctex"]
 
 [params]
 
