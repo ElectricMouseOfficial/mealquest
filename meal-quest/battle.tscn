@@ -4,6 +4,23 @@
 [ext_resource type="Resource" uid="uid://bufjyg3lx8fk8" path="res://Knife.tres" id="2_6t8i5"]
 [ext_resource type="Texture2D" uid="uid://chbsb2380rp0f" path="res://Fridge Proto.png" id="2_i431l"]
 [ext_resource type="Texture2D" uid="uid://cdisyg38pjhdl" path="res://Knife Proto.png" id="2_oxp8w"]
+[ext_resource type="Texture2D" uid="uid://cr7fjovskjl32" path="res://Animation_VFX_Import/Tomato Roll1 Proto.png" id="3_4s0ev"]
+[ext_resource type="Texture2D" uid="uid://k8j1bb7iq6di" path="res://Animation_VFX_Import/Tomato Roll2 Proto.png" id="4_pihy1"]
+[ext_resource type="Texture2D" uid="uid://j8c7abjxof0q" path="res://Animation_VFX_Import/Tomato Roll3 Proto.png" id="5_slotg"]
+[ext_resource type="Texture2D" uid="uid://dmmfia8f0sv3r" path="res://Animation_VFX_Import/Tomato Roll4 Proto.png" id="6_ix8ov"]
+[ext_resource type="Texture2D" uid="uid://fe8674ih6rgc" path="res://Animation_VFX_Import/Tomato Roll5 Proto.png" id="7_bx4lf"]
+[ext_resource type="Texture2D" uid="uid://djwojc6i28xof" path="res://Animation_VFX_Import/Tomato Roll6 Proto.png" id="8_22sa7"]
+[ext_resource type="Texture2D" uid="uid://dyjn0j7egkp2a" path="res://Animation_VFX_Import/Tomato Roll7 Proto.png" id="9_aacmo"]
+[ext_resource type="Texture2D" uid="uid://swvd0dcfq4o6" path="res://Animation_VFX_Import/Tomato Roll8 Proto.png" id="10_rggsl"]
+[ext_resource type="Texture2D" uid="uid://dm4trbgj4qry4" path="res://Animation_VFX_Import/Tomato Roll9 Proto.png" id="11_fljlq"]
+[ext_resource type="Texture2D" uid="uid://g8ia4n0xqy0f" path="res://Animation_VFX_Import/Tomato Splat VFX Proto.png" id="12_s5g7e"]
+[ext_resource type="Texture2D" uid="uid://ds2wbtcwdc7xm" path="res://Animation_VFX_Import/Knife Slash Proto.png" id="13_pihy1"]
+[ext_resource type="Texture2D" uid="uid://cdvsm2ju7csa8" path="res://Damaged Tomato PNG.png" id="14_rggsl"]
+[ext_resource type="Texture2D" uid="uid://bbfeuik7gs8ro" path="res://Damaged T-Bone PNG.png" id="15_fljlq"]
+[ext_resource type="Texture2D" uid="uid://6mac3ugfq8ga" path="res://Bowl PNG.png" id="16_ix8ov"]
+[ext_resource type="Texture2D" uid="uid://cn8le28qs05wy" path="res://Damaged Bowl PNG.png" id="16_s5g7e"]
+[ext_resource type="Texture2D" uid="uid://btcdt2b5hibk1" path="res://T-Bone PNG.png" id="17_bx4lf"]
+[ext_resource type="Texture2D" uid="uid://cpwxosk4c8bfw" path="res://Damaged Knife PNG.png" id="17_j128n"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8lcdg"]
 bg_color = Color(1, 1, 1, 1)
@@ -146,6 +163,14 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ip7xm")
 enemy = ExtResource("2_6t8i5")
+tomato_frames = Array[Texture2D]([ExtResource("3_4s0ev"), ExtResource("4_pihy1"), ExtResource("5_slotg"), ExtResource("6_ix8ov"), ExtResource("7_bx4lf"), ExtResource("8_22sa7"), ExtResource("9_aacmo"), ExtResource("10_rggsl"), ExtResource("11_fljlq"), ExtResource("12_s5g7e")])
+knife_frames = Array[Texture2D]([ExtResource("13_pihy1")])
+knife_frame_time = 0.5
+knife_scale = 0.3
+hero_damaged_tex = ExtResource("14_rggsl")
+ally1_damaged_tex = ExtResource("15_fljlq")
+ally2_damaged_tex = ExtResource("16_s5g7e")
+enemy_damaged_tex = ExtResource("17_j128n")
 
 [node name="Background" type="TextureRect" parent="." unique_id=803507479]
 layout_mode = 0
@@ -212,10 +237,10 @@ position = Vector2(160, 164)
 
 [node name="Hero" type="TextureRect" parent="." unique_id=1605867009]
 layout_mode = 0
-offset_left = 123.0
-offset_top = 246.0
-offset_right = 351.0
-offset_bottom = 473.0
+offset_left = 232.0
+offset_top = 292.0
+offset_right = 400.0
+offset_bottom = 465.0
 texture = SubResource("CompressedTexture2D_7sfm4")
 expand_mode = 1
 
@@ -252,6 +277,96 @@ offset_bottom = 3.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "HP:45/50"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ally2" type="TextureRect" parent="." unique_id=1971558417]
+layout_mode = 0
+offset_left = 53.0
+offset_top = 341.0
+offset_right = 241.0
+offset_bottom = 463.0
+texture = ExtResource("16_ix8ov")
+expand_mode = 1
+
+[node name="VBoxContainerH" type="VBoxContainer" parent="Ally2" unique_id=708496011]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -93.0
+offset_top = 109.5
+offset_right = 93.0
+offset_bottom = 125.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="Ally2/VBoxContainerH" unique_id=746418552]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_8lcdg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_knvjn")
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="Ally2/VBoxContainerH/ProgressBar" unique_id=1154693109]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.5
+offset_bottom = 3.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "HP:45/50"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ally1" type="TextureRect" parent="." unique_id=2034913859]
+layout_mode = 0
+offset_left = 396.0
+offset_top = 301.0
+offset_right = 584.0
+offset_bottom = 476.0
+texture = ExtResource("17_bx4lf")
+expand_mode = 1
+
+[node name="VBoxContainerH" type="VBoxContainer" parent="Ally1" unique_id=794760652]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -93.0
+offset_top = 109.5
+offset_right = 93.0
+offset_bottom = 125.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="Ally1/VBoxContainerH" unique_id=1182617745]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_8lcdg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_knvjn")
+step = 1.0
+value = 100.0
+show_percentage = false
+
+[node name="Label" type="Label" parent="Ally1/VBoxContainerH/ProgressBar" unique_id=1096640674]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -3.5
+offset_bottom = 3.5
+grow_horizontal = 2
+grow_vertical = 2
 text = "HP:45/50"
 horizontal_alignment = 1
 vertical_alignment = 1

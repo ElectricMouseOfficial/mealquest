@@ -15,28 +15,11 @@ var rally_bonus := 1.0        # damage multiplier applied by Rally, resets each 
 var moves_menu: VBoxContainer
 
 #--- Animations ---------------------------------------------------------------
-@export var tomato_frames: Array[Texture2D]   # all 10, in order: 9 roll + 1 splat
-@export var roll_count := 9                   # first 9 = roll, the rest = splat
-@export var roll_time := 0.6                  # seconds to roll to the enemy
-@export var frame_time := 0.08                # seconds per splat frame
-@export var splat_hold := 0.5                 # extra seconds the splat stays on screen
-@export var return_time := 0.4                # seconds to slide back
-@export_range(0.0, 1.0) var impact_x_ratio := 0.3   # where it lands on the enemy (0 = left edge, 0.5 = center)
-@export var knife_frames: Array[Texture2D]   # drag your knife frames here, in order
-@export var knife_frame_time := 0.06         # seconds per frame
-@export var knife_scale := 0.5   # 1.0 = original size, 0.5 = half
-var knife_vfx: TextureRect
-#---Damaged States-------------------------------------------------------------
-@export var hero_damaged_tex: Texture2D
-@export var ally1_damaged_tex: Texture2D
-@export var ally2_damaged_tex: Texture2D
-@export var enemy_damaged_tex: Texture2D
-var enemy_normal_tex: Texture2D
-#--- Turn indicator -----------------------------------------------------------
-@export var turn_indicator_tex: Texture2D     # drag your sprite here (optional)
-@export var turn_indicator_scale := 1.0
-@export var turn_indicator_offset := Vector2(0, 10)   # nudge relative to "just under the character"
-var turn_indicator: Control
+@export var tomato_frames: Array[Texture2D]   # all 10, in order
+@export var roll_count := 9                  # first 6 = roll, the rest = splat
+@export var roll_time := 0.5
+@export var frame_time := 0.08
+@export var attack_offset := Vector2(-120, 0)
 
 func _build_party():
 	party = [
@@ -85,18 +68,12 @@ func _bar(member) -> ProgressBar:
 	return get_node("%s/VBoxContainerH/ProgressBar" % member.node)
 
 func _ready():
-	_build_knife_vfx()
-	_build_turn_indicator()
 	_build_party()
 	for m in party:
 		set_health(_bar(m), m.hp, m.max_hp)
 	set_health($Enemy/VBoxContainerE/ProgressBar, enemy.health, enemy.health)
 	$Enemy.texture = enemy.texture
 	current_enemy_health = enemy.health
-	
-	_setup_sprites()
-	for m in party:
-		update_party_sprite(m)
 
 	_build_moves_menu()
 	$Textbox.hide()
@@ -106,38 +83,6 @@ func _ready():
 	await self.textbox_closed
 	start_player_turn()
 
-func _build_turn_indicator():
-	if turn_indicator_tex:
-		var tr = TextureRect.new()
-		tr.texture = turn_indicator_tex
-		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		tr.stretch_mode = TextureRect.STRETCH_SCALE
-		tr.size = turn_indicator_tex.get_size() * turn_indicator_scale
-		turn_indicator = tr
-	else:
-		# Placeholder until you assign a sprite
-		var l = Label.new()
-		l.text = "▲"
-		l.add_theme_font_size_override("font_size", 32)
-		l.add_theme_color_override("font_color", Color.BLACK)
-		l.size = Vector2(32, 40)
-		turn_indicator = l
-	turn_indicator.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	turn_indicator.z_index = 2
-	turn_indicator.hide()
-	add_child(turn_indicator)
-
-func show_turn_indicator(member):
-	var node = get_node(member.node)
-	var sprite_rect = node.get_global_rect()
-	var bar_rect = get_node(member.node + "/VBoxContainerH").get_global_rect()
-	# Sit below whichever is lower: the sprite or its health bar
-	var bottom_y = max(sprite_rect.end.y, bar_rect.end.y)
-	turn_indicator.global_position = Vector2(
-		sprite_rect.get_center().x - turn_indicator.size.x / 2.0,
-		bottom_y) + turn_indicator_offset
-	turn_indicator.show()
-	
 func set_health(progress_bar, health, max_health):
 	progress_bar.value = health
 	progress_bar.max_value = max_health
@@ -149,7 +94,6 @@ func _input(event):
 		emit_signal("textbox_closed")
 
 func display_text(text):
-	turn_indicator.hide()
 	$ActionsPanel.hide()
 	moves_menu.hide()
 	$Textbox.show()
@@ -166,25 +110,14 @@ func _build_moves_menu():
 	moves_menu.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	moves_menu.hide()
 
-# --- Tomato roll -> splat -> return ------------------------------------------
-func play_tomato_attack(dmg):
+func play_tomato_attack():
 	var hero = $Hero
-	var bar_box = $Hero/VBoxContainerH   # health bar is a child of Hero, so hide it while the tomato moves
 	var start_pos = hero.global_position
 	var original_texture = hero.texture
+	var target_pos = $Enemy.global_position + attack_offset
 	var roll = tomato_frames.slice(0, roll_count)
 	var splat = tomato_frames.slice(roll_count)
-
-	# Landing point: inside the enemy at impact_x_ratio across, vertically centered.
-	# Subtracting half the hero's size centers the tomato on that point.
-	var enemy_rect = $Enemy.get_global_rect()
-	var target_center = Vector2(
-		enemy_rect.position.x + enemy_rect.size.x * impact_x_ratio,
-		enemy_rect.get_center().y)
-	var target_pos = target_center - hero.size / 2.0
-
 	hero.z_index = 1
-	bar_box.hide()
 
 	# Roll: each roll frame shows once, evenly spread across the trip
 	var tween = create_tween()
@@ -194,56 +127,22 @@ func play_tomato_attack(dmg):
 	for f in roll:
 		hero.texture = f
 		await get_tree().create_timer(step).timeout
-	if tween.is_running():
-		await tween.finished
 
 	# Splat on impact
-	_apply_enemy_damage(dmg)
 	$AnimationPlayer.play("enemy_damaged")
 	for f in splat:
 		hero.texture = f
 		await get_tree().create_timer(frame_time).timeout
-	await get_tree().create_timer(splat_hold).timeout
-	if $AnimationPlayer.is_playing():
-		await $AnimationPlayer.animation_finished
+	await get_tree().create_timer(0.15).timeout
 
 	# Return
 	hero.texture = original_texture
 	var back = create_tween()
-	back.tween_property(hero, "global_position", start_pos, return_time) \
+	back.tween_property(hero, "global_position", start_pos, 0.4) \
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	await back.finished
-
 	hero.z_index = 0
-	bar_box.show()
 	
-	#Knife Attack----------------------------------------------------
-func _build_knife_vfx():
-	knife_vfx = TextureRect.new()
-	knife_vfx.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	knife_vfx.stretch_mode = TextureRect.STRETCH_SCALE
-	knife_vfx.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	knife_vfx.z_index = 2   # draw above the characters
-	knife_vfx.hide()
-	add_child(knife_vfx)
-
-func play_knife_attack(target_node: Control):
-	if knife_frames.is_empty():
-		return
-
-	$Enemy.self_modulate.a = 0.0   # hide the enemy sprite, keep its health bar
-
-	var center = target_node.get_global_rect().get_center()
-	knife_vfx.show()
-	for f in knife_frames:
-		knife_vfx.texture = f
-		knife_vfx.size = f.get_size() * knife_scale
-		knife_vfx.global_position = center - knife_vfx.size / 2.0
-		await get_tree().create_timer(knife_frame_time).timeout
-	knife_vfx.hide()
-
-	$Enemy.self_modulate.a = 1.0   # bring the enemy back
-
 func show_moves_for(member):
 	for child in moves_menu.get_children():
 		child.queue_free()
@@ -258,8 +157,6 @@ func show_moves_for(member):
 		b.text = move.name
 		b.pressed.connect(_on_move_chosen.bind(move))
 		moves_menu.add_child(b)
-	show_turn_indicator(member)
-	moves_menu.show()
 	moves_menu.show()
 
 # --- Turn flow ---------------------------------------------------------------
@@ -269,10 +166,6 @@ func start_player_turn():
 		_party_wiped()
 		return
 	show_moves_for(party[active_index])
-func _apply_enemy_damage(dmg):
-	current_enemy_health = max(0, current_enemy_health - dmg)
-	set_health($Enemy/VBoxContainerE/ProgressBar, current_enemy_health, enemy.health)
-	update_enemy_sprite()
 
 func _next_living(from_index: int) -> int:
 	for i in range(from_index, party.size()):
@@ -294,7 +187,7 @@ func _on_move_chosen(move):
 			member.guarding = true
 		"taunt":
 			taunt_target = active_index
-			member.guarding = false
+			member.guarding = true
 		"heal":
 			await _do_heal(member, move)
 		"rally":
@@ -312,34 +205,14 @@ func _on_move_chosen(move):
 		active_index = next
 		show_moves_for(party[active_index])
 
-func _setup_sprites():
-	# Order matches the party: Tomato, Steak, Soup
-	var damaged = [hero_damaged_tex, ally1_damaged_tex, ally2_damaged_tex]
-	for i in party.size():
-		party[i]["normal_tex"] = get_node(party[i].node).texture
-		party[i]["damaged_tex"] = damaged[i]
-	enemy_normal_tex = enemy.texture
-
-func update_party_sprite(member):
-	var node = get_node(member.node)
-	if member.damaged_tex and member.hp * 2 < member.max_hp:
-		node.texture = member.damaged_tex
-	else:
-		node.texture = member.normal_tex
-
-func update_enemy_sprite():
-	if enemy_damaged_tex and current_enemy_health * 2 < enemy.health:
-		$Enemy.texture = enemy_damaged_tex
-	else:
-		$Enemy.texture = enemy_normal_tex
-		
 func _do_attack(member, move):
 	var dmg = int(member.damage * move.mult * rally_bonus)
+	current_enemy_health = max(0, current_enemy_health - dmg)
+	set_health($Enemy/VBoxContainerE/ProgressBar, current_enemy_health, enemy.health)
 
 	if member.node == "Hero":
-		await play_tomato_attack(dmg)
+		await play_tomato_attack()
 	else:
-		_apply_enemy_damage(dmg)
 		$AnimationPlayer.play("enemy_damaged")
 		await $AnimationPlayer.animation_finished
 
@@ -362,7 +235,6 @@ func _do_heal(healer, move):
 	var before = target.hp
 	target.hp = min(target.max_hp, target.hp + move.amount)
 	set_health(_bar(target), target.hp, target.max_hp)
-	update_party_sprite(target)
 	if target.node == "Hero":
 		State.current_health = target.hp
 
@@ -382,8 +254,6 @@ func enemy_turn():
 
 	display_text("%s slices at %s OWCH!" % [enemy.name, target.name])
 	await self.textbox_closed
-	
-	await play_knife_attack(get_node(target.node))
 
 	if target.guarding:
 		$AnimationPlayer.play("mini_shake")
@@ -391,21 +261,16 @@ func enemy_turn():
 		display_text("%s defended successfully!" % target.name)
 		await self.textbox_closed
 	else:
-		# Impact: HP drops and the screen shakes immediately
 		target.hp = max(0, target.hp - enemy.damage)
 		set_health(_bar(target), target.hp, target.max_hp)
-		update_party_sprite(target)
 		if target.node == "Hero":
 			State.current_health = target.hp
+		display_text("%s dealt %d damage to %s!" % [enemy.name, enemy.damage, target.name])
+		await self.textbox_closed
 		$AnimationPlayer.play("shake")
 		await $AnimationPlayer.animation_finished
 
-		# Then the text
-		display_text("%s dealt %d damage to %s!" % [enemy.name, enemy.damage, target.name])
-		await self.textbox_closed
-
 		if target.hp == 0:
-			await play_party_death(target)
 			display_text("%s was knocked out!" % target.name)
 			await self.textbox_closed
 
@@ -417,15 +282,6 @@ func enemy_turn():
 
 	start_player_turn()
 
-func play_party_death(member):
-	var node = get_node(member.node)
-	var bar_box = get_node(member.node + "/VBoxContainerH")
-	var tween = create_tween().set_parallel(true)
-	tween.tween_property(node, "self_modulate:a", 0.0, 0.5)
-	tween.tween_property(bar_box, "modulate:a", 0.0, 0.5)
-	await tween.finished
-	bar_box.hide()
-	
 func _party_wiped():
 	display_text("Your party was defeated...")
 	await self.textbox_closed
