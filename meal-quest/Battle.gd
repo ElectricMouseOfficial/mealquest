@@ -13,6 +13,8 @@ var current_enemy_health = 0
 var taunt_target := -1        # party index the enemy is forced to hit (-1 = none)
 var rally_bonus := 1.0        # damage multiplier applied by Rally, resets each round
 var moves_menu: VBoxContainer
+var turn_order := [2, 0, 1]   # party indexes: 2 = Soup, 0 = Tomato, 1 = Steak
+var turn_pos := 0    # current position within turn_order
 
 #--- Animations ---------------------------------------------------------------
 @export var tomato_frames: Array[Texture2D]   # all 10, in order: 9 roll + 1 splat
@@ -52,6 +54,11 @@ var turn_indicator: Control
 @export var ally1_move_icons: Array[Texture2D]   # Meat Mash, Taunt, Harden
 @export var ally2_move_icons: Array[Texture2D]   # Broil, Broth, Dinner Call
 @export var move_icon_size := Vector2(96, 96)
+
+#--- Move cooldowns (in rounds, 0 = none) ---------------------------------------
+@export var hero_move_cooldowns: Array[int]    # Roll, Defend
+@export var ally1_move_cooldowns: Array[int]   # Meat Mash, Taunt, Harden
+@export var ally2_move_cooldowns: Array[int]   # Broil, Hearty Broth, Dinner Call
 
 func _build_party():
 	party = [
@@ -103,6 +110,7 @@ func _ready():
 	_build_knife_vfx()
 	_build_turn_indicator()
 	_build_party()
+	_setup_cooldowns()
 	for m in party:
 		set_health(_bar(m), m.hp, m.max_hp)
 	set_health($Enemy/VBoxContainerE/ProgressBar, enemy.health, enemy.health)
@@ -149,6 +157,14 @@ func _icon_for(member, move_index):
 		return icons[move_index]
 	return null
 	
+func _setup_cooldowns():
+	var sets = [hero_move_cooldowns, ally1_move_cooldowns, ally2_move_cooldowns]
+	for p in party.size():
+		for i in party[p].moves.size():
+			var move = party[p].moves[i]
+			move["cooldown"] = sets[p][i] if i < sets[p].size() else 0
+			move["cd_left"] = 0
+			
 func _move_description(member, move) -> String:
 	# A hand-written "desc" on the move wins
 	if move.has("desc"):
@@ -295,22 +311,31 @@ func show_moves_for(member):
 	var row = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)   # gap between buttons; 0 = touching
 	moves_menu.add_child(row)
-	
+
+	# Safety: if every move is cooling down, let the first one through so nobody gets stuck
+	var all_blocked = true
+	for mv in member.moves:
+		if mv.cd_left <= 0:
+			all_blocked = false
+
 	for i in member.moves.size():
 		var move = member.moves[i]
+		var blocked = move.cd_left > 0 and not (all_blocked and i == 0)
 		var tex = _icon_for(member, i)
 		var b: BaseButton
+		var cd_text = "\nCD: %d" % move.cd_left if blocked else ""
 
 		if tex:
 			var tb = TextureButton.new()
 			tb.texture_normal = tex
+			tb.texture_disabled = tex
 			tb.ignore_texture_size = true
 			tb.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 			tb.custom_minimum_size = move_icon_size
 
-			# The move's name, drawn on top of the texture
+			# The move's name (plus cooldown), drawn on top of the texture
 			var label = Label.new()
-			label.text = move.name
+			label.text = move.name + cd_text
 			label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -324,10 +349,15 @@ func show_moves_for(member):
 			b = tb
 		else:
 			var tb = Button.new()
-			tb.text = move.name
+			tb.text = move.name + cd_text.replace("\n", " ")   # "Roll CD: 2"
 			b = tb
 
-		b.tooltip_text = "%s\n%s" % [move.name, _move_description(member, move)]
+		b.disabled = blocked
+		if blocked:
+			b.modulate = Color(0.5, 0.5, 0.5)   # greyed out
+
+		var cd_info = "\nCooldown: %d round(s)" % move.cooldown if move.cooldown > 0 else ""
+		b.tooltip_text = "%s\n%s%s" % [move.name, _move_description(member, move), cd_info]
 		b.pressed.connect(_on_move_chosen.bind(move))
 		row.add_child(b)
 
@@ -335,25 +365,29 @@ func show_moves_for(member):
 	moves_menu.show()
 # --- Turn flow ---------------------------------------------------------------
 func start_player_turn():
-	active_index = _next_living(0)
-	if active_index == -1:
+	turn_pos = _next_living(0)
+	if turn_pos == -1:
 		_party_wiped()
 		return
+	active_index = turn_order[turn_pos]
 	show_moves_for(party[active_index])
+	
 func _apply_enemy_damage(dmg):
 	current_enemy_health = max(0, current_enemy_health - dmg)
 	set_health($Enemy/VBoxContainerE/ProgressBar, current_enemy_health, enemy.health)
 	update_enemy_sprite()
 	DamageNumbers.display_number(dmg, damage_numbers_origin_enemy.global_position)
 
-func _next_living(from_index: int) -> int:
-	for i in range(from_index, party.size()):
-		if party[i].hp > 0:
-			return i
+func _next_living(from_pos: int) -> int:
+	for p in range(from_pos, turn_order.size()):
+		if party[turn_order[p]].hp > 0:
+			return p
 	return -1
 
 func _on_move_chosen(move):
 	var member = party[active_index]
+	if move.cooldown > 0:
+			move.cd_left = move.cooldown + 1   # the +1 is because it ticks down at the end of this same round
 	moves_menu.hide()
 
 	display_text(move.text)
@@ -376,12 +410,13 @@ func _on_move_chosen(move):
 		return   # _do_attack already handled the victory
 
 	# Next living party member, or the enemy if everyone has acted
-	var next = _next_living(active_index + 1)
+	var next = _next_living(turn_pos + 1)
 	if next == -1:
 		await get_tree().create_timer(.25).timeout
 		enemy_turn()
 	else:
-		active_index = next
+		turn_pos = next
+		active_index = turn_order[turn_pos]
 		show_moves_for(party[active_index])
 
 func _setup_sprites():
@@ -494,8 +529,9 @@ func enemy_turn():
 	# Reset per-round effects
 	for m in party:
 		m.guarding = false
-	taunt_target = -1
-	rally_bonus = 1.0
+		for mv in m.moves:
+			if mv.cd_left > 0:
+				mv.cd_left -= 1
 
 	start_player_turn()
 

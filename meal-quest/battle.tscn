@@ -180,6 +180,9 @@ hero_move_icons = Array[Texture2D]([ExtResource("18_in21c"), ExtResource("18_in2
 ally1_move_icons = Array[Texture2D]([ExtResource("20_uwl2g"), ExtResource("20_uwl2g"), ExtResource("20_uwl2g")])
 ally2_move_icons = Array[Texture2D]([ExtResource("18_v7t3w"), ExtResource("21_5kmqj"), ExtResource("22_lfmjp")])
 move_icon_size = Vector2(130, 130)
+hero_move_cooldowns = Array[int]([0, 1])
+ally1_move_cooldowns = Array[int]([0, 1, 1])
+ally2_move_cooldowns = Array[int]([0, 4, 2])
 
 [node name="Background" type="TextureRect" parent="." unique_id=803507479]
 layout_mode = 0
