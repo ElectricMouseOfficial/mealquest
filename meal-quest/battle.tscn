@@ -232,8 +232,8 @@ text = "HP:45/50"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DamageNumbersOrigin" type="Node2D" parent="Enemy" unique_id=2076936577]
-position = Vector2(160, 164)
+[node name="DamageNumbersOriginEnemy" type="Node2D" parent="Enemy" unique_id=2076936577]
+position = Vector2(158, 129)
 
 [node name="Hero" type="TextureRect" parent="." unique_id=1605867009]
 layout_mode = 0
@@ -281,6 +281,9 @@ text = "HP:45/50"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="DamageNumbersOriginHero" type="Node2D" parent="Hero" unique_id=338573349]
+position = Vector2(64, 107)
+
 [node name="Ally2" type="TextureRect" parent="." unique_id=1971558417]
 layout_mode = 0
 offset_left = 53.0
@@ -322,9 +325,13 @@ offset_top = -3.5
 offset_bottom = 3.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "HP:45/50"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="DamageNumbersOriginAlly2" type="Node2D" parent="Ally2" unique_id=1237288621]
+position = Vector2(65, 67)
 
 [node name="Ally1" type="TextureRect" parent="." unique_id=2034913859]
 layout_mode = 0
@@ -367,9 +374,13 @@ offset_top = -3.5
 offset_bottom = 3.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "HP:45/50"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="DamageNumbersOriginAlly1" type="Node2D" parent="Ally1" unique_id=856645379]
+position = Vector2(80, 105)
 
 [node name="ActionsPanel" type="Panel" parent="." unique_id=674583537]
 layout_mode = 1
