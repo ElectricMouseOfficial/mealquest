@@ -127,6 +127,24 @@ func _build_turn_indicator():
 	turn_indicator.hide()
 	add_child(turn_indicator)
 
+func _move_description(member, move) -> String:
+	# A hand-written "desc" on the move wins
+	if move.has("desc"):
+		return move.desc
+	match move.kind:
+		"attack":
+			var dmg = int(member.damage * move.mult * rally_bonus)
+			return "Deals about %d damage to the enemy." % dmg
+		"defend":
+			return "Blocks the next enemy attack on %s." % member.name
+		"taunt":
+			return "Draws the enemy's attack to %s." % member.name
+		"heal":
+			return "Heals the most wounded ally for %d HP." % move.amount
+		"rally":
+			return "Boosts the party's damage by %d%% this round." % int((move.bonus - 1.0) * 100)
+	return ""
+	
 func show_turn_indicator(member):
 	var node = get_node(member.node)
 	var sprite_rect = node.get_global_rect()
@@ -256,6 +274,7 @@ func show_moves_for(member):
 	for move in member.moves:
 		var b = Button.new()
 		b.text = move.name
+		b.tooltip_text = _move_description(member, move)
 		b.pressed.connect(_on_move_chosen.bind(move))
 		moves_menu.add_child(b)
 	show_turn_indicator(member)
