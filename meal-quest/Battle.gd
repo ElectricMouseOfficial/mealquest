@@ -38,6 +38,12 @@ var enemy_normal_tex: Texture2D
 @export var turn_indicator_offset := Vector2(0, 10)   # nudge relative to "just under the character"
 var turn_indicator: Control
 
+#---Move button textures-------------------------------------------------------
+@export var hero_move_icons: Array[Texture2D]    # Roll, Defend
+@export var ally1_move_icons: Array[Texture2D]   # Meat Mash, Taunt, Harden
+@export var ally2_move_icons: Array[Texture2D]   # Broil, Broth, Dinner Call
+@export var move_icon_size := Vector2(96, 96)
+
 func _build_party():
 	party = [
 		{
@@ -127,6 +133,13 @@ func _build_turn_indicator():
 	turn_indicator.hide()
 	add_child(turn_indicator)
 
+func _icon_for(member, move_index):
+	var sets = [hero_move_icons, ally1_move_icons, ally2_move_icons]
+	var icons = sets[party.find(member)]
+	if move_index < icons.size():
+		return icons[move_index]
+	return null
+	
 func _move_description(member, move) -> String:
 	# A hand-written "desc" on the move wins
 	if move.has("desc"):
@@ -176,11 +189,10 @@ func display_text(text):
 # --- Moves menu (built in code, so no scene changes needed for the buttons) --
 func _build_moves_menu():
 	moves_menu = VBoxContainer.new()
+	moves_menu.add_theme_constant_override("separation", 4)
 	add_child(moves_menu)
-	# Anchor to the bottom-left corner with a 20px margin
 	moves_menu.set_anchors_and_offsets_preset(
 		Control.PRESET_BOTTOM_LEFT, Control.PRESET_MODE_MINSIZE, 20)
-	# The menu height changes with the number of moves, so grow upward
 	moves_menu.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	moves_menu.hide()
 
@@ -271,16 +283,46 @@ func show_moves_for(member):
 	title.add_theme_color_override("font_color", Color.BLACK)
 	moves_menu.add_child(title)
 
-	for move in member.moves:
-		var b = Button.new()
-		b.text = move.name
-		b.tooltip_text = _move_description(member, move)
+	var row = HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)   # gap between buttons; 0 = touching
+	moves_menu.add_child(row)
+	
+	for i in member.moves.size():
+		var move = member.moves[i]
+		var tex = _icon_for(member, i)
+		var b: BaseButton
+
+		if tex:
+			var tb = TextureButton.new()
+			tb.texture_normal = tex
+			tb.ignore_texture_size = true
+			tb.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+			tb.custom_minimum_size = move_icon_size
+
+			# The move's name, drawn on top of the texture
+			var label = Label.new()
+			label.text = move.name
+			label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			label.add_theme_font_size_override("font_size", 16)
+			label.add_theme_color_override("font_color", Color.WHITE)
+			label.add_theme_color_override("font_outline_color", Color.BLACK)
+			label.add_theme_constant_override("outline_size", 4)
+			tb.add_child(label)
+
+			b = tb
+		else:
+			var tb = Button.new()
+			tb.text = move.name
+			b = tb
+
 		b.pressed.connect(_on_move_chosen.bind(move))
-		moves_menu.add_child(b)
+		row.add_child(b)
+
 	show_turn_indicator(member)
 	moves_menu.show()
-	moves_menu.show()
-
 # --- Turn flow ---------------------------------------------------------------
 func start_player_turn():
 	active_index = _next_living(0)

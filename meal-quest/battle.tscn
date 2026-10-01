@@ -21,6 +21,11 @@
 [ext_resource type="Texture2D" uid="uid://cn8le28qs05wy" path="res://Damaged Bowl PNG.png" id="16_s5g7e"]
 [ext_resource type="Texture2D" uid="uid://btcdt2b5hibk1" path="res://T-Bone PNG.png" id="17_bx4lf"]
 [ext_resource type="Texture2D" uid="uid://cpwxosk4c8bfw" path="res://Damaged Knife PNG.png" id="17_j128n"]
+[ext_resource type="Texture2D" uid="uid://b3yov3dtm4w6l" path="res://UI_Move_Buttons/Red_Button.png" id="18_in21c"]
+[ext_resource type="Texture2D" uid="uid://bqlvrsaw46eyd" path="res://UI_Move_Buttons/Orange_Button.png" id="18_v7t3w"]
+[ext_resource type="Texture2D" uid="uid://cejfrq03vtu1s" path="res://UI_Move_Buttons/Purple_Button.png" id="20_uwl2g"]
+[ext_resource type="Texture2D" uid="uid://22behd4q231s" path="res://UI_Move_Buttons/Green_Button.png" id="21_5kmqj"]
+[ext_resource type="Texture2D" uid="uid://d1mi7b80x7saq" path="res://UI_Move_Buttons/Yellow_Button.png" id="22_lfmjp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8lcdg"]
 bg_color = Color(0.8825961, 0.10732099, 0, 1)
@@ -166,6 +171,10 @@ hero_damaged_tex = ExtResource("14_rggsl")
 ally1_damaged_tex = ExtResource("15_fljlq")
 ally2_damaged_tex = ExtResource("16_s5g7e")
 enemy_damaged_tex = ExtResource("17_j128n")
+hero_move_icons = Array[Texture2D]([ExtResource("18_in21c"), ExtResource("18_in21c")])
+ally1_move_icons = Array[Texture2D]([ExtResource("20_uwl2g"), ExtResource("20_uwl2g"), ExtResource("20_uwl2g")])
+ally2_move_icons = Array[Texture2D]([ExtResource("18_v7t3w"), ExtResource("21_5kmqj"), ExtResource("22_lfmjp")])
+move_icon_size = Vector2(130, 130)
 
 [node name="Background" type="TextureRect" parent="." unique_id=803507479]
 layout_mode = 0
@@ -366,7 +375,8 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -162.0
+offset_left = 43.0
+offset_top = -161.0
 offset_right = 227.0
 offset_bottom = -3.0
 grow_vertical = 0
