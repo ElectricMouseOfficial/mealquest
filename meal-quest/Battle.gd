@@ -13,6 +13,8 @@ var current_enemy_health = 0
 var taunt_target := -1        # party index the enemy is forced to hit (-1 = none)
 var rally_bonus := 1.0        # damage multiplier applied by Rally, resets each round
 var moves_menu: VBoxContainer
+var turn_order := [2, 0, 1]   # party indexes: 2 = Soup, 0 = Tomato, 1 = Steak
+var turn_pos := 0    # current position within turn_order
 
 #--- Animations ---------------------------------------------------------------
 @export var tomato_frames: Array[Texture2D]   # all 10, in order: 9 roll + 1 splat
@@ -47,6 +49,17 @@ var turn_indicator: Control
 @onready var healing_numbers_origin_ally1 = $Ally1/HealingNumbersOriginAlly1
 @onready var healing_numbers_origin_ally2 = $Ally2/HealingNumbersOriginAlly2
 
+#---Move button textures-------------------------------------------------------
+@export var hero_move_icons: Array[Texture2D]    # Roll, Defend
+@export var ally1_move_icons: Array[Texture2D]   # Meat Mash, Taunt, Harden
+@export var ally2_move_icons: Array[Texture2D]   # Broil, Broth, Dinner Call
+@export var move_icon_size := Vector2(96, 96)
+
+#--- Move cooldowns (in rounds, 0 = none) ---------------------------------------
+@export var hero_move_cooldowns: Array[int]    # Roll, Defend
+@export var ally1_move_cooldowns: Array[int]   # Meat Mash, Taunt, Harden
+@export var ally2_move_cooldowns: Array[int]   # Broil, Hearty Broth, Dinner Call
+
 func _build_party():
 	party = [
 		{
@@ -69,7 +82,7 @@ func _build_party():
 				{"name": "Meat Mash", "kind": "attack", "mult": 1.0,
 				 "text": "Ever been slapped by a steak? Well the enemy has!"},
 				{"name": "Taunt", "kind": "taunt",
-				 "text": "The steak shows off its tantilizing marble."},
+				 "text": "The steak shows off its tantilizing marble!"},
 				{"name": "Harden", "kind": "defend",
 				 "text": "Steak tenses its muscle fibers for an attack!"},
 			],
@@ -81,9 +94,9 @@ func _build_party():
 			"damage": 4, "guarding": false,
 			"moves": [
 				{"name": "Broil", "kind": "attack", "mult": 1.0,
-				 "text": "A scalding liquid burns the enemies! I wouldn't want to be them."},
-				{"name": "Broth", "kind": "heal", "amount": 15,
-				 "text": "A hearty broth heals your party!"},
+				 "text": "A scalding liquid burns the enemies! I wouldn't want to be them!"},
+				{"name": "Hearty Broth", "kind": "heal", "amount": 15,
+				 "text": "A hearty broth heals your party! You bet I'm hungry now!"},
 				{"name": "Dinner Call", "kind": "rally", "bonus": 1.5,
 				 "text": "A nice meal makes your party feel fired up!"},
 			],
@@ -97,6 +110,7 @@ func _ready():
 	_build_knife_vfx()
 	_build_turn_indicator()
 	_build_party()
+	_setup_cooldowns()
 	for m in party:
 		set_health(_bar(m), m.hp, m.max_hp)
 	set_health($Enemy/VBoxContainerE/ProgressBar, enemy.health, enemy.health)
@@ -128,7 +142,7 @@ func _build_turn_indicator():
 		var l = Label.new()
 		l.text = "▲"
 		l.add_theme_font_size_override("font_size", 32)
-		l.add_theme_color_override("font_color", Color.GOLDENROD)
+		l.add_theme_color_override("font_color", Color.BLACK)
 		l.size = Vector2(32, 40)
 		turn_indicator = l
 	turn_indicator.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -136,6 +150,39 @@ func _build_turn_indicator():
 	turn_indicator.hide()
 	add_child(turn_indicator)
 
+func _icon_for(member, move_index):
+	var sets = [hero_move_icons, ally1_move_icons, ally2_move_icons]
+	var icons = sets[party.find(member)]
+	if move_index < icons.size():
+		return icons[move_index]
+	return null
+	
+func _setup_cooldowns():
+	var sets = [hero_move_cooldowns, ally1_move_cooldowns, ally2_move_cooldowns]
+	for p in party.size():
+		for i in party[p].moves.size():
+			var move = party[p].moves[i]
+			move["cooldown"] = sets[p][i] if i < sets[p].size() else 0
+			move["cd_left"] = 0
+			
+func _move_description(member, move) -> String:
+	# A hand-written "desc" on the move wins
+	if move.has("desc"):
+		return move.desc
+	match move.kind:
+		"attack":
+			var dmg = int(member.damage * move.mult * rally_bonus)
+			return "Deals about %d damage to the enemy." % dmg
+		"defend":
+			return "Blocks the next enemy attack on %s." % member.name
+		"taunt":
+			return "Draws the enemy's attack to %s." % member.name
+		"heal":
+			return "Heals the most wounded ally for %d HP." % move.amount
+		"rally":
+			return "Boosts the party's damage by %d%% this round." % int((move.bonus - 1.0) * 100)
+	return ""
+	
 func show_turn_indicator(member):
 	var node = get_node(member.node)
 	var sprite_rect = node.get_global_rect()
@@ -167,11 +214,10 @@ func display_text(text):
 # --- Moves menu (built in code, so no scene changes needed for the buttons) --
 func _build_moves_menu():
 	moves_menu = VBoxContainer.new()
+	moves_menu.add_theme_constant_override("separation", 4)
 	add_child(moves_menu)
-	# Anchor to the bottom-left corner with a 20px margin
 	moves_menu.set_anchors_and_offsets_preset(
 		Control.PRESET_BOTTOM_LEFT, Control.PRESET_MODE_MINSIZE, 20)
-	# The menu height changes with the number of moves, so grow upward
 	moves_menu.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	moves_menu.hide()
 
@@ -262,92 +308,86 @@ func show_moves_for(member):
 	title.add_theme_color_override("font_color", Color.BLACK)
 	moves_menu.add_child(title)
 
-	for move in member.moves:
-		var b = Button.new()
-		b.text = move.name
+	var row = HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)   # gap between buttons; 0 = touching
+	moves_menu.add_child(row)
+
+	# Safety: if every move is cooling down, let the first one through so nobody gets stuck
+	var all_blocked = true
+	for mv in member.moves:
+		if mv.cd_left <= 0:
+			all_blocked = false
+
+	for i in member.moves.size():
+		var move = member.moves[i]
+		var blocked = move.cd_left > 0 and not (all_blocked and i == 0)
+		var tex = _icon_for(member, i)
+		var b: BaseButton
+		var cd_text = "\nCD: %d" % move.cd_left if blocked else ""
+
+		if tex:
+			var tb = TextureButton.new()
+			tb.texture_normal = tex
+			tb.texture_disabled = tex
+			tb.ignore_texture_size = true
+			tb.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+			tb.custom_minimum_size = move_icon_size
+
+			# The move's name (plus cooldown), drawn on top of the texture
+			var label = Label.new()
+			label.text = move.name + cd_text
+			label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			label.add_theme_font_size_override("font_size", 16)
+			label.add_theme_color_override("font_color", Color.WHITE)
+			label.add_theme_color_override("font_outline_color", Color.BLACK)
+			label.add_theme_constant_override("outline_size", 4)
+			tb.add_child(label)
+
+			b = tb
+		else:
+			var tb = Button.new()
+			tb.text = move.name + cd_text.replace("\n", " ")   # "Roll CD: 2"
+			b = tb
+
+		b.disabled = blocked
+		if blocked:
+			b.modulate = Color(0.5, 0.5, 0.5)   # greyed out
+
+		var cd_info = "\nCooldown: %d round(s)" % move.cooldown if move.cooldown > 0 else ""
+		b.tooltip_text = "%s\n%s%s" % [move.name, _move_description(member, move), cd_info]
 		b.pressed.connect(_on_move_chosen.bind(move))
-		moves_menu.add_child(b)
+		row.add_child(b)
+
 	show_turn_indicator(member)
 	moves_menu.show()
-	moves_menu.show()
-
-# --- Changing Health Bar Color -----------------------------------------------
-func update_health_bar_color():
-	#for enemy
-	if current_enemy_health >= $Enemy/VBoxContainerE/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Enemy/VBoxContainerE/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = "#36b729" #(green)
-		$Enemy/VBoxContainerE/ProgressBar.add_theme_stylebox_override("fill", style)
-	if current_enemy_health <= $Enemy/VBoxContainerE/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Enemy/VBoxContainerE/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.YELLOW
-		$Enemy/VBoxContainerE/ProgressBar.add_theme_stylebox_override("fill", style)
-	if current_enemy_health <= $Enemy/VBoxContainerE/ProgressBar.max_value * 0.25:
-		var style: StyleBoxFlat = $Enemy/VBoxContainerE/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.RED
-		$Enemy/VBoxContainerE/ProgressBar.add_theme_stylebox_override("fill", style)
-	#for hero
-	if $Hero/VBoxContainerH/ProgressBar.value >= $Hero/VBoxContainerH/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Hero/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = "#36b729" #(green)
-		$Hero/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-	if $Hero/VBoxContainerH/ProgressBar.value <= $Hero/VBoxContainerH/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Hero/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.YELLOW
-		$Hero/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-	if $Hero/VBoxContainerH/ProgressBar.value <= $Hero/VBoxContainerH/ProgressBar.max_value * 0.25:
-		var style: StyleBoxFlat = $Hero/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.RED
-		$Hero/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-	#for ally1
-	if $Ally1/VBoxContainerH/ProgressBar.value >= $Ally1/VBoxContainerH/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Ally1/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = "#36b729" #(green)
-		$Ally1/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-	if $Ally1/VBoxContainerH/ProgressBar.value <= $Ally1/VBoxContainerH/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Ally1/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.YELLOW
-		$Ally1/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-	if $Ally1/VBoxContainerH/ProgressBar.value <= $Ally1/VBoxContainerH/ProgressBar.max_value * 0.25:
-		var style: StyleBoxFlat = $Ally1/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.RED
-		$Ally1/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)	
-	#for ally2
-	if $Ally2/VBoxContainerH/ProgressBar.value >= $Ally2/VBoxContainerH/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Ally2/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = "#36b729" #(green)
-		$Ally2/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-	if $Ally2/VBoxContainerH/ProgressBar.value <= $Ally2/VBoxContainerH/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Ally2/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.YELLOW
-		$Ally2/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-	if $Ally2/VBoxContainerH/ProgressBar.value <= $Ally2/VBoxContainerH/ProgressBar.max_value * 0.25:
-		var style: StyleBoxFlat = $Ally2/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.RED
-		$Ally2/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-
 # --- Turn flow ---------------------------------------------------------------
 func start_player_turn():
-	active_index = _next_living(0)
-	if active_index == -1:
+	turn_pos = _next_living(0)
+	if turn_pos == -1:
 		_party_wiped()
 		return
+	active_index = turn_order[turn_pos]
 	show_moves_for(party[active_index])
+	
 func _apply_enemy_damage(dmg):
 	current_enemy_health = max(0, current_enemy_health - dmg)
 	set_health($Enemy/VBoxContainerE/ProgressBar, current_enemy_health, enemy.health)
-	update_health_bar_color()
 	update_enemy_sprite()
 	DamageNumbers.display_number(dmg, damage_numbers_origin_enemy.global_position)
 
-func _next_living(from_index: int) -> int:
-	for i in range(from_index, party.size()):
-		if party[i].hp > 0:
-			return i
+func _next_living(from_pos: int) -> int:
+	for p in range(from_pos, turn_order.size()):
+		if party[turn_order[p]].hp > 0:
+			return p
 	return -1
 
 func _on_move_chosen(move):
 	var member = party[active_index]
+	if move.cooldown > 0:
+			move.cd_left = move.cooldown + 1   # the +1 is because it ticks down at the end of this same round
 	moves_menu.hide()
 
 	display_text(move.text)
@@ -370,12 +410,13 @@ func _on_move_chosen(move):
 		return   # _do_attack already handled the victory
 
 	# Next living party member, or the enemy if everyone has acted
-	var next = _next_living(active_index + 1)
+	var next = _next_living(turn_pos + 1)
 	if next == -1:
 		await get_tree().create_timer(.25).timeout
 		enemy_turn()
 	else:
-		active_index = next
+		turn_pos = next
+		active_index = turn_order[turn_pos]
 		show_moves_for(party[active_index])
 
 func _setup_sprites():
@@ -429,7 +470,6 @@ func _do_heal(healer, move):
 	target.hp = min(target.max_hp, target.hp + move.amount)
 	set_health(_bar(target), target.hp, target.max_hp)
 	update_party_sprite(target)
-	update_health_bar_color()
 	if target.node == "Hero":
 		State.current_health = target.hp
 		HealingNumbers.display_number(move.amount, healing_numbers_origin_hero.global_position)
@@ -467,7 +507,6 @@ func enemy_turn():
 		target.hp = max(0, target.hp - enemy.damage)
 		set_health(_bar(target), target.hp, target.max_hp)
 		update_party_sprite(target)
-		update_health_bar_color()
 		if target.node == "Hero":
 			State.current_health = target.hp
 			DamageNumbers.display_number(enemy.damage, damage_numbers_origin_hero.global_position)
@@ -490,8 +529,9 @@ func enemy_turn():
 	# Reset per-round effects
 	for m in party:
 		m.guarding = false
-	taunt_target = -1
-	rally_bonus = 1.0
+		for mv in m.moves:
+			if mv.cd_left > 0:
+				mv.cd_left -= 1
 
 	start_player_turn()
 
