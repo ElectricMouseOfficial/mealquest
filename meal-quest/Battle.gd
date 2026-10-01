@@ -272,7 +272,8 @@ func show_moves_for(member):
 	moves_menu.show()
 
 # --- Changing Health Bar Color -----------------------------------------------
-func update_enemy_health_bar_color():
+func update_health_bar_color():
+	#for enemy
 	if current_enemy_health >= $Enemy/VBoxContainerE/ProgressBar.max_value * 0.5:
 		var style: StyleBoxFlat = $Enemy/VBoxContainerE/ProgressBar.get_theme_stylebox("fill").duplicate()
 		style.bg_color = "#36b729" #(green)
@@ -285,8 +286,7 @@ func update_enemy_health_bar_color():
 		var style: StyleBoxFlat = $Enemy/VBoxContainerE/ProgressBar.get_theme_stylebox("fill").duplicate()
 		style.bg_color = Color.RED
 		$Enemy/VBoxContainerE/ProgressBar.add_theme_stylebox_override("fill", style)
-
-func update_hero_health_bar_color():
+	#for hero
 	if $Hero/VBoxContainerH/ProgressBar.value >= $Hero/VBoxContainerH/ProgressBar.max_value * 0.5:
 		var style: StyleBoxFlat = $Hero/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
 		style.bg_color = "#36b729" #(green)
@@ -299,8 +299,7 @@ func update_hero_health_bar_color():
 		var style: StyleBoxFlat = $Hero/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
 		style.bg_color = Color.RED
 		$Hero/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-
-func update_ally1_health_bar_color():
+	#for ally1
 	if $Ally1/VBoxContainerH/ProgressBar.value >= $Ally1/VBoxContainerH/ProgressBar.max_value * 0.5:
 		var style: StyleBoxFlat = $Ally1/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
 		style.bg_color = "#36b729" #(green)
@@ -312,9 +311,8 @@ func update_ally1_health_bar_color():
 	if $Ally1/VBoxContainerH/ProgressBar.value <= $Ally1/VBoxContainerH/ProgressBar.max_value * 0.25:
 		var style: StyleBoxFlat = $Ally1/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
 		style.bg_color = Color.RED
-		$Ally1/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-
-func update_ally2_health_bar_color():
+		$Ally1/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)	
+	#for ally2
 	if $Ally2/VBoxContainerH/ProgressBar.value >= $Ally2/VBoxContainerH/ProgressBar.max_value * 0.5:
 		var style: StyleBoxFlat = $Ally2/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
 		style.bg_color = "#36b729" #(green)
@@ -338,8 +336,7 @@ func start_player_turn():
 func _apply_enemy_damage(dmg):
 	current_enemy_health = max(0, current_enemy_health - dmg)
 	set_health($Enemy/VBoxContainerE/ProgressBar, current_enemy_health, enemy.health)
-	#changing the health bar color when reaching health thresholds
-	update_enemy_health_bar_color()
+	update_health_bar_color()
 	update_enemy_sprite()
 	DamageNumbers.display_number(dmg, damage_numbers_origin_enemy.global_position)
 
@@ -432,9 +429,7 @@ func _do_heal(healer, move):
 	target.hp = min(target.max_hp, target.hp + move.amount)
 	set_health(_bar(target), target.hp, target.max_hp)
 	update_party_sprite(target)
-	update_hero_health_bar_color()
-	update_ally1_health_bar_color()
-	update_ally2_health_bar_color()
+	update_health_bar_color()
 	if target.node == "Hero":
 		State.current_health = target.hp
 		HealingNumbers.display_number(move.amount, healing_numbers_origin_hero.global_position)
@@ -472,9 +467,7 @@ func enemy_turn():
 		target.hp = max(0, target.hp - enemy.damage)
 		set_health(_bar(target), target.hp, target.max_hp)
 		update_party_sprite(target)
-		update_hero_health_bar_color()
-		update_ally1_health_bar_color()
-		update_ally2_health_bar_color()
+		update_health_bar_color()
 		if target.node == "Hero":
 			State.current_health = target.hp
 			DamageNumbers.display_number(enemy.damage, damage_numbers_origin_hero.global_position)
