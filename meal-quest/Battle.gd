@@ -37,6 +37,15 @@ var enemy_normal_tex: Texture2D
 @export var turn_indicator_scale := 1.0
 @export var turn_indicator_offset := Vector2(0, 10)   # nudge relative to "just under the character"
 var turn_indicator: Control
+#--- DamageNumbers-------------------------------------------------------------
+@onready var damage_numbers_origin_enemy = $Enemy/DamageNumbersOriginEnemy
+@onready var damage_numbers_origin_hero = $Hero/DamageNumbersOriginHero
+@onready var damage_numbers_origin_ally1 = $Ally1/DamageNumbersOriginAlly1
+@onready var damage_numbers_origin_ally2 = $Ally2/DamageNumbersOriginAlly2
+#--- HealingNumbers------------------------------------------------------------
+@onready var healing_numbers_origin_hero = $Hero/HealingNumbersOriginHero
+@onready var healing_numbers_origin_ally1 = $Ally1/HealingNumbersOriginAlly1
+@onready var healing_numbers_origin_ally2 = $Ally2/HealingNumbersOriginAlly2
 
 #---Move button textures-------------------------------------------------------
 @export var hero_move_icons: Array[Texture2D]    # Roll, Defend
@@ -334,6 +343,7 @@ func _apply_enemy_damage(dmg):
 	current_enemy_health = max(0, current_enemy_health - dmg)
 	set_health($Enemy/VBoxContainerE/ProgressBar, current_enemy_health, enemy.health)
 	update_enemy_sprite()
+	DamageNumbers.display_number(dmg, damage_numbers_origin_enemy.global_position)
 
 func _next_living(from_index: int) -> int:
 	for i in range(from_index, party.size()):
@@ -426,7 +436,12 @@ func _do_heal(healer, move):
 	update_party_sprite(target)
 	if target.node == "Hero":
 		State.current_health = target.hp
-
+		HealingNumbers.display_number(move.amount, healing_numbers_origin_hero.global_position)
+	if target.node == "Ally1":
+		HealingNumbers.display_number(move.amount, healing_numbers_origin_ally1.global_position)
+	if target.node == "Ally2":
+		HealingNumbers.display_number(move.amount, healing_numbers_origin_ally2.global_position)
+		
 	display_text("%s recovered %d HP!" % [target.name, target.hp - before])
 	await self.textbox_closed
 
@@ -458,6 +473,11 @@ func enemy_turn():
 		update_party_sprite(target)
 		if target.node == "Hero":
 			State.current_health = target.hp
+			DamageNumbers.display_number(enemy.damage, damage_numbers_origin_hero.global_position)
+		if target.node == "Ally1":
+			DamageNumbers.display_number(enemy.damage, damage_numbers_origin_ally1.global_position)
+		if target.node == "Ally2":
+			DamageNumbers.display_number(enemy.damage, damage_numbers_origin_ally2.global_position)
 		$AnimationPlayer.play("shake")
 		await $AnimationPlayer.animation_finished
 

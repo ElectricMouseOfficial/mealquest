@@ -28,14 +28,19 @@
 [ext_resource type="Texture2D" uid="uid://d1mi7b80x7saq" path="res://UI_Move_Buttons/Yellow_Button.png" id="22_lfmjp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8lcdg"]
-bg_color = Color(0.8825961, 0.10732099, 0, 1)
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_knvjn"]
 bg_color = Color(0.21021196, 0.7166735, 0.15961385, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
 border_color = Color(0, 0, 0, 1)
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_7sfm4"]
@@ -231,9 +236,13 @@ offset_top = -3.5
 offset_bottom = 3.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "HP:45/50"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="DamageNumbersOriginEnemy" type="Node2D" parent="Enemy" unique_id=2076936577]
+position = Vector2(158, 129)
 
 [node name="Hero" type="TextureRect" parent="." unique_id=1605867009]
 layout_mode = 0
@@ -276,9 +285,16 @@ offset_top = -3.5
 offset_bottom = 3.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "HP:45/50"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="DamageNumbersOriginHero" type="Node2D" parent="Hero" unique_id=338573349]
+position = Vector2(64, 107)
+
+[node name="HealingNumbersOriginHero" type="Node2D" parent="Hero" unique_id=691530593]
+position = Vector2(64, 107)
 
 [node name="Ally2" type="TextureRect" parent="." unique_id=1971558417]
 layout_mode = 0
@@ -321,9 +337,16 @@ offset_top = -3.5
 offset_bottom = 3.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "HP:45/50"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="DamageNumbersOriginAlly2" type="Node2D" parent="Ally2" unique_id=1237288621]
+position = Vector2(65, 67)
+
+[node name="HealingNumbersOriginAlly2" type="Node2D" parent="Ally2" unique_id=183436425]
+position = Vector2(65, 67)
 
 [node name="Ally1" type="TextureRect" parent="." unique_id=2034913859]
 layout_mode = 0
@@ -366,9 +389,16 @@ offset_top = -3.5
 offset_bottom = 3.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 text = "HP:45/50"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="DamageNumbersOriginAlly1" type="Node2D" parent="Ally1" unique_id=856645379]
+position = Vector2(80, 105)
+
+[node name="HealingNumbersOriginAlly1" type="Node2D" parent="Ally1" unique_id=619201341]
+position = Vector2(80, 105)
 
 [node name="ActionsPanel" type="Panel" parent="." unique_id=674583537]
 layout_mode = 1

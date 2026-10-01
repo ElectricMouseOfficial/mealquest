@@ -23,6 +23,8 @@ config/icon="res://icon.svg"
 
 TurnManager="*res://turn_manager.gd"
 State="*uid://bwxmhonleu78w"
+DamageNumbers="*uid://rkqi8ues7bhf"
+HealingNumbers="*uid://cas5a03jq1rtp"
 
 [display]
 
