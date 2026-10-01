@@ -10,16 +10,14 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 
-func display_number(value: int, position: Vector2, is_critical: bool = false):
+func display_number(value: int, position: Vector2):
 	var number = Label.new()
 	number.global_position = position
-	number.text = str("-", value)
+	number.text = str("+", value)
 	number.z_index = 5
 	number.label_settings = LabelSettings.new()
 	
-	var color = "#B22" #fee62b(yellow)
-	if is_critical:
-		color = "#B22"
+	var color = "#3cd12c" #(green) "#fee62b"(yellow)
 	if value == 0:
 		color = "#FFF8"
 	

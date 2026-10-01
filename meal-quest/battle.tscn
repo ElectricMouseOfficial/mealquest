@@ -284,6 +284,9 @@ vertical_alignment = 1
 [node name="DamageNumbersOriginHero" type="Node2D" parent="Hero" unique_id=338573349]
 position = Vector2(64, 107)
 
+[node name="HealingNumbersOriginHero" type="Node2D" parent="Hero" unique_id=691530593]
+position = Vector2(64, 107)
+
 [node name="Ally2" type="TextureRect" parent="." unique_id=1971558417]
 layout_mode = 0
 offset_left = 53.0
@@ -333,6 +336,9 @@ vertical_alignment = 1
 [node name="DamageNumbersOriginAlly2" type="Node2D" parent="Ally2" unique_id=1237288621]
 position = Vector2(65, 67)
 
+[node name="HealingNumbersOriginAlly2" type="Node2D" parent="Ally2" unique_id=183436425]
+position = Vector2(65, 67)
+
 [node name="Ally1" type="TextureRect" parent="." unique_id=2034913859]
 layout_mode = 0
 offset_left = 396.0
@@ -380,6 +386,9 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="DamageNumbersOriginAlly1" type="Node2D" parent="Ally1" unique_id=856645379]
+position = Vector2(80, 105)
+
+[node name="HealingNumbersOriginAlly1" type="Node2D" parent="Ally1" unique_id=619201341]
 position = Vector2(80, 105)
 
 [node name="ActionsPanel" type="Panel" parent="." unique_id=674583537]
