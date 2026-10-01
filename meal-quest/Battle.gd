@@ -142,7 +142,7 @@ func _build_turn_indicator():
 		var l = Label.new()
 		l.text = "▲"
 		l.add_theme_font_size_override("font_size", 32)
-		l.add_theme_color_override("font_color", Color.BLACK)
+		l.add_theme_color_override("font_color", Color.GOLDENROD)
 		l.size = Vector2(32, 40)
 		turn_indicator = l
 	turn_indicator.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -363,6 +363,62 @@ func show_moves_for(member):
 
 	show_turn_indicator(member)
 	moves_menu.show()
+	
+# --- Changing Health Bar Color -----------------------------------------------
+func update_health_bar_color():
+	#for enemy
+	if current_enemy_health >= $Enemy/VBoxContainerE/ProgressBar.max_value * 0.5:
+		var style: StyleBoxFlat = $Enemy/VBoxContainerE/ProgressBar.get_theme_stylebox("fill").duplicate()
+		style.bg_color = "#36b729" #(green)
+		$Enemy/VBoxContainerE/ProgressBar.add_theme_stylebox_override("fill", style)
+	if current_enemy_health <= $Enemy/VBoxContainerE/ProgressBar.max_value * 0.5:
+		var style: StyleBoxFlat = $Enemy/VBoxContainerE/ProgressBar.get_theme_stylebox("fill").duplicate()
+		style.bg_color = Color.YELLOW
+		$Enemy/VBoxContainerE/ProgressBar.add_theme_stylebox_override("fill", style)
+	if current_enemy_health <= $Enemy/VBoxContainerE/ProgressBar.max_value * 0.25:
+		var style: StyleBoxFlat = $Enemy/VBoxContainerE/ProgressBar.get_theme_stylebox("fill").duplicate()
+		style.bg_color = Color.RED
+		$Enemy/VBoxContainerE/ProgressBar.add_theme_stylebox_override("fill", style)
+	#for hero
+	if $Hero/VBoxContainerH/ProgressBar.value >= $Hero/VBoxContainerH/ProgressBar.max_value * 0.5:
+		var style: StyleBoxFlat = $Hero/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
+		style.bg_color = "#36b729" #(green)
+		$Hero/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
+	if $Hero/VBoxContainerH/ProgressBar.value <= $Hero/VBoxContainerH/ProgressBar.max_value * 0.5:
+		var style: StyleBoxFlat = $Hero/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
+		style.bg_color = Color.YELLOW
+		$Hero/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
+	if $Hero/VBoxContainerH/ProgressBar.value <= $Hero/VBoxContainerH/ProgressBar.max_value * 0.25:
+		var style: StyleBoxFlat = $Hero/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
+		style.bg_color = Color.RED
+		$Hero/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
+	#for ally1
+	if $Ally1/VBoxContainerH/ProgressBar.value >= $Ally1/VBoxContainerH/ProgressBar.max_value * 0.5:
+		var style: StyleBoxFlat = $Ally1/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
+		style.bg_color = "#36b729" #(green)
+		$Ally1/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
+	if $Ally1/VBoxContainerH/ProgressBar.value <= $Ally1/VBoxContainerH/ProgressBar.max_value * 0.5:
+		var style: StyleBoxFlat = $Ally1/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
+		style.bg_color = Color.YELLOW
+		$Ally1/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
+	if $Ally1/VBoxContainerH/ProgressBar.value <= $Ally1/VBoxContainerH/ProgressBar.max_value * 0.25:
+		var style: StyleBoxFlat = $Ally1/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
+		style.bg_color = Color.RED
+		$Ally1/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)	
+	#for ally2
+	if $Ally2/VBoxContainerH/ProgressBar.value >= $Ally2/VBoxContainerH/ProgressBar.max_value * 0.5:
+		var style: StyleBoxFlat = $Ally2/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
+		style.bg_color = "#36b729" #(green)
+		$Ally2/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
+	if $Ally2/VBoxContainerH/ProgressBar.value <= $Ally2/VBoxContainerH/ProgressBar.max_value * 0.5:
+		var style: StyleBoxFlat = $Ally2/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
+		style.bg_color = Color.YELLOW
+		$Ally2/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
+	if $Ally2/VBoxContainerH/ProgressBar.value <= $Ally2/VBoxContainerH/ProgressBar.max_value * 0.25:
+		var style: StyleBoxFlat = $Ally2/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
+		style.bg_color = Color.RED
+		$Ally2/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
+
 # --- Turn flow ---------------------------------------------------------------
 func start_player_turn():
 	turn_pos = _next_living(0)
@@ -376,6 +432,7 @@ func _apply_enemy_damage(dmg):
 	current_enemy_health = max(0, current_enemy_health - dmg)
 	set_health($Enemy/VBoxContainerE/ProgressBar, current_enemy_health, enemy.health)
 	update_enemy_sprite()
+	update_health_bar_color()
 	DamageNumbers.display_number(dmg, damage_numbers_origin_enemy.global_position)
 
 func _next_living(from_pos: int) -> int:
@@ -470,6 +527,7 @@ func _do_heal(healer, move):
 	target.hp = min(target.max_hp, target.hp + move.amount)
 	set_health(_bar(target), target.hp, target.max_hp)
 	update_party_sprite(target)
+	update_health_bar_color()
 	if target.node == "Hero":
 		State.current_health = target.hp
 		HealingNumbers.display_number(move.amount, healing_numbers_origin_hero.global_position)
@@ -507,6 +565,7 @@ func enemy_turn():
 		target.hp = max(0, target.hp - enemy.damage)
 		set_health(_bar(target), target.hp, target.max_hp)
 		update_party_sprite(target)
+		update_health_bar_color()
 		if target.node == "Hero":
 			State.current_health = target.hp
 			DamageNumbers.display_number(enemy.damage, damage_numbers_origin_hero.global_position)
