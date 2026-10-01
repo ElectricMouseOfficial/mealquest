@@ -327,6 +327,7 @@ func show_moves_for(member):
 			tb.text = move.name
 			b = tb
 
+		b.tooltip_text = "%s\n%s" % [move.name, _move_description(member, move)]
 		b.pressed.connect(_on_move_chosen.bind(move))
 		row.add_child(b)
 
