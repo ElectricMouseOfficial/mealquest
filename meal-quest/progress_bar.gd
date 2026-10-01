@@ -1,4 +1,5 @@
 extends ProgressBar
+class_name HealthBar
 
 #(Code to change the health bar color when at certain thresholds
 @onready var fill_stylebox: StyleBoxFlat
