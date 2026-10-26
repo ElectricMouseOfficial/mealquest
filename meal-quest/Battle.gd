@@ -1,609 +1,135 @@
 extends Control
-
-signal textbox_closed
+## Turn flow only. This is the one script that knows about all the modules.
+##   Team       (team_manager.gd)       rules + data
+##   Animations (battle_animations.gd)  movement and effects
+##   UI         (battle_ui.gd)          menus, bars, text
 
 @export var enemy: Resource
 
-# --- Party -----------------------------------------------------------------
-# Each member: node (scene node name), name, hp, max_hp, damage, guarding, moves
-# Move "kind" values: attack, defend, heal, taunt, rally
-var party: Array = []
-var active_index := 0
-var current_enemy_health = 0
-var taunt_target := -1        # party index the enemy is forced to hit (-1 = none)
-var rally_bonus := 1.0        # damage multiplier applied by Rally, resets each round
-var moves_menu: VBoxContainer
-var turn_order := [2, 0, 1]   # party indexes: 2 = Soup, 0 = Tomato, 1 = Steak
-var turn_pos := 0    # current position within turn_order
+@onready var team: TeamManager = $Team
+@onready var anim: BattleAnimations = $Animations
+@onready var ui: BattleUI = $UI
+@onready var enemy_sprite: TextureRect = $Enemy
 
-#--- Animations ---------------------------------------------------------------
-@export var tomato_frames: Array[Texture2D]   # all 10, in order: 9 roll + 1 splat
-@export var roll_count := 9                   # first 9 = roll, the rest = splat
-@export var roll_time := 0.6                  # seconds to roll to the enemy
-@export var frame_time := 0.08                # seconds per splat frame
-@export var splat_hold := 0.5                 # extra seconds the splat stays on screen
-@export var return_time := 0.4                # seconds to slide back
-@export_range(0.0, 1.0) var impact_x_ratio := 0.3   # where it lands on the enemy (0 = left edge, 0.5 = center)
-@export var knife_frames: Array[Texture2D]   # drag your knife frames here, in order
-@export var knife_frame_time := 0.06         # seconds per frame
-@export var knife_scale := 0.5   # 1.0 = original size, 0.5 = half
-var knife_vfx: TextureRect
-#---Damaged States-------------------------------------------------------------
-@export var hero_damaged_tex: Texture2D
-@export var ally1_damaged_tex: Texture2D
-@export var ally2_damaged_tex: Texture2D
-@export var enemy_damaged_tex: Texture2D
-var enemy_normal_tex: Texture2D
-#--- Turn indicator -----------------------------------------------------------
-@export var turn_indicator_tex: Texture2D     # drag your sprite here (optional)
-@export var turn_indicator_scale := 1.0
-@export var turn_indicator_offset := Vector2(0, 10)   # nudge relative to "just under the character"
-var turn_indicator: Control
-#--- DamageNumbers-------------------------------------------------------------
-@onready var damage_numbers_origin_enemy = $Enemy/DamageNumbersOriginEnemy
-@onready var damage_numbers_origin_hero = $Hero/DamageNumbersOriginHero
-@onready var damage_numbers_origin_ally1 = $Ally1/DamageNumbersOriginAlly1
-@onready var damage_numbers_origin_ally2 = $Ally2/DamageNumbersOriginAlly2
-#--- HealingNumbers------------------------------------------------------------
-@onready var healing_numbers_origin_hero = $Hero/HealingNumbersOriginHero
-@onready var healing_numbers_origin_ally1 = $Ally1/HealingNumbersOriginAlly1
-@onready var healing_numbers_origin_ally2 = $Ally2/HealingNumbersOriginAlly2
+var party_nodes: Array[TextureRect] = []
+var enemy_hp := 0
+var active_index := 0     # party index of whoever is acting
+var turn_pos := 0         # position within team.turn_order
 
-#---Move button textures-------------------------------------------------------
-@export var hero_move_icons: Array[Texture2D]    # Roll, Defend
-@export var ally1_move_icons: Array[Texture2D]   # Meat Mash, Taunt, Harden
-@export var ally2_move_icons: Array[Texture2D]   # Broil, Broth, Dinner Call
-@export var move_icon_size := Vector2(96, 96)
-
-#--- Move cooldowns (in rounds, 0 = none) ---------------------------------------
-@export var hero_move_cooldowns: Array[int]    # Roll, Defend
-@export var ally1_move_cooldowns: Array[int]   # Meat Mash, Taunt, Harden
-@export var ally2_move_cooldowns: Array[int]   # Broil, Hearty Broth, Dinner Call
-
-func _build_party():
-	party = [
-		{
-			"node": "Hero", "name": "Tomato",
-			"hp": State.current_health, "max_hp": State.max_health,
-			"damage": State.damage, "guarding": false,
-			"moves": [
-				{"name": "Roll", "kind": "attack", "mult": 1.0,
-				 "text": "You roll your juicy body!"},
-				{"name": "Defend", "kind": "defend",
-				 "text": "Your fine stem hairs tense!"},
-			],
-		},
-		{
-			# Ally 1: tank
-			"node": "Ally1", "name": "Steak",
-			"hp": 40, "max_hp": 40,
-			"damage": 6, "guarding": false,
-			"moves": [
-				{"name": "Meat Mash", "kind": "attack", "mult": 1.0,
-				 "text": "Ever been slapped by a steak? Well the enemy has!"},
-				{"name": "Taunt", "kind": "taunt",
-				 "text": "The steak shows off its tantilizing marble!"},
-				{"name": "Harden", "kind": "defend",
-				 "text": "Steak tenses its muscle fibers for an attack!"},
-			],
-		},
-		{
-			# Ally 2: support
-			"node": "Ally2", "name": "Soup",
-			"hp": 25, "max_hp": 25,
-			"damage": 4, "guarding": false,
-			"moves": [
-				{"name": "Broil", "kind": "attack", "mult": 1.0,
-				 "text": "A scalding liquid burns the enemies! I wouldn't want to be them!"},
-				{"name": "Hearty Broth", "kind": "heal", "amount": 15,
-				 "text": "A hearty broth heals your party! You bet I'm hungry now!"},
-				{"name": "Dinner Call", "kind": "rally", "bonus": 1.5,
-				 "text": "A nice meal makes your party feel fired up!"},
-			],
-		},
-	]
-
-func _bar(member) -> ProgressBar:
-	return get_node("%s/VBoxContainerH/ProgressBar" % member.node)
 
 func _ready():
-	_build_knife_vfx()
-	_build_turn_indicator()
-	_build_party()
-	_setup_cooldowns()
-	for m in party:
-		set_health(_bar(m), m.hp, m.max_hp)
-	set_health($Enemy/VBoxContainerE/ProgressBar, enemy.health, enemy.health)
-	$Enemy.texture = enemy.texture
-	current_enemy_health = enemy.health
-	
-	_setup_sprites()
-	for m in party:
-		update_party_sprite(m)
+	team.setup()
+	for m in team.members:
+		party_nodes.append(get_node(m.scene_node) as TextureRect)
+	enemy_hp = enemy.health
 
-	_build_moves_menu()
-	$Textbox.hide()
-	$ActionsPanel.hide()
+	anim.setup($AnimationPlayer, enemy_sprite, self)
+	ui.setup(team, party_nodes, enemy_sprite, enemy, $Textbox, $ActionsPanel)
+	ui.set_enemy_health(enemy_hp, enemy.health)
 
-	display_text("A determined %s appears!" % enemy.name.to_upper())
-	await self.textbox_closed
+	team.health_changed.connect(ui.set_party_health)
+	ui.move_chosen.connect(_on_move_chosen)
+
+	await ui.say("A determined %s appears!" % enemy.name.to_upper())
 	start_player_turn()
 
-func _build_turn_indicator():
-	if turn_indicator_tex:
-		var tr = TextureRect.new()
-		tr.texture = turn_indicator_tex
-		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		tr.stretch_mode = TextureRect.STRETCH_SCALE
-		tr.size = turn_indicator_tex.get_size() * turn_indicator_scale
-		turn_indicator = tr
-	else:
-		# Placeholder until you assign a sprite
-		var l = Label.new()
-		l.text = "▲"
-		l.add_theme_font_size_override("font_size", 32)
-		l.add_theme_color_override("font_color", Color.GOLDENROD)
-		l.size = Vector2(32, 40)
-		turn_indicator = l
-	turn_indicator.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	turn_indicator.z_index = 2
-	turn_indicator.hide()
-	add_child(turn_indicator)
-
-func _icon_for(member, move_index):
-	var sets = [hero_move_icons, ally1_move_icons, ally2_move_icons]
-	var icons = sets[party.find(member)]
-	if move_index < icons.size():
-		return icons[move_index]
-	return null
-	
-func _setup_cooldowns():
-	var sets = [hero_move_cooldowns, ally1_move_cooldowns, ally2_move_cooldowns]
-	for p in party.size():
-		for i in party[p].moves.size():
-			var move = party[p].moves[i]
-			move["cooldown"] = sets[p][i] if i < sets[p].size() else 0
-			move["cd_left"] = 0
-			
-func _move_description(member, move) -> String:
-	# A hand-written "desc" on the move wins
-	if move.has("desc"):
-		return move.desc
-	match move.kind:
-		"attack":
-			var dmg = int(member.damage * move.mult * rally_bonus)
-			return "Deals about %d damage to the enemy." % dmg
-		"defend":
-			return "Blocks the next enemy attack on %s." % member.name
-		"taunt":
-			return "Draws the enemy's attack to %s." % member.name
-		"heal":
-			return "Heals the most wounded ally for %d HP." % move.amount
-		"rally":
-			return "Boosts the party's damage by %d%% this round." % int((move.bonus - 1.0) * 100)
-	return ""
-	
-func show_turn_indicator(member):
-	var node = get_node(member.node)
-	var sprite_rect = node.get_global_rect()
-	var bar_rect = get_node(member.node + "/VBoxContainerH").get_global_rect()
-	# Sit below whichever is lower: the sprite or its health bar
-	var bottom_y = max(sprite_rect.end.y, bar_rect.end.y)
-	turn_indicator.global_position = Vector2(
-		sprite_rect.get_center().x - turn_indicator.size.x / 2.0,
-		bottom_y) + turn_indicator_offset
-	turn_indicator.show()
-	
-func set_health(progress_bar, health, max_health):
-	progress_bar.value = health
-	progress_bar.max_value = max_health
-	progress_bar.get_node("Label").text = "HP:%d/%d" % [health, max_health]
-
-func _input(event):
-	if (Input.is_action_just_pressed("ui_accept") or Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)) and $Textbox.visible:
-		$Textbox.hide()
-		emit_signal("textbox_closed")
-
-func display_text(text):
-	turn_indicator.hide()
-	$ActionsPanel.hide()
-	moves_menu.hide()
-	$Textbox.show()
-	$Textbox/Label.text = text
-
-# --- Moves menu (built in code, so no scene changes needed for the buttons) --
-func _build_moves_menu():
-	moves_menu = VBoxContainer.new()
-	moves_menu.add_theme_constant_override("separation", 4)
-	add_child(moves_menu)
-	moves_menu.set_anchors_and_offsets_preset(
-		Control.PRESET_BOTTOM_LEFT, Control.PRESET_MODE_MINSIZE, 20)
-	moves_menu.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	moves_menu.hide()
-
-# --- Tomato roll -> splat -> return ------------------------------------------
-func play_tomato_attack(dmg):
-	var hero = $Hero
-	var bar_box = $Hero/VBoxContainerH   # health bar is a child of Hero, so hide it while the tomato moves
-	var start_pos = hero.global_position
-	var original_texture = hero.texture
-	var roll = tomato_frames.slice(0, roll_count)
-	var splat = tomato_frames.slice(roll_count)
-
-	# Landing point: inside the enemy at impact_x_ratio across, vertically centered.
-	# Subtracting half the hero's size centers the tomato on that point.
-	var enemy_rect = $Enemy.get_global_rect()
-	var target_center = Vector2(
-		enemy_rect.position.x + enemy_rect.size.x * impact_x_ratio,
-		enemy_rect.get_center().y)
-	var target_pos = target_center - hero.size / 2.0
-
-	hero.z_index = 1
-	bar_box.hide()
-
-	# Roll: each roll frame shows once, evenly spread across the trip
-	var tween = create_tween()
-	tween.tween_property(hero, "global_position", target_pos, roll_time) \
-		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	var step = roll_time / roll.size()
-	for f in roll:
-		hero.texture = f
-		await get_tree().create_timer(step).timeout
-	if tween.is_running():
-		await tween.finished
-
-	# Splat on impact
-	_apply_enemy_damage(dmg)
-	$AnimationPlayer.play("enemy_damaged")
-	for f in splat:
-		hero.texture = f
-		await get_tree().create_timer(frame_time).timeout
-	await get_tree().create_timer(splat_hold).timeout
-	if $AnimationPlayer.is_playing():
-		await $AnimationPlayer.animation_finished
-
-	# Return
-	hero.texture = original_texture
-	var back = create_tween()
-	back.tween_property(hero, "global_position", start_pos, return_time) \
-		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	await back.finished
-
-	hero.z_index = 0
-	bar_box.show()
-	
-	#Knife Attack----------------------------------------------------
-func _build_knife_vfx():
-	knife_vfx = TextureRect.new()
-	knife_vfx.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	knife_vfx.stretch_mode = TextureRect.STRETCH_SCALE
-	knife_vfx.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	knife_vfx.z_index = 2   # draw above the characters
-	knife_vfx.hide()
-	add_child(knife_vfx)
-
-func play_knife_attack(target_node: Control):
-	if knife_frames.is_empty():
-		return
-
-	$Enemy.self_modulate.a = 0.0   # hide the enemy sprite, keep its health bar
-
-	var center = target_node.get_global_rect().get_center()
-	knife_vfx.show()
-	for f in knife_frames:
-		knife_vfx.texture = f
-		knife_vfx.size = f.get_size() * knife_scale
-		knife_vfx.global_position = center - knife_vfx.size / 2.0
-		await get_tree().create_timer(knife_frame_time).timeout
-	knife_vfx.hide()
-
-	$Enemy.self_modulate.a = 1.0   # bring the enemy back
-
-func show_moves_for(member):
-	for child in moves_menu.get_children():
-		child.queue_free()
-
-	var title = Label.new()
-	title.text = "%s's turn" % member.name
-	title.add_theme_color_override("font_color", Color.BLACK)
-	moves_menu.add_child(title)
-
-	var row = HBoxContainer.new()
-	row.add_theme_constant_override("separation", 8)   # gap between buttons; 0 = touching
-	moves_menu.add_child(row)
-
-	# Safety: if every move is cooling down, let the first one through so nobody gets stuck
-	var all_blocked = true
-	for mv in member.moves:
-		if mv.cd_left <= 0:
-			all_blocked = false
-
-	for i in member.moves.size():
-		var move = member.moves[i]
-		var blocked = move.cd_left > 0 and not (all_blocked and i == 0)
-		var tex = _icon_for(member, i)
-		var b: BaseButton
-		var cd_text = "\nCD: %d" % move.cd_left if blocked else ""
-
-		if tex:
-			var tb = TextureButton.new()
-			tb.texture_normal = tex
-			tb.texture_disabled = tex
-			tb.ignore_texture_size = true
-			tb.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-			tb.custom_minimum_size = move_icon_size
-
-			# The move's name (plus cooldown), drawn on top of the texture
-			var label = Label.new()
-			label.text = move.name + cd_text
-			label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-			label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-			label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			label.add_theme_font_size_override("font_size", 16)
-			label.add_theme_color_override("font_color", Color.WHITE)
-			label.add_theme_color_override("font_outline_color", Color.BLACK)
-			label.add_theme_constant_override("outline_size", 4)
-			tb.add_child(label)
-
-			b = tb
-		else:
-			var tb = Button.new()
-			tb.text = move.name + cd_text.replace("\n", " ")   # "Roll CD: 2"
-			b = tb
-
-		b.disabled = blocked
-		if blocked:
-			b.modulate = Color(0.5, 0.5, 0.5)   # greyed out
-
-		var cd_info = "\nCooldown: %d round(s)" % move.cooldown if move.cooldown > 0 else ""
-		b.tooltip_text = "%s\n%s%s" % [move.name, _move_description(member, move), cd_info]
-		b.pressed.connect(_on_move_chosen.bind(move))
-		row.add_child(b)
-
-	show_turn_indicator(member)
-	moves_menu.show()
-	
-# --- Changing Health Bar Color -----------------------------------------------
-func update_health_bar_color():
-	#for enemy
-	if current_enemy_health >= $Enemy/VBoxContainerE/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Enemy/VBoxContainerE/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = "#36b729" #(green)
-		$Enemy/VBoxContainerE/ProgressBar.add_theme_stylebox_override("fill", style)
-	if current_enemy_health <= $Enemy/VBoxContainerE/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Enemy/VBoxContainerE/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.YELLOW
-		$Enemy/VBoxContainerE/ProgressBar.add_theme_stylebox_override("fill", style)
-	if current_enemy_health <= $Enemy/VBoxContainerE/ProgressBar.max_value * 0.25:
-		var style: StyleBoxFlat = $Enemy/VBoxContainerE/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.RED
-		$Enemy/VBoxContainerE/ProgressBar.add_theme_stylebox_override("fill", style)
-	#for hero
-	if $Hero/VBoxContainerH/ProgressBar.value >= $Hero/VBoxContainerH/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Hero/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = "#36b729" #(green)
-		$Hero/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-	if $Hero/VBoxContainerH/ProgressBar.value <= $Hero/VBoxContainerH/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Hero/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.YELLOW
-		$Hero/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-	if $Hero/VBoxContainerH/ProgressBar.value <= $Hero/VBoxContainerH/ProgressBar.max_value * 0.25:
-		var style: StyleBoxFlat = $Hero/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.RED
-		$Hero/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-	#for ally1
-	if $Ally1/VBoxContainerH/ProgressBar.value >= $Ally1/VBoxContainerH/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Ally1/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = "#36b729" #(green)
-		$Ally1/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-	if $Ally1/VBoxContainerH/ProgressBar.value <= $Ally1/VBoxContainerH/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Ally1/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.YELLOW
-		$Ally1/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-	if $Ally1/VBoxContainerH/ProgressBar.value <= $Ally1/VBoxContainerH/ProgressBar.max_value * 0.25:
-		var style: StyleBoxFlat = $Ally1/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.RED
-		$Ally1/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)	
-	#for ally2
-	if $Ally2/VBoxContainerH/ProgressBar.value >= $Ally2/VBoxContainerH/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Ally2/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = "#36b729" #(green)
-		$Ally2/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-	if $Ally2/VBoxContainerH/ProgressBar.value <= $Ally2/VBoxContainerH/ProgressBar.max_value * 0.5:
-		var style: StyleBoxFlat = $Ally2/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.YELLOW
-		$Ally2/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
-	if $Ally2/VBoxContainerH/ProgressBar.value <= $Ally2/VBoxContainerH/ProgressBar.max_value * 0.25:
-		var style: StyleBoxFlat = $Ally2/VBoxContainerH/ProgressBar.get_theme_stylebox("fill").duplicate()
-		style.bg_color = Color.RED
-		$Ally2/VBoxContainerH/ProgressBar.add_theme_stylebox_override("fill", style)
 
 # --- Turn flow ---------------------------------------------------------------
 func start_player_turn():
-	turn_pos = _next_living(0)
+	turn_pos = team.next_living_pos(0)
 	if turn_pos == -1:
-		_party_wiped()
+		await _party_wiped()
 		return
-	active_index = turn_order[turn_pos]
-	show_moves_for(party[active_index])
-	
-func _apply_enemy_damage(dmg):
-	current_enemy_health = max(0, current_enemy_health - dmg)
-	set_health($Enemy/VBoxContainerE/ProgressBar, current_enemy_health, enemy.health)
-	update_enemy_sprite()
-	update_health_bar_color()
-	DamageNumbers.display_number(dmg, damage_numbers_origin_enemy.global_position)
+	active_index = team.turn_order[turn_pos]
+	ui.show_moves(active_index)
 
-func _next_living(from_pos: int) -> int:
-	for p in range(from_pos, turn_order.size()):
-		if party[turn_order[p]].hp > 0:
-			return p
-	return -1
+func _on_move_chosen(move_index: int):
+	var i := active_index
+	var move: MoveData = team.members[i].moves[move_index]
 
-func _on_move_chosen(move):
-	var member = party[active_index]
-	if move.cooldown > 0:
-			move.cd_left = move.cooldown + 1   # the +1 is because it ticks down at the end of this same round
-	moves_menu.hide()
-
-	display_text(move.text)
-	await self.textbox_closed
+	team.begin_move(i, move_index)
+	ui.hide_moves()
+	await ui.say(move.text)
 
 	match move.kind:
 		"attack":
-			await _do_attack(member, move)
+			await _do_attack(i, move)
 		"defend":
-			member.guarding = true
+			team.set_guard(i)
 		"taunt":
-			taunt_target = active_index
-			member.guarding = false
+			team.set_taunt(i)
 		"heal":
-			await _do_heal(member, move)
+			await _do_heal(i, move)
 		"rally":
-			rally_bonus = move.bonus
+			team.set_rally(move.rally_bonus)
 
-	if current_enemy_health == 0:
+	if enemy_hp == 0:
 		return   # _do_attack already handled the victory
 
-	# Next living party member, or the enemy if everyone has acted
-	var next = _next_living(turn_pos + 1)
+	var next := team.next_living_pos(turn_pos + 1)
 	if next == -1:
 		await get_tree().create_timer(.25).timeout
 		enemy_turn()
 	else:
 		turn_pos = next
-		active_index = turn_order[turn_pos]
-		show_moves_for(party[active_index])
+		active_index = team.turn_order[turn_pos]
+		ui.show_moves(active_index)
 
-func _setup_sprites():
-	# Order matches the party: Tomato, Steak, Soup
-	var damaged = [hero_damaged_tex, ally1_damaged_tex, ally2_damaged_tex]
-	for i in party.size():
-		party[i]["normal_tex"] = get_node(party[i].node).texture
-		party[i]["damaged_tex"] = damaged[i]
-	enemy_normal_tex = enemy.texture
 
-func update_party_sprite(member):
-	var node = get_node(member.node)
-	if member.damaged_tex and member.hp * 2 < member.max_hp:
-		node.texture = member.damaged_tex
-	else:
-		node.texture = member.normal_tex
+# --- Player moves ------------------------------------------------------------
+func _apply_enemy_damage(dmg: int):
+	enemy_hp = maxi(0, enemy_hp - dmg)
+	ui.set_enemy_health(enemy_hp, enemy.health)
+	ui.show_enemy_damage_number(dmg)
 
-func update_enemy_sprite():
-	if enemy_damaged_tex and current_enemy_health * 2 < enemy.health:
-		$Enemy.texture = enemy_damaged_tex
-	else:
-		$Enemy.texture = enemy_normal_tex
-		
-func _do_attack(member, move):
-	var dmg = int(member.damage * move.mult * rally_bonus)
+func _do_attack(i: int, move: MoveData):
+	var dmg := team.attack_damage(i, move)
 
-	if member.node == "Hero":
-		await play_tomato_attack(dmg)
+	if team.members[i].scene_node == "Hero":
+		await anim.play_tomato_attack(party_nodes[i], func(): _apply_enemy_damage(dmg))
 	else:
 		_apply_enemy_damage(dmg)
-		$AnimationPlayer.play("enemy_damaged")
-		await $AnimationPlayer.animation_finished
+		await anim.play_enemy_hit()
 
-	display_text("%s dealt %d damage!" % [member.name, dmg])
-	await self.textbox_closed
+	await ui.say("%s dealt %d damage!" % [team.members[i].name, dmg])
 
-	if current_enemy_health == 0:
-		display_text("%s was defeated!" % enemy.name)
-		$AnimationPlayer.play("enemy_died")
-		await $AnimationPlayer.animation_finished
+	if enemy_hp == 0:
+		ui.show_text("%s was defeated!" % enemy.name)
+		await anim.play_enemy_death()
 		await get_tree().create_timer(.25).timeout
 		get_tree().quit()
 
-func _do_heal(healer, move):
-	# Heal the living ally with the lowest HP ratio
-	var target = healer
-	for m in party:
-		if m.hp > 0 and float(m.hp) / m.max_hp < float(target.hp) / target.max_hp:
-			target = m
-	var before = target.hp
-	target.hp = min(target.max_hp, target.hp + move.amount)
-	set_health(_bar(target), target.hp, target.max_hp)
-	update_party_sprite(target)
-	update_health_bar_color()
-	if target.node == "Hero":
-		State.current_health = target.hp
-		HealingNumbers.display_number(move.amount, healing_numbers_origin_hero.global_position)
-	if target.node == "Ally1":
-		HealingNumbers.display_number(move.amount, healing_numbers_origin_ally1.global_position)
-	if target.node == "Ally2":
-		HealingNumbers.display_number(move.amount, healing_numbers_origin_ally2.global_position)
-		
-	display_text("%s recovered %d HP!" % [target.name, target.hp - before])
-	await self.textbox_closed
+func _do_heal(healer: int, move: MoveData):
+	var result := team.heal_lowest(healer, move.heal_amount)   # emits health_changed -> UI updates
+	ui.show_heal_number(result.index, move.heal_amount)
+	await ui.say("%s recovered %d HP!" % [team.members[result.index].name, result.healed])
 
+
+# --- Enemy turn --------------------------------------------------------------
 func enemy_turn():
-	# Pick target: taunter if any, otherwise a random living member
-	var idx = taunt_target
-	if idx == -1 or party[idx].hp <= 0:
-		var living = []
-		for i in party.size():
-			if party[i].hp > 0:
-				living.append(i)
-		idx = living.pick_random()
-	var target = party[idx]
+	var idx := team.pick_enemy_target()
+	var target := team.members[idx]
 
-	display_text("%s slices at %s OWCH!" % [enemy.name, target.name])
-	await self.textbox_closed
-	
-	await play_knife_attack(get_node(target.node))
+	await ui.say("%s slices at %s OWCH!" % [enemy.name, target.name])
+	await anim.play_knife_attack(party_nodes[idx])
 
-	if target.guarding:
-		$AnimationPlayer.play("mini_shake")
-		await $AnimationPlayer.animation_finished
-		display_text("%s defended successfully!" % target.name)
-		await self.textbox_closed
+	if team.is_guarding(idx):
+		await anim.play_mini_shake()
+		await ui.say("%s defended successfully!" % target.name)
 	else:
-		# Impact: HP drops and the screen shakes immediately
-		target.hp = max(0, target.hp - enemy.damage)
-		set_health(_bar(target), target.hp, target.max_hp)
-		update_party_sprite(target)
-		update_health_bar_color()
-		if target.node == "Hero":
-			State.current_health = target.hp
-			DamageNumbers.display_number(enemy.damage, damage_numbers_origin_hero.global_position)
-		if target.node == "Ally1":
-			DamageNumbers.display_number(enemy.damage, damage_numbers_origin_ally1.global_position)
-		if target.node == "Ally2":
-			DamageNumbers.display_number(enemy.damage, damage_numbers_origin_ally2.global_position)
-		$AnimationPlayer.play("shake")
-		await $AnimationPlayer.animation_finished
+		# Impact: HP drops and the screen shakes immediately, then the text
+		team.damage_member(idx, enemy.damage)
+		ui.show_party_damage_number(idx, enemy.damage)
+		await anim.play_shake()
+		await ui.say("%s dealt %d damage to %s!" % [enemy.name, enemy.damage, target.name])
 
-		# Then the text
-		display_text("%s dealt %d damage to %s!" % [enemy.name, enemy.damage, target.name])
-		await self.textbox_closed
+		if not team.is_alive(idx):
+			await anim.play_party_death(party_nodes[idx])
+			await ui.say("%s was knocked out!" % target.name)
 
-		if target.hp == 0:
-			await play_party_death(target)
-			display_text("%s was knocked out!" % target.name)
-			await self.textbox_closed
-
-	# Reset per-round effects
-	for m in party:
-		m.guarding = false
-		for mv in m.moves:
-			if mv.cd_left > 0:
-				mv.cd_left -= 1
-
+	team.end_round()
 	start_player_turn()
 
-func play_party_death(member):
-	var node = get_node(member.node)
-	var bar_box = get_node(member.node + "/VBoxContainerH")
-	var tween = create_tween().set_parallel(true)
-	tween.tween_property(node, "self_modulate:a", 0.0, 0.5)
-	tween.tween_property(bar_box, "modulate:a", 0.0, 0.5)
-	await tween.finished
-	bar_box.hide()
-	
 func _party_wiped():
-	display_text("Your party was defeated...")
-	await self.textbox_closed
+	await ui.say("Your party was defeated...")
 	get_tree().quit()

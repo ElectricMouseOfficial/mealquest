@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MoveData" format=3 uid="uid://bj0eikt6yu68a"]
+
+[ext_resource type="Texture2D" uid="uid://b3yov3dtm4w6l" path="res://UI_Move_Buttons/Red_Button.png" id="1_io05t"]
+[ext_resource type="Script" uid="uid://cs3vmvvucvnlu" path="res://Separated Scenes/move_data.gd" id="1_n8jvw"]
+
+[resource]
+script = ExtResource("1_n8jvw")
+name = "Roll"
+icon = ExtResource("1_io05t")
+text = "You roll your juicy body!"

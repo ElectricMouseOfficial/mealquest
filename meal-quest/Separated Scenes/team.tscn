@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dpip1o8x0w4tb"]
+
+[ext_resource type="Script" uid="uid://dufehktefyefp" path="res://Separated Scenes/team_manager.gd" id="1_k05yy"]
+[ext_resource type="Script" uid="uid://b5jenne8whshv" path="res://Separated Scenes/party_member_data.gd" id="2_ffi11"]
+[ext_resource type="Resource" uid="uid://dl50ge4yfl7sl" path="res://Separated Scenes/data/party/tomato.tres" id="3_an7vn"]
+[ext_resource type="Resource" uid="uid://bppxrnwm0j6ut" path="res://Separated Scenes/data/party/steak.tres" id="4_ihr2q"]
+[ext_resource type="Resource" uid="uid://bigdt071l75ft" path="res://Separated Scenes/data/party/soup.tres" id="5_08jp7"]
+
+[node name="Team" type="Node" unique_id=1447434418]
+script = ExtResource("1_k05yy")
+members = Array[ExtResource("2_ffi11")]([ExtResource("3_an7vn"), ExtResource("4_ihr2q"), ExtResource("5_08jp7")])

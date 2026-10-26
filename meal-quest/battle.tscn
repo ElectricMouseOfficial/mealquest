@@ -4,28 +4,11 @@
 [ext_resource type="Resource" uid="uid://bufjyg3lx8fk8" path="res://Knife.tres" id="2_6t8i5"]
 [ext_resource type="Texture2D" uid="uid://chbsb2380rp0f" path="res://Fridge Proto.png" id="2_i431l"]
 [ext_resource type="Texture2D" uid="uid://cdisyg38pjhdl" path="res://Knife Proto.png" id="2_oxp8w"]
-[ext_resource type="Texture2D" uid="uid://cr7fjovskjl32" path="res://Animation_VFX_Import/Tomato Roll1 Proto.png" id="3_4s0ev"]
-[ext_resource type="Texture2D" uid="uid://k8j1bb7iq6di" path="res://Animation_VFX_Import/Tomato Roll2 Proto.png" id="4_pihy1"]
-[ext_resource type="Texture2D" uid="uid://j8c7abjxof0q" path="res://Animation_VFX_Import/Tomato Roll3 Proto.png" id="5_slotg"]
-[ext_resource type="Texture2D" uid="uid://dmmfia8f0sv3r" path="res://Animation_VFX_Import/Tomato Roll4 Proto.png" id="6_ix8ov"]
-[ext_resource type="Texture2D" uid="uid://fe8674ih6rgc" path="res://Animation_VFX_Import/Tomato Roll5 Proto.png" id="7_bx4lf"]
-[ext_resource type="Texture2D" uid="uid://djwojc6i28xof" path="res://Animation_VFX_Import/Tomato Roll6 Proto.png" id="8_22sa7"]
-[ext_resource type="Texture2D" uid="uid://dyjn0j7egkp2a" path="res://Animation_VFX_Import/Tomato Roll7 Proto.png" id="9_aacmo"]
-[ext_resource type="Texture2D" uid="uid://swvd0dcfq4o6" path="res://Animation_VFX_Import/Tomato Roll8 Proto.png" id="10_rggsl"]
-[ext_resource type="Texture2D" uid="uid://dm4trbgj4qry4" path="res://Animation_VFX_Import/Tomato Roll9 Proto.png" id="11_fljlq"]
-[ext_resource type="Texture2D" uid="uid://g8ia4n0xqy0f" path="res://Animation_VFX_Import/Tomato Splat VFX Proto.png" id="12_s5g7e"]
-[ext_resource type="Texture2D" uid="uid://ds2wbtcwdc7xm" path="res://Animation_VFX_Import/Knife Slash Proto.png" id="13_pihy1"]
-[ext_resource type="Texture2D" uid="uid://cdvsm2ju7csa8" path="res://Damaged Tomato PNG.png" id="14_rggsl"]
-[ext_resource type="Texture2D" uid="uid://bbfeuik7gs8ro" path="res://Damaged T-Bone PNG.png" id="15_fljlq"]
+[ext_resource type="PackedScene" uid="uid://dpip1o8x0w4tb" path="res://Separated Scenes/team.tscn" id="7_lcjiy"]
+[ext_resource type="PackedScene" uid="uid://ql45mgnqerka" path="res://Separated Scenes/animations.tscn" id="8_ol6im"]
+[ext_resource type="PackedScene" uid="uid://dqk3fx56k06cl" path="res://Separated Scenes/ui.tscn" id="9_b1i6x"]
 [ext_resource type="Texture2D" uid="uid://6mac3ugfq8ga" path="res://Bowl PNG.png" id="16_ix8ov"]
-[ext_resource type="Texture2D" uid="uid://cn8le28qs05wy" path="res://Damaged Bowl PNG.png" id="16_s5g7e"]
 [ext_resource type="Texture2D" uid="uid://btcdt2b5hibk1" path="res://T-Bone PNG.png" id="17_bx4lf"]
-[ext_resource type="Texture2D" uid="uid://cpwxosk4c8bfw" path="res://Damaged Knife PNG.png" id="17_j128n"]
-[ext_resource type="Texture2D" uid="uid://b3yov3dtm4w6l" path="res://UI_Move_Buttons/Red_Button.png" id="18_in21c"]
-[ext_resource type="Texture2D" uid="uid://bqlvrsaw46eyd" path="res://UI_Move_Buttons/Orange_Button.png" id="18_v7t3w"]
-[ext_resource type="Texture2D" uid="uid://cejfrq03vtu1s" path="res://UI_Move_Buttons/Purple_Button.png" id="20_uwl2g"]
-[ext_resource type="Texture2D" uid="uid://22behd4q231s" path="res://UI_Move_Buttons/Green_Button.png" id="21_5kmqj"]
-[ext_resource type="Texture2D" uid="uid://d1mi7b80x7saq" path="res://UI_Move_Buttons/Yellow_Button.png" id="22_lfmjp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8lcdg"]
 bg_color = Color(1, 1, 1, 1)
@@ -168,21 +151,6 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ip7xm")
 enemy = ExtResource("2_6t8i5")
-tomato_frames = Array[Texture2D]([ExtResource("3_4s0ev"), ExtResource("4_pihy1"), ExtResource("5_slotg"), ExtResource("6_ix8ov"), ExtResource("7_bx4lf"), ExtResource("8_22sa7"), ExtResource("9_aacmo"), ExtResource("10_rggsl"), ExtResource("11_fljlq"), ExtResource("12_s5g7e")])
-knife_frames = Array[Texture2D]([ExtResource("13_pihy1")])
-knife_frame_time = 0.5
-knife_scale = 0.3
-hero_damaged_tex = ExtResource("14_rggsl")
-ally1_damaged_tex = ExtResource("15_fljlq")
-ally2_damaged_tex = ExtResource("16_s5g7e")
-enemy_damaged_tex = ExtResource("17_j128n")
-hero_move_icons = Array[Texture2D]([ExtResource("18_in21c"), ExtResource("18_in21c")])
-ally1_move_icons = Array[Texture2D]([ExtResource("20_uwl2g"), ExtResource("20_uwl2g"), ExtResource("20_uwl2g")])
-ally2_move_icons = Array[Texture2D]([ExtResource("18_v7t3w"), ExtResource("21_5kmqj"), ExtResource("22_lfmjp")])
-move_icon_size = Vector2(130, 130)
-hero_move_cooldowns = Array[int]([0, 1])
-ally1_move_cooldowns = Array[int]([0, 1, 1])
-ally2_move_cooldowns = Array[int]([0, 4, 2])
 
 [node name="Background" type="TextureRect" parent="." unique_id=803507479]
 layout_mode = 0
@@ -474,6 +442,13 @@ libraries/ = SubResource("AnimationLibrary_0npn6")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=9632254]
 anchor_mode = 0
+
+[node name="Team" parent="." unique_id=1447434418 instance=ExtResource("7_lcjiy")]
+
+[node name="Animations" parent="." unique_id=1683575310 instance=ExtResource("8_ol6im")]
+
+[node name="UI" parent="." unique_id=872549265 instance=ExtResource("9_b1i6x")]
+layout_mode = 1
 
 [connection signal="pressed" from="ActionsPanel/Actions/Button" to="." method="_on_Attack_pressed"]
 [connection signal="pressed" from="ActionsPanel/Actions/Button2" to="." method="_on_Defend_pressed"]

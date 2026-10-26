@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="MoveData" format=3 uid="uid://bwr3noddn6bfk"]
+
+[ext_resource type="Script" uid="uid://cs3vmvvucvnlu" path="res://Separated Scenes/move_data.gd" id="1_0j04o"]
+[ext_resource type="Texture2D" uid="uid://bqlvrsaw46eyd" path="res://UI_Move_Buttons/Orange_Button.png" id="1_ekcgp"]
+
+[resource]
+script = ExtResource("1_0j04o")
+name = "Broil"
+icon = ExtResource("1_ekcgp")
+text = "A scalding liquid burns the enemies! I wouldn't want to be them!"

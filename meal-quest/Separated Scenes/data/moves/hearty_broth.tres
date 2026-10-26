@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="MoveData" format=3 uid="uid://dfd8uacdrxpm8"]
+
+[ext_resource type="Script" uid="uid://cs3vmvvucvnlu" path="res://Separated Scenes/move_data.gd" id="1_gremv"]
+[ext_resource type="Texture2D" uid="uid://22behd4q231s" path="res://UI_Move_Buttons/Green_Button.png" id="1_n782l"]
+
+[resource]
+script = ExtResource("1_gremv")
+name = "Hearty Broth"
+kind = "heal"
+heal_amount = 15
+icon = ExtResource("1_n782l")
+text = "A hearty broth heals your party! You bet I'm hungry now!"

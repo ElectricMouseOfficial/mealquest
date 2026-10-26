@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://ql45mgnqerka"]
+
+[ext_resource type="Script" uid="uid://ct01p67px5kf7" path="res://Separated Scenes/battle_animations.gd" id="1_fjodn"]
+[ext_resource type="Texture2D" uid="uid://cr7fjovskjl32" path="res://Animation_VFX_Import/Tomato Roll1 Proto.png" id="2_qho6j"]
+[ext_resource type="Texture2D" uid="uid://k8j1bb7iq6di" path="res://Animation_VFX_Import/Tomato Roll2 Proto.png" id="3_qaicb"]
+[ext_resource type="Texture2D" uid="uid://j8c7abjxof0q" path="res://Animation_VFX_Import/Tomato Roll3 Proto.png" id="4_gu2pf"]
+[ext_resource type="Texture2D" uid="uid://dmmfia8f0sv3r" path="res://Animation_VFX_Import/Tomato Roll4 Proto.png" id="5_1of8g"]
+[ext_resource type="Texture2D" uid="uid://fe8674ih6rgc" path="res://Animation_VFX_Import/Tomato Roll5 Proto.png" id="6_0qcrl"]
+[ext_resource type="Texture2D" uid="uid://djwojc6i28xof" path="res://Animation_VFX_Import/Tomato Roll6 Proto.png" id="7_xhmdb"]
+[ext_resource type="Texture2D" uid="uid://dyjn0j7egkp2a" path="res://Animation_VFX_Import/Tomato Roll7 Proto.png" id="8_s0vl6"]
+[ext_resource type="Texture2D" uid="uid://swvd0dcfq4o6" path="res://Animation_VFX_Import/Tomato Roll8 Proto.png" id="9_aht8c"]
+[ext_resource type="Texture2D" uid="uid://dm4trbgj4qry4" path="res://Animation_VFX_Import/Tomato Roll9 Proto.png" id="10_bn2q6"]
+[ext_resource type="Texture2D" uid="uid://g8ia4n0xqy0f" path="res://Animation_VFX_Import/Tomato Splat VFX Proto.png" id="11_ifrdp"]
+[ext_resource type="Texture2D" uid="uid://ds2wbtcwdc7xm" path="res://Animation_VFX_Import/Knife Slash Proto.png" id="12_ojchn"]
+
+[node name="Animations" type="Node" unique_id=1683575310]
+script = ExtResource("1_fjodn")
+tomato_frames = Array[Texture2D]([ExtResource("2_qho6j"), ExtResource("3_qaicb"), ExtResource("4_gu2pf"), ExtResource("5_1of8g"), ExtResource("6_0qcrl"), ExtResource("7_xhmdb"), ExtResource("8_s0vl6"), ExtResource("9_aht8c"), ExtResource("10_bn2q6"), ExtResource("11_ifrdp")])
+knife_frames = Array[Texture2D]([ExtResource("12_ojchn")])
