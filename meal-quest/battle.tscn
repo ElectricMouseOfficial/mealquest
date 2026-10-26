@@ -448,6 +448,7 @@ anchor_mode = 0
 [node name="Animations" parent="." unique_id=1683575310 instance=ExtResource("8_ol6im")]
 
 [node name="UI" parent="." unique_id=872549265 instance=ExtResource("9_b1i6x")]
+visible = true
 layout_mode = 1
 
 [connection signal="pressed" from="ActionsPanel/Actions/Button" to="." method="_on_Attack_pressed"]
