@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="PartyMemberData" format=3 uid="uid://bppxrnwm0j6ut"]
+
+[ext_resource type="Texture2D" uid="uid://bbfeuik7gs8ro" path="res://Damaged T-Bone PNG.png" id="1_boyur"]
+[ext_resource type="Script" uid="uid://cs3vmvvucvnlu" path="res://Separated Scenes/move_data.gd" id="1_le014"]
+[ext_resource type="Script" uid="uid://b5jenne8whshv" path="res://Separated Scenes/party_member_data.gd" id="2_boyur"]
+[ext_resource type="Resource" uid="uid://dvs00ddgjombt" path="res://Separated Scenes/data/moves/meat_mash.tres" id="3_7giux"]
+[ext_resource type="Resource" uid="uid://dxrsfemsinvip" path="res://Separated Scenes/data/moves/taunt.tres" id="4_5uu0t"]
+[ext_resource type="Resource" uid="uid://ctselgqjwpur0" path="res://Separated Scenes/data/moves/harden.tres" id="5_dc82x"]
+
+[resource]
+script = ExtResource("2_boyur")
+name = "Steak"
+scene_node = "Ally1"
+max_hp = 40
+damage = 6
+damaged_tex = ExtResource("1_boyur")
+moves = Array[ExtResource("1_le014")]([ExtResource("3_7giux"), ExtResource("4_5uu0t"), ExtResource("5_dc82x")])
