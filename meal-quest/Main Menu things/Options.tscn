@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dphce4pu8uw0b"]
 
-[ext_resource type="Texture2D" uid="uid://ckdqwtu4ku85y" path="res://arrow_r1_c2 (1).png" id="1_r314q"]
+[ext_resource type="Script" uid="uid://beg0mjlstgkye" path="res://Main Menu things/options.gd" id="1_da6f1"]
+[ext_resource type="Texture2D" uid="uid://ckdqwtu4ku85y" path="res://Main Menu things/arrow_r1_c2 (1).png" id="1_r314q"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yia4p"]
 bg_color = Color(0, 0, 0, 1)
@@ -16,6 +17,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_da6f1")
 
 [node name="Label" type="Label" parent="." unique_id=1690047263]
 layout_mode = 1
@@ -44,16 +46,17 @@ offset_bottom = 631.0
 
 [node name="BackButton" type="Button" parent="." unique_id=1947898659]
 layout_mode = 0
-offset_left = 60.0
-offset_top = 36.0
-offset_right = 229.0
-offset_bottom = 101.0
+offset_left = 71.0
+offset_top = 47.0
+offset_right = 141.0
+offset_bottom = 112.0
 theme_override_constants/outline_size = 0
 theme_override_constants/h_separation = 0
 theme_override_constants/icon_max_width = 60
 theme_override_font_sizes/font_size = 39
 theme_override_icons/icon = ExtResource("1_r314q")
 theme_override_styles/normal = SubResource("StyleBoxFlat_yia4p")
-text = "Back"
 icon = ExtResource("1_r314q")
 alignment = 0
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

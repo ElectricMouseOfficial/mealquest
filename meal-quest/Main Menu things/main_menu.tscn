@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bq5h1mue44ggh"]
 
-[ext_resource type="Script" uid="uid://difhkyns328dm" path="res://main_menu.gd" id="1_06t4h"]
+[ext_resource type="Script" uid="uid://difhkyns328dm" path="res://Main Menu things/main_menu.gd" id="1_06t4h"]
 [ext_resource type="Script" uid="uid://1baq1opywugf" path="res://progress_bar.gd" id="2_7vrkn"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_nsyf1"]
