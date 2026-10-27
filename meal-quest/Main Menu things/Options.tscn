@@ -5,10 +5,36 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yia4p"]
 bg_color = Color(0, 0, 0, 1)
-border_width_left = 1
+border_width_left = 2
 border_width_top = 2
 border_width_right = 2
-border_width_bottom = 1
+border_width_bottom = 2
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_da6f1"]
+bg_color = Color(0.043137256, 0.043137256, 0.043137256, 0.09411765)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yn33y"]
+bg_color = Color(0.043137256, 0.043137256, 0.043137256, 0.5176471)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
 
 [node name="Options" type="Control" unique_id=573299278]
 layout_mode = 3
@@ -45,18 +71,22 @@ offset_right = 1096.0
 offset_bottom = 631.0
 
 [node name="BackButton" type="Button" parent="." unique_id=1947898659]
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 0
-offset_left = 71.0
-offset_top = 47.0
-offset_right = 141.0
-offset_bottom = 112.0
+offset_left = 70.0
+offset_top = 45.0
+offset_right = 150.0
+offset_bottom = 125.0
 theme_override_constants/outline_size = 0
 theme_override_constants/h_separation = 0
 theme_override_constants/icon_max_width = 60
 theme_override_font_sizes/font_size = 39
 theme_override_icons/icon = ExtResource("1_r314q")
 theme_override_styles/normal = SubResource("StyleBoxFlat_yia4p")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_da6f1")
+theme_override_styles/hover = SubResource("StyleBoxFlat_yn33y")
 icon = ExtResource("1_r314q")
 alignment = 0
+icon_alignment = 1
 
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
