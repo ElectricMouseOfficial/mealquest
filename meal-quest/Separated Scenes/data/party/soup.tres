@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="PartyMemberData" format=3 uid="uid://bigdt071l75ft"]
+
+[ext_resource type="Script" uid="uid://cs3vmvvucvnlu" path="res://Separated Scenes/move_data.gd" id="1_b0p7m"]
+[ext_resource type="Texture2D" uid="uid://cn8le28qs05wy" path="res://Damaged Bowl PNG.png" id="1_hjhst"]
+[ext_resource type="Script" uid="uid://b5jenne8whshv" path="res://Separated Scenes/party_member_data.gd" id="2_hjhst"]
+[ext_resource type="Resource" uid="uid://bwr3noddn6bfk" path="res://Separated Scenes/data/moves/broil.tres" id="3_gn6l2"]
+[ext_resource type="Resource" uid="uid://dfd8uacdrxpm8" path="res://Separated Scenes/data/moves/hearty_broth.tres" id="4_qf5xy"]
+[ext_resource type="Resource" uid="uid://bx3hsm10ia80d" path="res://Separated Scenes/data/moves/dinner_call.tres" id="5_g1vq5"]
+
+[resource]
+script = ExtResource("2_hjhst")
+name = "Soup"
+scene_node = "Ally2"
+max_hp = 25
+damage = 4
+damaged_tex = ExtResource("1_hjhst")
+moves = Array[ExtResource("1_b0p7m")]([ExtResource("3_gn6l2"), ExtResource("4_qf5xy"), ExtResource("5_g1vq5")])

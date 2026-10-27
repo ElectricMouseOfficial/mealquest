@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="PartyMemberData" format=3 uid="uid://dl50ge4yfl7sl"]
+
+[ext_resource type="Script" uid="uid://cs3vmvvucvnlu" path="res://Separated Scenes/move_data.gd" id="1_an6dk"]
+[ext_resource type="Texture2D" uid="uid://cdvsm2ju7csa8" path="res://Damaged Tomato PNG.png" id="1_oh8eo"]
+[ext_resource type="Script" uid="uid://b5jenne8whshv" path="res://Separated Scenes/party_member_data.gd" id="2_oh8eo"]
+[ext_resource type="Resource" uid="uid://bj0eikt6yu68a" path="res://Separated Scenes/data/moves/roll.tres" id="3_nic0c"]
+[ext_resource type="Resource" uid="uid://d1ypden1o1wr5" path="res://Separated Scenes/data/moves/defend.tres" id="4_tytok"]
+
+[resource]
+script = ExtResource("2_oh8eo")
+name = "Tomato"
+scene_node = "Hero"
+use_global_state = true
+damaged_tex = ExtResource("1_oh8eo")
+moves = Array[ExtResource("1_an6dk")]([ExtResource("3_nic0c"), ExtResource("4_tytok")])
