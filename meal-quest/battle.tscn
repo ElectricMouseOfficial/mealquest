@@ -446,6 +446,8 @@ anchor_mode = 0
 [node name="Team" parent="." unique_id=1447434418 instance=ExtResource("7_lcjiy")]
 
 [node name="Animations" parent="." unique_id=1683575310 instance=ExtResource("8_ol6im")]
+knife_frame_time = 0.6
+knife_scale = 0.34
 
 [node name="UI" parent="." unique_id=872549265 instance=ExtResource("9_b1i6x")]
 visible = true
