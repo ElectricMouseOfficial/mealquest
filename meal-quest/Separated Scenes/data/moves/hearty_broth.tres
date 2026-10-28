@@ -8,5 +8,6 @@ script = ExtResource("1_gremv")
 name = "Hearty Broth"
 kind = "heal"
 heal_amount = 15
+cooldown = 3
 icon = ExtResource("1_n782l")
 text = "A hearty broth heals your party! You bet I'm hungry now!"

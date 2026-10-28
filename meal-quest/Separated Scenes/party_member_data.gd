@@ -8,4 +8,5 @@ extends Resource
 @export var damage := 5
 @export var use_global_state := false   # true = hp / max_hp / damage come from the State autoload (Tomato)
 @export var damaged_tex: Texture2D      # sprite shown below half HP
+@export var death_frames: Array[Texture2D] = []   # optional death animation; the last frame is held, then it fades
 @export var moves: Array[MoveData] = []

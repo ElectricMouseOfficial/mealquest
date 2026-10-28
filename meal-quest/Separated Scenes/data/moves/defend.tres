@@ -7,5 +7,6 @@
 script = ExtResource("1_yt4wv")
 name = "Defend"
 kind = "defend"
+cooldown = 2
 icon = ExtResource("1_7c3tn")
 text = "Your fine stem hairs tense!"

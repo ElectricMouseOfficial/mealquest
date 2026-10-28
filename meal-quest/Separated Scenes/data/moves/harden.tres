@@ -7,5 +7,6 @@
 script = ExtResource("1_p2nbn")
 name = "Harden"
 kind = "defend"
+cooldown = 2
 icon = ExtResource("1_2wdst")
 text = "Steak tenses its muscle fibers for an attack!"

@@ -7,5 +7,6 @@
 script = ExtResource("1_wuc02")
 name = "Taunt"
 kind = "taunt"
+cooldown = 1
 icon = ExtResource("1_m41ia")
 text = "The steak shows off its tantilizing marble!"

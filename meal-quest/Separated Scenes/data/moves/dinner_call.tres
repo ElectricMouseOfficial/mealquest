@@ -7,5 +7,6 @@
 script = ExtResource("1_ffkdy")
 name = "Dinner Call"
 kind = "rally"
+cooldown = 2
 icon = ExtResource("1_5gv2t")
 text = "A nice meal makes your party feel fired up!"
