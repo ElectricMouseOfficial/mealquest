@@ -6,16 +6,19 @@ extends Control
 
 @export var enemy: Resource
 
+
 @onready var team: TeamManager = $Team
 @onready var anim: BattleAnimations = $Animations
 @onready var ui: BattleUI = $UI
 @onready var enemy_sprite: TextureRect = $Enemy
 
+
+
 var party_nodes: Array[TextureRect] = []
 var enemy_hp := 0
 var active_index := 0     # party index of whoever is acting
 var turn_pos := 0         # position within team.turn_order
-
+ 
 
 func _ready():
 	team.setup()
@@ -77,10 +80,16 @@ func _on_move_chosen(move_index: int):
 
 
 # --- Player moves ------------------------------------------------------------
+# --- Player moves ------------------------------------------------------------
 func _apply_enemy_damage(dmg: int):
 	enemy_hp = maxi(0, enemy_hp - dmg)
 	ui.set_enemy_health(enemy_hp, enemy.health)
 	ui.show_enemy_damage_number(dmg)
+	
+	# Automatically finds the Spectators node inside Background folder
+	var bg_manager = get_node_or_null("Background/Spectators")
+	if bg_manager and bg_manager.has_method("trigger_damage_reaction"):
+		bg_manager.trigger_damage_reaction()
 
 func _do_attack(i: int, move: MoveData):
 	var dmg := team.attack_damage(i, move)

@@ -4,8 +4,14 @@
 [ext_resource type="Resource" uid="uid://bufjyg3lx8fk8" path="res://Knife.tres" id="2_6t8i5"]
 [ext_resource type="Texture2D" uid="uid://chbsb2380rp0f" path="res://Fridge Proto.png" id="2_i431l"]
 [ext_resource type="Texture2D" uid="uid://cdisyg38pjhdl" path="res://Knife Proto.png" id="2_oxp8w"]
+[ext_resource type="Script" uid="uid://bv6fbscvgpl8d" path="res://spectators.gd" id="4_pihy1"]
+[ext_resource type="Texture2D" uid="uid://24lx6lrkedc1" path="res://Background Group.png" id="5_slotg"]
+[ext_resource type="Texture2D" uid="uid://v5kvim6m84ir" path="res://Background Egg PNG.png" id="6_ix8ov"]
+[ext_resource type="Texture2D" uid="uid://bogg3cqh676oj" path="res://Background Carrot.png" id="7_bx4lf"]
 [ext_resource type="PackedScene" uid="uid://dpip1o8x0w4tb" path="res://Separated Scenes/team.tscn" id="7_lcjiy"]
+[ext_resource type="Texture2D" uid="uid://e5n85fni0vjv" path="res://Background Brocolli PNG.png" id="8_22sa7"]
 [ext_resource type="PackedScene" uid="uid://ql45mgnqerka" path="res://Separated Scenes/animations.tscn" id="8_ol6im"]
+[ext_resource type="Texture2D" uid="uid://coq0fulkhm2w7" path="res://Background Apple.png" id="9_aacmo"]
 [ext_resource type="PackedScene" uid="uid://dqk3fx56k06cl" path="res://Separated Scenes/ui.tscn" id="9_b1i6x"]
 [ext_resource type="Texture2D" uid="uid://6mac3ugfq8ga" path="res://Bowl PNG.png" id="16_ix8ov"]
 [ext_resource type="Texture2D" uid="uid://btcdt2b5hibk1" path="res://T-Bone PNG.png" id="17_bx4lf"]
@@ -165,6 +171,109 @@ expand_mode = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="Spectators" type="FoldableContainer" parent="Background" unique_id=607183237]
+layout_mode = 0
+offset_left = -1.0
+offset_top = -10.0
+offset_right = 23.0
+offset_bottom = 22.0
+script = ExtResource("4_pihy1")
+
+[node name="BackgroundGroup" type="Sprite2D" parent="Background/Spectators" unique_id=646856166]
+position = Vector2(236.00012, 264)
+scale = Vector2(0.06603774, 0.06603774)
+texture = ExtResource("5_slotg")
+
+[node name="BackgroundEggPng" type="Sprite2D" parent="Background/Spectators" unique_id=127832062]
+position = Vector2(339, 274)
+scale = Vector2(0.078646064, 0.078646064)
+texture = ExtResource("6_ix8ov")
+
+[node name="BackgroundCarrot" type="Sprite2D" parent="Background/Spectators" unique_id=653921981]
+position = Vector2(374.00012, 261.00006)
+scale = Vector2(0.07424793, 0.074247934)
+texture = ExtResource("7_bx4lf")
+
+[node name="BackgroundEggPng2" type="Sprite2D" parent="Background/Spectators" unique_id=741247985]
+position = Vector2(411, 275)
+scale = Vector2(0.074472874, 0.0744729)
+texture = ExtResource("6_ix8ov")
+
+[node name="BackgroundBrocolliPng" type="Sprite2D" parent="Background/Spectators" unique_id=2043581553]
+position = Vector2(450, 265)
+scale = Vector2(0.08404533, 0.08404533)
+texture = ExtResource("8_22sa7")
+
+[node name="BackgroundApple" type="Sprite2D" parent="Background/Spectators" unique_id=108059993]
+position = Vector2(496, 274)
+scale = Vector2(0.056562502, 0.05656249)
+texture = ExtResource("9_aacmo")
+
+[node name="BackgroundEggPng3" type="Sprite2D" parent="Background/Spectators" unique_id=1240633719]
+position = Vector2(544, 274.00003)
+scale = Vector2(0.079525724, 0.079525724)
+texture = ExtResource("6_ix8ov")
+
+[node name="BackgroundBrocolliPng2" type="Sprite2D" parent="Background/Spectators" unique_id=1548040893]
+position = Vector2(586.00006, 268)
+scale = Vector2(0.07692308, 0.07692308)
+texture = ExtResource("8_22sa7")
+
+[node name="BackgroundCarrot2" type="Sprite2D" parent="Background/Spectators" unique_id=1500892206]
+position = Vector2(629.0001, 260.99997)
+scale = Vector2(0.06954892, 0.06954891)
+texture = ExtResource("7_bx4lf")
+
+[node name="BackgroundApple2" type="Sprite2D" parent="Background/Spectators" unique_id=330072257]
+position = Vector2(677, 267)
+scale = Vector2(0.07000002, 0.07000002)
+texture = ExtResource("9_aacmo")
+
+[node name="BackgroundEggPng4" type="Sprite2D" parent="Background/Spectators" unique_id=260937186]
+position = Vector2(768.00006, 276.99997)
+scale = Vector2(0.06876126, 0.06876127)
+texture = ExtResource("6_ix8ov")
+
+[node name="BackgroundBrocolliPng3" type="Sprite2D" parent="Background/Spectators" unique_id=788334150]
+position = Vector2(723, 255)
+scale = Vector2(0.10541312, 0.10541312)
+texture = ExtResource("8_22sa7")
+
+[node name="BackgroundApple3" type="Sprite2D" parent="Background/Spectators" unique_id=85831838]
+position = Vector2(131, 276)
+scale = Vector2(0.051562537, 0.051562533)
+texture = ExtResource("9_aacmo")
+
+[node name="BackgroundEggPng5" type="Sprite2D" parent="Background/Spectators" unique_id=358229609]
+position = Vector2(950, 273)
+scale = Vector2(0.06107202, 0.06107202)
+texture = ExtResource("6_ix8ov")
+
+[node name="BackgroundApple4" type="Sprite2D" parent="Background/Spectators" unique_id=876731428]
+position = Vector2(996.9999, 266.00006)
+scale = Vector2(0.067499995, 0.0675)
+texture = ExtResource("9_aacmo")
+
+[node name="BackgroundBrocolliPng4" type="Sprite2D" parent="Background/Spectators" unique_id=992096774]
+position = Vector2(1049, 253.00003)
+scale = Vector2(0.097578235, 0.097578235)
+texture = ExtResource("8_22sa7")
+
+[node name="BackgroundApple5" type="Sprite2D" parent="Background/Spectators" unique_id=1791764458]
+position = Vector2(820, 269)
+scale = Vector2(0.07750013, 0.07750012)
+texture = ExtResource("9_aacmo")
+
+[node name="BackgroundCarrot3" type="Sprite2D" parent="Background/Spectators" unique_id=411217839]
+position = Vector2(869, 257)
+scale = Vector2(0.078947514, 0.07894751)
+texture = ExtResource("7_bx4lf")
+
+[node name="BackgroundBrocolliPng5" type="Sprite2D" parent="Background/Spectators" unique_id=1689831340]
+position = Vector2(907, 268)
+scale = Vector2(0.061965853, 0.06196586)
+texture = ExtResource("8_22sa7")
 
 [node name="Enemy" type="TextureRect" parent="." unique_id=131894994]
 layout_mode = 0
