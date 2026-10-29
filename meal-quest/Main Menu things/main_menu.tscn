@@ -1,16 +1,18 @@
 [gd_scene format=3 uid="uid://bq5h1mue44ggh"]
 
 [ext_resource type="Script" uid="uid://difhkyns328dm" path="res://Main Menu things/main_menu.gd" id="1_06t4h"]
-[ext_resource type="Script" uid="uid://1baq1opywugf" path="res://progress_bar.gd" id="2_7vrkn"]
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_nsyf1"]
+[ext_resource type="Texture2D" uid="uid://c226x5832hpdf" path="res://Tomato Proto.png" id="2_2yr3r"]
+[ext_resource type="Texture2D" uid="uid://dq1fb7fes2n8v" path="res://Main Menu things/wood full image.jpg" id="2_uv4t6"]
+[ext_resource type="Texture2D" uid="uid://btcdt2b5hibk1" path="res://T-Bone PNG.png" id="3_siksr"]
+[ext_resource type="Texture2D" uid="uid://cdisyg38pjhdl" path="res://Knife Proto.png" id="5_5iu3d"]
+[ext_resource type="Texture2D" uid="uid://itrcdefrn3up" path="res://Main Menu things/lightning bolt_r1_c1 (1).png" id="7_5iu3d"]
+[ext_resource type="Texture2D" uid="uid://cn8le28qs05wy" path="res://Damaged Bowl PNG.png" id="7_uv4t6"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n2lyd"]
-texture = SubResource("PlaceholderTexture2D_nsyf1")
-modulate_color = Color(0.62152386, 0.62152386, 0.6215238, 1)
+texture = ExtResource("2_uv4t6")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rhts7"]
-bg_color = Color(1, 1, 1, 1)
+bg_color = Color(0.7137255, 1, 0.5803922, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
@@ -18,7 +20,7 @@ corner_radius_bottom_left = 16
 shadow_size = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_06t4h"]
-bg_color = Color(0.37036446, 0.3703645, 0.37036446, 1)
+bg_color = Color(0.25218385, 0.4200541, 0.18710381, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
@@ -26,7 +28,7 @@ corner_radius_bottom_left = 16
 shadow_size = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7vrkn"]
-bg_color = Color(0.7708395, 0.77083945, 0.77083945, 1)
+bg_color = Color(0.93738973, 0.9999998, 0.93758786, 1)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
@@ -34,11 +36,6 @@ corner_radius_bottom_left = 16
 shadow_size = 5
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fu7sn"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n2lyd"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yc4dm"]
-bg_color = Color(0.3883625, 0.7010227, 0, 1)
 
 [node name="MainMenu" type="Control" unique_id=1031210757]
 layout_mode = 3
@@ -59,27 +56,28 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_n2lyd")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=2058776690]
+z_index = 1
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -173.5
-offset_top = -123.5
-offset_right = 173.5
-offset_bottom = 123.5
+offset_left = -127.45001
+offset_top = -150.0
+offset_right = 100.048584
+offset_bottom = 220.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 50
 
 [node name="Button" type="Button" parent="VBoxContainer" unique_id=1700636474]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
-theme_override_colors/font_focus_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
-theme_override_colors/font_pressed_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
-theme_override_colors/font_hover_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 40
 theme_override_styles/normal = SubResource("StyleBoxFlat_rhts7")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_06t4h")
@@ -90,10 +88,14 @@ text = "Start"
 [node name="Button2" type="Button" parent="VBoxContainer" unique_id=275744741]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.23366272, 0.62285465, 0.35269478, 1)
-theme_override_colors/font_focus_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
-theme_override_colors/font_pressed_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
-theme_override_colors/font_hover_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_normal_color = Color(0.7137255, 1, 0.5803922, 1)
+theme_override_colors/icon_focus_color = Color(0.7137255, 1, 0.5803922, 1)
+theme_override_colors/icon_pressed_color = Color(0.7137255, 1, 0.5803922, 1)
+theme_override_colors/icon_hover_color = Color(0.7137255, 1, 0.5803922, 1)
 theme_override_font_sizes/font_size = 40
 theme_override_styles/normal = SubResource("StyleBoxFlat_rhts7")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_06t4h")
@@ -104,10 +106,10 @@ text = "Options"
 [node name="Button3" type="Button" parent="VBoxContainer" unique_id=1794586401]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.23366272, 0.62285465, 0.35269478, 1)
-theme_override_colors/font_focus_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
-theme_override_colors/font_pressed_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
-theme_override_colors/font_hover_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 40
 theme_override_styles/normal = SubResource("StyleBoxFlat_rhts7")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_06t4h")
@@ -118,10 +120,10 @@ text = "Credits"
 [node name="Button4" type="Button" parent="VBoxContainer" unique_id=854490719]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.23366272, 0.62285465, 0.35269478, 1)
-theme_override_colors/font_focus_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
-theme_override_colors/font_pressed_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
-theme_override_colors/font_hover_color = Color(0.23529412, 0.62352943, 0.3529412, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 40
 theme_override_styles/normal = SubResource("StyleBoxFlat_rhts7")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_06t4h")
@@ -130,6 +132,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_fu7sn")
 text = "Quit"
 
 [node name="Label" type="Label" parent="." unique_id=208454098]
+z_index = 1
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -142,27 +145,87 @@ offset_right = 144.5
 offset_bottom = -177.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.34404734, 0.7260112, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 15
 theme_override_font_sizes/font_size = 75
 text = "Meal Quest"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=187376829]
-visible = false
+[node name="LightningBoltR1C1(1)" type="Sprite2D" parent="." unique_id=100090140]
+position = Vector2(556.0625, 324.24374)
+scale = Vector2(0.6414765, 0.64147645)
+texture = ExtResource("7_5iu3d")
 
-[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer" unique_id=1561640809]
-visible = false
-anchors_preset = 1
+[node name="TextureRect_Knife" type="TextureRect" parent="." unique_id=1549975455]
+custom_maximum_size = Vector2(300, 300)
+layout_mode = 1
+anchors_preset = 6
 anchor_left = 1.0
+anchor_top = 0.5
 anchor_right = 1.0
-offset_left = -185.0
-offset_bottom = 28.0
+anchor_bottom = 0.5
+offset_left = -497.0
+offset_top = 32.0
+offset_right = -197.0
+offset_bottom = 332.0
 grow_horizontal = 0
-theme_override_styles/background = SubResource("StyleBoxFlat_n2lyd")
-theme_override_styles/fill = SubResource("StyleBoxFlat_yc4dm")
-value = 75.0
-show_percentage = false
-script = ExtResource("2_7vrkn")
+grow_vertical = 2
+rotation = -0.61086524
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("5_5iu3d")
+
+[node name="TextureRect_Tomato" type="TextureRect" parent="." unique_id=1851343280]
+custom_maximum_size = Vector2(175, 175)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 234.99998
+offset_top = -206.0
+offset_right = 410.0
+offset_bottom = -31.0
+grow_vertical = 2
+rotation = 0.6981317
+size_flags_horizontal = 4
+size_flags_vertical = 4
+offset_transform_enabled = true
+texture = ExtResource("2_2yr3r")
+
+[node name="TextureRect_Tbone" type="TextureRect" parent="." unique_id=1137956667]
+custom_maximum_size = Vector2(200, 200)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 248.0
+offset_top = -33.0
+offset_right = 448.0
+offset_bottom = 167.0
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+offset_transform_enabled = true
+offset_transform_rotation = 0.34906584
+texture = ExtResource("3_siksr")
+
+[node name="TextureRect_Bowl" type="TextureRect" parent="." unique_id=2035215924]
+custom_maximum_size = Vector2(200, 125)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 101.0
+offset_top = 149.0
+offset_right = 301.0
+offset_bottom = 274.0
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+offset_transform_enabled = true
+texture = ExtResource("7_uv4t6")
 
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_options_button_pressed"]

@@ -20,7 +20,7 @@ func _on_options_button_pressed() -> void:
 
 
 func _on_credits_button_pressed() -> void:
-	print("credits")
+	get_tree().change_scene_to_file("res://Main Menu things/Credits.tscn")
 
 
 func _on_quit_button_pressed() -> void:

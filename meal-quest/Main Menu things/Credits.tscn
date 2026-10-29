@@ -1,0 +1,122 @@
+[gd_scene format=3 uid="uid://clqy57neth42g"]
+
+[ext_resource type="Script" uid="uid://cby0eqpfl00n4" path="res://Main Menu things/credits.gd" id="1_nf7y4"]
+[ext_resource type="Texture2D" uid="uid://ckdqwtu4ku85y" path="res://Main Menu things/arrow_r1_c2 (1).png" id="1_ywkq2"]
+[ext_resource type="Texture2D" uid="uid://dq1fb7fes2n8v" path="res://Main Menu things/wood full image.jpg" id="4_a0pe8"]
+[ext_resource type="Texture2D" uid="uid://c5mt3mr1vor55" path="res://Main Menu things/sparkle border.png" id="5_a0pe8"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kkpia"]
+texture = ExtResource("4_a0pe8")
+modulate_color = Color(0.6656405, 0.58087975, 0.25554702, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nf7y4"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xusd1"]
+bg_color = Color(0.043137256, 0.043137256, 0.043137256, 0.09411765)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_01yim"]
+bg_color = Color(0.043137256, 0.043137256, 0.043137256, 0.5176471)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[node name="Credits" type="Node2D" unique_id=1968405622]
+script = ExtResource("1_nf7y4")
+
+[node name="Panel_Background" type="Panel" parent="." unique_id=452115238]
+z_index = -1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_right = 1152.0
+offset_bottom = 648.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_kkpia")
+
+[node name="BackButton" type="Button" parent="." unique_id=1728192658]
+z_index = 5
+custom_minimum_size = Vector2(80, 80)
+offset_left = 70.0
+offset_top = 45.0
+offset_right = 150.0
+offset_bottom = 125.0
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 0
+theme_override_constants/icon_max_width = 60
+theme_override_font_sizes/font_size = 39
+theme_override_icons/icon = ExtResource("1_ywkq2")
+theme_override_styles/normal = SubResource("StyleBoxFlat_nf7y4")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_xusd1")
+theme_override_styles/hover = SubResource("StyleBoxFlat_01yim")
+icon = ExtResource("1_ywkq2")
+alignment = 0
+icon_alignment = 1
+
+[node name="Label_Title" type="Label" parent="." unique_id=1713858374]
+z_index = 5
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 479.0
+offset_top = 33.0
+offset_right = 664.0
+offset_bottom = 102.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 50
+text = "Credits:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label_Names" type="Label" parent="." unique_id=911717521]
+z_index = 5
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 297.0
+offset_top = 199.0
+offset_right = 890.0
+offset_bottom = 406.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 28
+text = "Djante Rodgers                  Daylan Weatherup
+
+Ethan Ellison                       Giuseppe Giuffre
+
+Josh Brown"
+vertical_alignment = 1
+
+[node name="SparkleBorder" type="Sprite2D" parent="." unique_id=123681593]
+position = Vector2(586, 304)
+scale = Vector2(1.4405404, 0.9685598)
+texture = ExtResource("5_a0pe8")
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
