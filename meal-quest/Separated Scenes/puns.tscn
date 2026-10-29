@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://pgvbttqh0dqv"]
+
+[ext_resource type="Script" uid="uid://coldgjg7taau3" path="res://Separated Scenes/spectator_puns.gd" id="1_r28iq"]
+
+[node name="Puns" type="Node" unique_id=1723135082]
+script = ExtResource("1_r28iq")
+dealt_puns = Array[String](["Lettuce celebrate, that was a-peeling!", "You're on a roll!", "Beet him up!", "That was gouda!", "Kale yeah, {name}!", "Turnip the heat!"])
+taken_puns = Array[String](["Oh no, {name} is in a real pickle!", "Don't go bad on us, {name}!", "Gourd help us!", "Who's cutting onions in here?!", "{name} is toast!"])
