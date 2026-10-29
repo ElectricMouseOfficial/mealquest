@@ -1,0 +1,190 @@
+[gd_scene format=3 uid="uid://dphce4pu8uw0b"]
+
+[ext_resource type="Script" uid="uid://beg0mjlstgkye" path="res://Main Menu things/options.gd" id="1_da6f1"]
+[ext_resource type="Texture2D" uid="uid://dncp6v5a6a0p7" path="res://Main Menu things/arrow_r1_c1 (1).png" id="3_wmstt"]
+[ext_resource type="Texture2D" uid="uid://dq1fb7fes2n8v" path="res://Main Menu things/wood full image.jpg" id="3_yn33y"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wmstt"]
+texture = ExtResource("3_yn33y")
+modulate_color = Color(0.6656405, 0.58087975, 0.25554702, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yia4p"]
+bg_color = Color(0.7137255, 1, 0.5803922, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_da6f1"]
+bg_color = Color(0.14509805, 0.25490198, 0.101960786, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yn33y"]
+bg_color = Color(0.33333334, 0.54509807, 0.25490198, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="Gradient" id="Gradient_yn33y"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ksxui"]
+gradient = SubResource("Gradient_yn33y")
+width = 33
+height = 30
+fill_from = Vector2(0, 1)
+
+[sub_resource type="Gradient" id="Gradient_wmstt"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.25565878, 0.25565878, 0.25565878, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_yn33y"]
+gradient = SubResource("Gradient_wmstt")
+width = 33
+height = 30
+
+[sub_resource type="Gradient" id="Gradient_r5pix"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_r5pix"]
+gradient = SubResource("Gradient_r5pix")
+width = 2
+height = 30
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kkpia"]
+bg_color = Color(0, 0, 0, 1)
+border_width_top = 15
+border_width_bottom = 15
+border_color = Color(0.8810723, 0.8810722, 0.8810722, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5yddh"]
+bg_color = Color(0.7137255, 1, 0.5803922, 1)
+border_color = Color(0.7137255, 1, 0.5803922, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wmstt"]
+bg_color = Color(0.7137255, 1, 0.5803922, 1)
+
+[node name="Options" type="Control" unique_id=573299278]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_da6f1")
+
+[node name="Panel_Background" type="Panel" parent="." unique_id=651683057]
+z_index = -1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -576.0
+offset_top = -324.0
+offset_right = 576.0
+offset_bottom = 324.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_wmstt")
+
+[node name="BackButton" type="Button" parent="." unique_id=1947898659]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 0
+offset_left = 70.0
+offset_top = 45.0
+offset_right = 150.0
+offset_bottom = 125.0
+theme_override_constants/h_separation = 0
+theme_override_constants/icon_max_width = 60
+theme_override_font_sizes/font_size = 40
+theme_override_icons/icon = ExtResource("3_wmstt")
+theme_override_styles/normal = SubResource("StyleBoxFlat_yia4p")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_da6f1")
+theme_override_styles/hover = SubResource("StyleBoxFlat_yn33y")
+icon = ExtResource("3_wmstt")
+alignment = 0
+icon_alignment = 1
+
+[node name="Label" type="Label" parent="." unique_id=1690047263]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.003
+anchor_right = 0.5
+anchor_bottom = 0.003
+offset_left = -119.0
+offset_top = 31.056
+offset_right = 119.0
+offset_bottom = 124.056
+theme_override_colors/font_color = Color(0.34509805, 0.7254902, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 15
+theme_override_font_sizes/font_size = 50
+text = "Options:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="." unique_id=1714795600]
+custom_maximum_size = Vector2(2000, 500)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -552.0
+offset_top = -97.0
+offset_right = -52.0
+offset_bottom = 23.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_icons/grabber = SubResource("GradientTexture2D_ksxui")
+theme_override_icons/grabber_highlight = SubResource("GradientTexture2D_yn33y")
+theme_override_icons/grabber_disabled = SubResource("GradientTexture2D_ksxui")
+theme_override_icons/tick = SubResource("GradientTexture2D_r5pix")
+theme_override_styles/slider = SubResource("StyleBoxFlat_kkpia")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_5yddh")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_wmstt")
+step = 20.0
+ticks_position = 3
+
+[node name="Label2" type="Label" parent="." unique_id=429200163]
+layout_mode = 0
+offset_left = 279.0
+offset_top = 250.0
+offset_right = 549.0
+offset_bottom = 314.0
+theme_override_font_sizes/font_size = 40
+text = "Audio Volume"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

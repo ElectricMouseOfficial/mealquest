@@ -1,0 +1,248 @@
+[gd_scene format=3 uid="uid://bq5h1mue44ggh"]
+
+[ext_resource type="Script" uid="uid://difhkyns328dm" path="res://Main Menu things/main_menu.gd" id="1_06t4h"]
+[ext_resource type="Texture2D" uid="uid://c226x5832hpdf" path="res://Tomato Proto.png" id="2_2yr3r"]
+[ext_resource type="Texture2D" uid="uid://dq1fb7fes2n8v" path="res://Main Menu things/wood full image.jpg" id="2_uv4t6"]
+[ext_resource type="Texture2D" uid="uid://btcdt2b5hibk1" path="res://T-Bone PNG.png" id="3_siksr"]
+[ext_resource type="Texture2D" uid="uid://cdisyg38pjhdl" path="res://Knife Proto.png" id="5_5iu3d"]
+[ext_resource type="Texture2D" uid="uid://itrcdefrn3up" path="res://Main Menu things/lightning bolt_r1_c1 (1).png" id="7_5iu3d"]
+[ext_resource type="Texture2D" uid="uid://cn8le28qs05wy" path="res://Damaged Bowl PNG.png" id="7_uv4t6"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n2lyd"]
+texture = ExtResource("2_uv4t6")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rhts7"]
+bg_color = Color(0.7137255, 1, 0.5803922, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_06t4h"]
+bg_color = Color(0.1442579, 0.25459328, 0.10315963, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7vrkn"]
+bg_color = Color(0.331799, 0.54330385, 0.2532339, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fu7sn"]
+
+[node name="MainMenu" type="Control" unique_id=1031210757]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_06t4h")
+
+[node name="Panel" type="Panel" parent="." unique_id=148014582]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_n2lyd")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=2058776690]
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -127.45001
+offset_top = -144.0
+offset_right = 100.048584
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+
+[node name="Button" type="Button" parent="VBoxContainer" unique_id=1700636474]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_rhts7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_06t4h")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_fu7sn")
+text = "Start"
+
+[node name="Button2" type="Button" parent="VBoxContainer" unique_id=275744741]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/icon_normal_color = Color(0.7137255, 1, 0.5803922, 1)
+theme_override_colors/icon_focus_color = Color(0.7137255, 1, 0.5803922, 1)
+theme_override_colors/icon_pressed_color = Color(0.7137255, 1, 0.5803922, 1)
+theme_override_colors/icon_hover_color = Color(0.7137255, 1, 0.5803922, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_rhts7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_06t4h")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_fu7sn")
+text = "Options"
+
+[node name="Button3" type="Button" parent="VBoxContainer" unique_id=1794586401]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_rhts7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_06t4h")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_fu7sn")
+text = "Credits"
+
+[node name="Button4" type="Button" parent="VBoxContainer" unique_id=854490719]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_rhts7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_06t4h")
+theme_override_styles/hover = SubResource("StyleBoxFlat_7vrkn")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_fu7sn")
+text = "Quit"
+
+[node name="Label" type="Label" parent="." unique_id=208454098]
+z_index = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -206.5
+offset_top = -294.0
+offset_right = 206.5
+offset_bottom = -191.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.34404734, 0.7260112, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 15
+theme_override_font_sizes/font_size = 75
+text = "Meal Quest"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LightningBoltR1C1(1)" type="Sprite2D" parent="." unique_id=100090140]
+position = Vector2(556.0625, 324.24374)
+scale = Vector2(0.6414765, 0.64147645)
+texture = ExtResource("7_5iu3d")
+
+[node name="TextureRect_Knife" type="TextureRect" parent="." unique_id=1549975455]
+custom_maximum_size = Vector2(300, 300)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -505.0
+offset_top = 47.0
+offset_right = -205.0
+offset_bottom = 347.0
+grow_horizontal = 0
+grow_vertical = 2
+rotation = -0.61086524
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("5_5iu3d")
+
+[node name="TextureRect_Tomato" type="TextureRect" parent="." unique_id=1851343280]
+custom_maximum_size = Vector2(175, 175)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 234.99998
+offset_top = -206.0
+offset_right = 410.0
+offset_bottom = -31.0
+grow_vertical = 2
+rotation = 0.6981317
+size_flags_horizontal = 4
+size_flags_vertical = 4
+offset_transform_enabled = true
+texture = ExtResource("2_2yr3r")
+
+[node name="TextureRect_Tbone" type="TextureRect" parent="." unique_id=1137956667]
+custom_maximum_size = Vector2(200, 200)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 248.0
+offset_top = -33.0
+offset_right = 448.0
+offset_bottom = 167.0
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+offset_transform_enabled = true
+offset_transform_rotation = 0.34906584
+texture = ExtResource("3_siksr")
+
+[node name="TextureRect_Bowl" type="TextureRect" parent="." unique_id=2035215924]
+custom_maximum_size = Vector2(200, 125)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 101.0
+offset_top = 149.0
+offset_right = 301.0
+offset_bottom = 274.0
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+offset_transform_enabled = true
+texture = ExtResource("7_uv4t6")
+
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button3" to="." method="_on_credits_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button4" to="." method="_on_quit_button_pressed"]
