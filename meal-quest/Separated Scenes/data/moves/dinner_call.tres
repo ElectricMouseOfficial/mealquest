@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="MoveData" format=3 uid="uid://bx3hsm10ia80d"]
 
-[ext_resource type="Texture2D" uid="uid://d1mi7b80x7saq" path="res://UI_Move_Buttons/Yellow_Button.png" id="1_5gv2t"]
+[ext_resource type="Texture2D" uid="uid://oq41ng1btht5" path="res://UI_Move_Buttons/Soup_UI.png" id="1_5gv2t"]
 [ext_resource type="Script" uid="uid://cs3vmvvucvnlu" path="res://Separated Scenes/move_data.gd" id="1_ffkdy"]
 
 [resource]
