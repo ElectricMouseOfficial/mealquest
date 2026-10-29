@@ -1,11 +1,12 @@
 [gd_resource type="Resource" script_class="MoveData" format=3 uid="uid://d1ypden1o1wr5"]
 
-[ext_resource type="Texture2D" uid="uid://b3yov3dtm4w6l" path="res://UI_Move_Buttons/Red_Button.png" id="1_7c3tn"]
+[ext_resource type="Texture2D" uid="uid://b7yx6hje3u3fo" path="res://UI_Move_Buttons/Tomato_UI.png" id="1_7c3tn"]
 [ext_resource type="Script" uid="uid://cs3vmvvucvnlu" path="res://Separated Scenes/move_data.gd" id="1_yt4wv"]
 
 [resource]
 script = ExtResource("1_yt4wv")
 name = "Defend"
 kind = "defend"
+cooldown = 2
 icon = ExtResource("1_7c3tn")
 text = "Your fine stem hairs tense!"

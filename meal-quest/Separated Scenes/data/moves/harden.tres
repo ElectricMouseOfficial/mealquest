@@ -1,11 +1,12 @@
 [gd_resource type="Resource" script_class="MoveData" format=3 uid="uid://ctselgqjwpur0"]
 
-[ext_resource type="Texture2D" uid="uid://cejfrq03vtu1s" path="res://UI_Move_Buttons/Purple_Button.png" id="1_2wdst"]
+[ext_resource type="Texture2D" uid="uid://dnqyopux6aj0y" path="res://UI_Move_Buttons/Steak_UI.png" id="1_2wdst"]
 [ext_resource type="Script" uid="uid://cs3vmvvucvnlu" path="res://Separated Scenes/move_data.gd" id="1_p2nbn"]
 
 [resource]
 script = ExtResource("1_p2nbn")
 name = "Harden"
 kind = "defend"
+cooldown = 2
 icon = ExtResource("1_2wdst")
 text = "Steak tenses its muscle fibers for an attack!"

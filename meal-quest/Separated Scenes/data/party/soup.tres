@@ -2,10 +2,23 @@
 
 [ext_resource type="Script" uid="uid://cs3vmvvucvnlu" path="res://Separated Scenes/move_data.gd" id="1_b0p7m"]
 [ext_resource type="Texture2D" uid="uid://cn8le28qs05wy" path="res://Damaged Bowl PNG.png" id="1_hjhst"]
+[ext_resource type="Texture2D" uid="uid://bwkwanc4buiic" path="res://Animation_VFX_Import/Soup_sprites_damaged/soup_damaged1.png" id="2_5d8ya"]
 [ext_resource type="Script" uid="uid://b5jenne8whshv" path="res://Separated Scenes/party_member_data.gd" id="2_hjhst"]
+[ext_resource type="Texture2D" uid="uid://dllho6bxcv0w1" path="res://Animation_VFX_Import/Soup_sprites_damaged/soup_damaged2.png" id="3_fr00x"]
 [ext_resource type="Resource" uid="uid://bwr3noddn6bfk" path="res://Separated Scenes/data/moves/broil.tres" id="3_gn6l2"]
 [ext_resource type="Resource" uid="uid://dfd8uacdrxpm8" path="res://Separated Scenes/data/moves/hearty_broth.tres" id="4_qf5xy"]
+[ext_resource type="Texture2D" uid="uid://cap1ot31lrhu8" path="res://Animation_VFX_Import/Soup_sprites_damaged/soup_damaged3.png" id="4_v3v5x"]
 [ext_resource type="Resource" uid="uid://bx3hsm10ia80d" path="res://Separated Scenes/data/moves/dinner_call.tres" id="5_g1vq5"]
+[ext_resource type="Texture2D" uid="uid://3as58u83oncq" path="res://Animation_VFX_Import/Soup_sprites_damaged/soup_damaged4.png" id="5_t0i8d"]
+[ext_resource type="Texture2D" uid="uid://bkfavkgxbqpsx" path="res://Animation_VFX_Import/Soup_sprites_damaged/soup_damaged5.png" id="6_2d41j"]
+[ext_resource type="Texture2D" uid="uid://c8asy7yfltiyc" path="res://Animation_VFX_Import/Soup_sprites_damaged/soup_damaged6.png" id="7_pcudd"]
+[ext_resource type="Texture2D" uid="uid://c117nob0cj0q5" path="res://Animation_VFX_Import/Soup_sprites_damaged/soup_damaged7.png" id="8_gqx3k"]
+[ext_resource type="Texture2D" uid="uid://ca5axhiu5mydi" path="res://Animation_VFX_Import/Soup_sprites_damaged/soup_damaged8.png" id="9_rjk07"]
+[ext_resource type="Texture2D" uid="uid://d1hskn23gqxw7" path="res://Animation_VFX_Import/Soup_sprites_damaged/soup_damaged9.png" id="10_atq0j"]
+[ext_resource type="Texture2D" uid="uid://c7ybftdicrh1g" path="res://Animation_VFX_Import/Soup_sprites_damaged/soup_damaged10.png" id="11_af1bd"]
+[ext_resource type="Texture2D" uid="uid://4rppd682pa15" path="res://Animation_VFX_Import/Soup_sprites_damaged/soup_damaged11.png" id="12_sdwqc"]
+[ext_resource type="Texture2D" uid="uid://0ca6yf621mo" path="res://Animation_VFX_Import/Soup_sprites_damaged/soup_damaged12.png" id="13_0hvoy"]
+[ext_resource type="Texture2D" uid="uid://che4uj16hqwyn" path="res://Animation_VFX_Import/Soup_sprites_damaged/soup_damaged_puddle.png" id="14_cjwmc"]
 
 [resource]
 script = ExtResource("2_hjhst")
@@ -14,4 +27,5 @@ scene_node = "Ally2"
 max_hp = 25
 damage = 4
 damaged_tex = ExtResource("1_hjhst")
+death_frames = Array[Texture2D]([ExtResource("2_5d8ya"), ExtResource("3_fr00x"), ExtResource("4_v3v5x"), ExtResource("5_t0i8d"), ExtResource("6_2d41j"), ExtResource("7_pcudd"), ExtResource("8_gqx3k"), ExtResource("9_rjk07"), ExtResource("10_atq0j"), ExtResource("11_af1bd"), ExtResource("12_sdwqc"), ExtResource("13_0hvoy"), ExtResource("14_cjwmc")])
 moves = Array[ExtResource("1_b0p7m")]([ExtResource("3_gn6l2"), ExtResource("4_qf5xy"), ExtResource("5_g1vq5")])

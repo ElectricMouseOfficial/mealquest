@@ -17,7 +17,9 @@ extends Node
 @export var knife_frame_time := 0.06
 @export var knife_scale := 0.5
 
-# --- Death fade ----------------------------------------------------------------
+# --- Death ---------------------------------------------------------------------
+@export var death_frame_time := 0.1    # seconds per death frame
+@export var death_hold := 0.6          # seconds the last frame (the puddle) stays before fading
 @export var death_fade_time := 0.5
 
 const BAR_BOX := "VBoxContainerH"   # health bar container under each party sprite
@@ -132,8 +134,17 @@ func play_knife_attack(target: Control):
 
 
 # --- Party member death ----------------------------------------------------------
-func play_party_death(node: TextureRect):
+# frames is optional: with frames it plays them, holds the last one, then fades.
+# With no frames it just fades.
+func play_party_death(node: TextureRect, frames: Array[Texture2D] = []):
 	var bar_box: Control = node.get_node(BAR_BOX)
+
+	if not frames.is_empty():
+		for f in frames:
+			node.texture = f
+			await get_tree().create_timer(death_frame_time).timeout
+		await get_tree().create_timer(death_hold).timeout
+
 	var tween := create_tween().set_parallel(true)
 	tween.tween_property(node, "self_modulate:a", 0.0, death_fade_time)
 	tween.tween_property(bar_box, "modulate:a", 0.0, death_fade_time)
