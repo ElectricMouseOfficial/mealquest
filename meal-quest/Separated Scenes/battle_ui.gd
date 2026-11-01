@@ -10,6 +10,8 @@ signal move_chosen(move_index: int)
 signal textbox_closed
 
 @export var turn_indicator_tex: Texture2D
+@export var turn_indicator_tex_b: Texture2D
+var _indicator_frame := 0
 @export var turn_indicator_scale := 1.0
 @export var turn_indicator_offset := Vector2(0, 10)
 @export var move_icon_size := Vector2(96, 96)
@@ -152,9 +154,21 @@ func _build_turn_indicator():
 		l.size = Vector2(32, 40)
 		turn_indicator = l
 	turn_indicator.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	turn_indicator.z_index = 2
+	turn_indicator.z_index = 0
 	turn_indicator.hide()
 	add_child(turn_indicator)
+	
+	var flip_timer := Timer.new()
+	flip_timer.wait_time = 0.25
+	flip_timer.autostart = true
+	flip_timer.timeout.connect(_flip_indicator)
+	add_child(flip_timer)
+	
+func _flip_indicator():
+	if not (turn_indicator is TextureRect) or turn_indicator_tex_b == null:
+		return
+	_indicator_frame = 1 - _indicator_frame   # toggles 0 <-> 1
+	turn_indicator.texture = turn_indicator_tex if _indicator_frame == 0 else turn_indicator_tex_b
 
 func show_turn_indicator(i: int):
 	var node := party_nodes[i]

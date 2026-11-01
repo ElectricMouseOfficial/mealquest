@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jo6uuedxmvnw"
-path="res://.godot/imported/Turn Indicator Ring_2.png-c30f90a09a0dd72db1ef85403170a70f.ctex"
+uid="uid://7ex5y2koj8jo"
+path="res://.godot/imported/Turn Indicator Ring_r2.png-4479a61a32a8edd50c79f24975420b8b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Turn Indicator Ring_2.png"
-dest_files=["res://.godot/imported/Turn Indicator Ring_2.png-c30f90a09a0dd72db1ef85403170a70f.ctex"]
+source_file="res://Turn Indicator Ring_r2.png"
+dest_files=["res://.godot/imported/Turn Indicator Ring_r2.png-4479a61a32a8edd50c79f24975420b8b.ctex"]
 
 [params]
 

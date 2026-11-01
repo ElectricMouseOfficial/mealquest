@@ -13,8 +13,10 @@
 [ext_resource type="PackedScene" uid="uid://ql45mgnqerka" path="res://Separated Scenes/animations.tscn" id="8_ol6im"]
 [ext_resource type="Texture2D" uid="uid://coq0fulkhm2w7" path="res://Background Apple.png" id="9_aacmo"]
 [ext_resource type="PackedScene" uid="uid://dqk3fx56k06cl" path="res://Separated Scenes/ui.tscn" id="9_b1i6x"]
+[ext_resource type="Texture2D" uid="uid://d15u4iqyf6o74" path="res://Turn Indicator Ring_r1.png" id="16_bx4lf"]
 [ext_resource type="Texture2D" uid="uid://6mac3ugfq8ga" path="res://Bowl PNG.png" id="16_ix8ov"]
 [ext_resource type="PackedScene" uid="uid://pgvbttqh0dqv" path="res://Separated Scenes/puns.tscn" id="16_slotg"]
+[ext_resource type="Texture2D" uid="uid://7ex5y2koj8jo" path="res://Turn Indicator Ring_r2.png" id="17_22sa7"]
 [ext_resource type="Texture2D" uid="uid://btcdt2b5hibk1" path="res://T-Bone PNG.png" id="17_bx4lf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8lcdg"]
@@ -326,6 +328,7 @@ vertical_alignment = 1
 position = Vector2(158, 129)
 
 [node name="Hero" type="TextureRect" parent="." unique_id=1605867009]
+z_index = 1
 layout_mode = 0
 offset_left = 232.0
 offset_top = 292.0
@@ -378,6 +381,7 @@ position = Vector2(64, 107)
 position = Vector2(64, 107)
 
 [node name="Ally2" type="TextureRect" parent="." unique_id=1971558417]
+z_index = 1
 layout_mode = 0
 offset_left = 53.0
 offset_top = 341.0
@@ -430,6 +434,7 @@ position = Vector2(65, 67)
 position = Vector2(65, 67)
 
 [node name="Ally1" type="TextureRect" parent="." unique_id=2034913859]
+z_index = 1
 layout_mode = 0
 offset_left = 396.0
 offset_top = 301.0
@@ -562,6 +567,10 @@ knife_scale = 0.34
 [node name="UI" parent="." unique_id=872549265 instance=ExtResource("9_b1i6x")]
 visible = true
 layout_mode = 1
+turn_indicator_tex = ExtResource("16_bx4lf")
+turn_indicator_tex_b = ExtResource("17_22sa7")
+turn_indicator_scale = 0.15
+turn_indicator_offset = Vector2(0, -100)
 
 [node name="Puns" parent="." unique_id=1723135082 instance=ExtResource("16_slotg")]
 
