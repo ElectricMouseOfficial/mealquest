@@ -110,7 +110,7 @@ func play_tomato_attack(hero: TextureRect, on_impact: Callable):
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	await back.finished
 
-	hero.z_index = 0
+	hero.z_index = 1
 	bar_box.show()
 
 
