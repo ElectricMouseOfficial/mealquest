@@ -46,7 +46,7 @@ corner_radius_bottom_right = 40
 corner_radius_bottom_left = 40
 
 [sub_resource type="LabelSettings" id="LabelSettings_upiai"]
-line_spacing = 60.0
+line_spacing = 0.0
 font_size = 35
 
 [node name="Credits" type="Node2D" unique_id=1968405622]
