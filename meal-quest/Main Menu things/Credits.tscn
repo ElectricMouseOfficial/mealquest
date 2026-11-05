@@ -45,6 +45,10 @@ corner_radius_top_right = 40
 corner_radius_bottom_right = 40
 corner_radius_bottom_left = 40
 
+[sub_resource type="LabelSettings" id="LabelSettings_upiai"]
+line_spacing = 60.0
+font_size = 35
+
 [node name="Credits" type="Node2D" unique_id=1968405622]
 script = ExtResource("1_nf7y4")
 
@@ -106,24 +110,23 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 297.0
-offset_top = 199.0
-offset_right = 890.0
-offset_bottom = 406.0
+offset_left = 264.0
+offset_top = 183.0
+offset_right = 918.0
+offset_bottom = 450.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 28
-text = "Djante Rodgers                  Daylan Weatherup
-
-Ethan Ellison                       Giuseppe Giuffre
-
+text = "Djante Rodgers         Daylan Weatherup
+Ethan Ellison              Giuseppe Giuffre
 Josh Brown"
+label_settings = SubResource("LabelSettings_upiai")
 vertical_alignment = 1
 
 [node name="SparkleBorder" type="Sprite2D" parent="." unique_id=123681593]
-position = Vector2(586, 304)
-scale = Vector2(1.4405404, 0.9685598)
+position = Vector2(589, 320)
+scale = Vector2(1.6162714, 1.086714)
 texture = ExtResource("5_a0pe8")
 
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
