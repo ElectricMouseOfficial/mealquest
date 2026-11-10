@@ -9,8 +9,7 @@ extends Control
 signal move_chosen(move_index: int)
 signal textbox_closed
 
-@export var turn_indicator_tex: Texture2D
-@export var turn_indicator_tex_b: Texture2D
+@export var turn_indicator_frames: Array[Texture2D] = []
 var _indicator_frame := 0
 @export var turn_indicator_scale := 1.0
 @export var turn_indicator_offset := Vector2(0, 10)
@@ -139,12 +138,15 @@ func show_heal_number(i: int, amount: int):
 
 # --- Turn indicator --------------------------------------------------------------
 func _build_turn_indicator():
-	if turn_indicator_tex:
+	if turn_indicator_frames.size() > 0:
+		var first := turn_indicator_frames[0]
 		var arrow := TextureRect.new()
-		arrow.texture = turn_indicator_tex
+		arrow.texture = first
 		arrow.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		arrow.stretch_mode = TextureRect.STRETCH_SCALE
-		arrow.size = turn_indicator_tex.get_size() * turn_indicator_scale
+		var s := first.get_size() * turn_indicator_scale
+		arrow.custom_minimum_size = s
+		arrow.size = s
 		turn_indicator = arrow
 	else:
 		var l := Label.new()   # placeholder until you assign a sprite
@@ -159,16 +161,16 @@ func _build_turn_indicator():
 	add_child(turn_indicator)
 	
 	var flip_timer := Timer.new()
-	flip_timer.wait_time = 0.25
+	flip_timer.wait_time = 0.15
 	flip_timer.autostart = true
 	flip_timer.timeout.connect(_flip_indicator)
 	add_child(flip_timer)
 	
 func _flip_indicator():
-	if not (turn_indicator is TextureRect) or turn_indicator_tex_b == null:
+	if not (turn_indicator is TextureRect) or turn_indicator_frames.size() < 2:
 		return
-	_indicator_frame = 1 - _indicator_frame   # toggles 0 <-> 1
-	turn_indicator.texture = turn_indicator_tex if _indicator_frame == 0 else turn_indicator_tex_b
+	_indicator_frame = (_indicator_frame + 1) % turn_indicator_frames.size()
+	turn_indicator.texture = turn_indicator_frames[_indicator_frame]
 
 func show_turn_indicator(i: int):
 	var node := party_nodes[i]
