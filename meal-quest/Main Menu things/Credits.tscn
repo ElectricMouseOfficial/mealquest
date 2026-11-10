@@ -49,6 +49,53 @@ corner_radius_bottom_left = 40
 line_spacing = 0.0
 font_size = 35
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_j8cl5"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="Gradient_a0pe8"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_01yim"]
+gradient = SubResource("Gradient_a0pe8")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="Gradient" id="Gradient_01yim"]
+colors = PackedColorArray(1, 1, 0.16078432, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_wknyb"]
+gradient = SubResource("Gradient_01yim")
+
+[sub_resource type="Curve" id="Curve_01yim"]
+_data = [Vector2(0.0031152666, 0), 0.0, 0.0, 0, 0, Vector2(0.5046729, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_01yim"]
+curve = SubResource("Curve_01yim")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_kkpia"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(200, 50, 1)
+initial_velocity_min = 5.0
+initial_velocity_max = 20.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.29999998
+scale_curve = SubResource("CurveTexture_01yim")
+color_ramp = SubResource("GradientTexture1D_wknyb")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_01yim"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(300, 50, 1)
+initial_velocity_min = 5.0
+initial_velocity_max = 20.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.29999998
+scale_curve = SubResource("CurveTexture_01yim")
+color_ramp = SubResource("GradientTexture1D_wknyb")
+
 [node name="Credits" type="Node2D" unique_id=1968405622]
 script = ExtResource("1_nf7y4")
 
@@ -128,5 +175,37 @@ vertical_alignment = 1
 position = Vector2(589, 320)
 scale = Vector2(1.6162714, 1.086714)
 texture = ExtResource("5_a0pe8")
+
+[node name="TopSparkles" type="GPUParticles2D" parent="." unique_id=945964351]
+material = SubResource("CanvasItemMaterial_j8cl5")
+position = Vector2(572, 303)
+amount = 45
+texture = SubResource("GradientTexture2D_01yim")
+lifetime = 1.5
+process_material = SubResource("ParticleProcessMaterial_kkpia")
+
+[node name="BottomSparkles" type="GPUParticles2D" parent="." unique_id=1453925997]
+material = SubResource("CanvasItemMaterial_j8cl5")
+position = Vector2(572, 303)
+amount = 45
+texture = SubResource("GradientTexture2D_01yim")
+lifetime = 1.5
+process_material = SubResource("ParticleProcessMaterial_01yim")
+
+[node name="LeftSparkles" type="GPUParticles2D" parent="." unique_id=1596377231]
+material = SubResource("CanvasItemMaterial_j8cl5")
+position = Vector2(572, 303)
+amount = 45
+texture = SubResource("GradientTexture2D_01yim")
+lifetime = 1.5
+process_material = SubResource("ParticleProcessMaterial_kkpia")
+
+[node name="RightSparkles" type="GPUParticles2D" parent="." unique_id=1807279799]
+material = SubResource("CanvasItemMaterial_j8cl5")
+position = Vector2(572, 303)
+amount = 45
+texture = SubResource("GradientTexture2D_01yim")
+lifetime = 1.5
+process_material = SubResource("ParticleProcessMaterial_kkpia")
 
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
