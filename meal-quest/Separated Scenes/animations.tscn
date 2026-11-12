@@ -12,37 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://dm4trbgj4qry4" path="res://Animation_VFX_Import/Tomato Roll9 Proto.png" id="10_bn2q6"]
 [ext_resource type="Texture2D" uid="uid://g8ia4n0xqy0f" path="res://Animation_VFX_Import/Tomato Splat VFX Proto.png" id="11_ifrdp"]
 [ext_resource type="Texture2D" uid="uid://ds2wbtcwdc7xm" path="res://Animation_VFX_Import/Knife Slash Proto.png" id="12_ojchn"]
-[ext_resource type="Script" uid="uid://vb8cgriby2qf" path="res://Separated Scenes/vfx_heal.gd" id="13_gu2pf"]
-[ext_resource type="Texture2D" uid="uid://3f66nf58eem1" path="res://Animation_VFX_Import/vfx_sprites/vfx-heal.png" id="14_1of8g"]
-[ext_resource type="Texture2D" uid="uid://b3eu30r348iaw" path="res://Animation_VFX_Import/vfx_sprites/vfx-shield.png" id="15_0qcrl"]
 
 [node name="Animations" type="Node" unique_id=1683575310]
 script = ExtResource("1_fjodn")
 tomato_frames = Array[Texture2D]([ExtResource("2_qho6j"), ExtResource("3_qaicb"), ExtResource("4_gu2pf"), ExtResource("5_1of8g"), ExtResource("6_0qcrl"), ExtResource("7_xhmdb"), ExtResource("8_s0vl6"), ExtResource("9_aht8c"), ExtResource("10_bn2q6"), ExtResource("11_ifrdp")])
 knife_frames = Array[Texture2D]([ExtResource("12_ojchn")])
-
-[node name="VfxHeal" type="Node2D" parent="." unique_id=2058393878]
-script = ExtResource("13_gu2pf")
-
-[node name="Heal01" type="Sprite2D" parent="VfxHeal" unique_id=1755853750]
-texture = ExtResource("14_1of8g")
-
-[node name="Heal02" type="Sprite2D" parent="VfxHeal" unique_id=747404966]
-texture = ExtResource("14_1of8g")
-
-[node name="Heal03" type="Sprite2D" parent="VfxHeal" unique_id=1521716055]
-texture = ExtResource("14_1of8g")
-
-[node name="Heal04" type="Sprite2D" parent="VfxHeal" unique_id=1350001696]
-texture = ExtResource("14_1of8g")
-
-[node name="VfxShield" type="Node2D" parent="." unique_id=1234349765]
-
-[node name="Shield01" type="Sprite2D" parent="VfxShield" unique_id=887509543]
-texture = ExtResource("15_0qcrl")
-
-[node name="Shield02" type="Sprite2D" parent="VfxShield" unique_id=187412973]
-texture = ExtResource("15_0qcrl")
-
-[node name="Shield03" type="Sprite2D" parent="VfxShield" unique_id=1275065669]
-texture = ExtResource("15_0qcrl")
