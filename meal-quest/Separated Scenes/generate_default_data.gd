@@ -1,9 +1,5 @@
 @tool
 extends EditorScript
-## Open this file in the Script editor, then File > Run (Ctrl+Shift+X).
-## Creates the MoveData / PartyMemberData .tres files in a "data" folder next to this script,
-## and links every party member to the move FILES (not embedded copies).
-## Safe to run again: existing files keep your edits (icons, cooldowns, damaged textures).
 
 var DIR := ""
 
