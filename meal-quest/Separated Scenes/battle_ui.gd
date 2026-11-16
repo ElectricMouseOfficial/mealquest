@@ -32,6 +32,13 @@ var _indicator_frame := 0
 @export var title_outline_size := 4
 @export var menu_shift := Vector2.ZERO            # nudge the whole moves menu (+x right, +y down)
 
+@export_group("Textbox")
+@export var textbox_texture: Texture2D            # drag your custom textbox image here
+@export var textbox_patch_margin := Vector4i(16, 16, 16, 16)   # left, top, right, bottom (9-slice borders)
+@export var textbox_text_color := Color.WHITE
+@export var textbox_font_size := 18
+@export var textbox_text_padding := Vector2(16, 12)            # label inset from the box edges
+
 var team: TeamManager                 # read-only queries (cooldowns, damage preview)
 var party_nodes: Array[TextureRect] = []
 var enemy_node: TextureRect
@@ -42,6 +49,49 @@ var turn_indicator: Control
 var normal_tex: Array[Texture2D] = []
 var enemy_normal_tex: Texture2D
 
+func _apply_textbox_style():
+	if textbox == null:
+		return
+
+	var label: Label = textbox.get_node("Label")
+
+	# Text styling
+	label.add_theme_color_override("font_color", textbox_text_color)
+	label.add_theme_font_size_override("font_size", textbox_font_size)
+
+	if textbox_texture == null:
+		return   # nothing assigned, keep the original look
+
+	# Hide the old background so the custom art shows
+	if textbox is Panel or textbox is PanelContainer:
+		textbox.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	elif textbox is ColorRect:
+		textbox.color = Color(0, 0, 0, 0)
+
+	# Remove an earlier custom background if setup runs twice
+	var old := textbox.get_node_or_null("CustomBG")
+	if old:
+		old.queue_free()
+
+	# Stretchable background (9-slice, so the corners don't distort)
+	var bg := NinePatchRect.new()
+	bg.name = "CustomBG"
+	bg.texture = textbox_texture
+	bg.patch_margin_left = textbox_patch_margin.x
+	bg.patch_margin_top = textbox_patch_margin.y
+	bg.patch_margin_right = textbox_patch_margin.z
+	bg.patch_margin_bottom = textbox_patch_margin.w
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	textbox.add_child(bg)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	textbox.move_child(bg, 0)   # behind the Label
+
+	# Keep the text inside the art's borders
+	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	label.offset_left = textbox_text_padding.x
+	label.offset_right = -textbox_text_padding.x
+	label.offset_top = textbox_text_padding.y
+	label.offset_bottom = -textbox_text_padding.y
 
 func setup(team_ref: TeamManager, nodes: Array[TextureRect], enemy_sprite: TextureRect,
 		enemy_res: Resource, textbox_node: Control, actions_node: Control):
@@ -59,6 +109,7 @@ func setup(team_ref: TeamManager, nodes: Array[TextureRect], enemy_sprite: Textu
 	_build_turn_indicator()
 	_build_moves_menu()
 	textbox.hide()
+	_apply_textbox_style()
 	actions_panel.hide()
 
 	for i in party_nodes.size():

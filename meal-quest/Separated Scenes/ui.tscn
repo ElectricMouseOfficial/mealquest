@@ -16,3 +16,4 @@ script = ExtResource("1_xlb7i")
 turn_indicator_offset = Vector2(0, -20)
 enemy_damaged_tex = ExtResource("2_lcxs2")
 menu_shift = Vector2(0, 30)
+textbox_font_size = 24
