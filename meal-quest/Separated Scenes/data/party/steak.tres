@@ -15,3 +15,4 @@ max_hp = 40
 damage = 6
 damaged_tex = ExtResource("1_boyur")
 moves = Array[ExtResource("1_le014")]([ExtResource("3_7giux"), ExtResource("4_5uu0t"), ExtResource("5_dc82x")])
+fusion_max = 5

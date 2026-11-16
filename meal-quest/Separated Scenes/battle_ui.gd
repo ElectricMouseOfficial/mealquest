@@ -8,6 +8,7 @@ extends Control
 
 signal move_chosen(move_index: int)
 signal textbox_closed
+signal fusion_chosen
 
 @export var turn_indicator_frames: Array[Texture2D] = []
 var _indicator_frame := 0
@@ -39,6 +40,19 @@ var _indicator_frame := 0
 @export var textbox_font_size := 18
 @export var textbox_text_padding := Vector2(16, 12)            # label inset from the box edges
 
+@export_group("Fusion")
+@export var fusion_button_text := "Fusion!"
+@export var fusion_icon: Texture2D                      # drag your Fusion button art here
+@export var fusion_text_color := Color.GOLD
+@export var fusion_bar_size := Vector2(60, 8)
+@export var fusion_bar_color := Color("#3aa0ff")
+@export var fusion_bar_full_color := Color.GOLD
+@export var fusion_bar_bg_color := Color(0, 0, 0, 0.6)
+@export var hover_font_size := 14
+@export var hover_text_color := Color.WHITE
+@export var hover_bg_color := Color(0, 0, 0, 0.8)
+@export var hover_offset := Vector2(0, -8)              # nudge the hover panel (+x right, +y down)
+
 var team: TeamManager                 # read-only queries (cooldowns, damage preview)
 var party_nodes: Array[TextureRect] = []
 var enemy_node: TextureRect
@@ -48,6 +62,10 @@ var moves_menu: VBoxContainer
 var turn_indicator: Control
 var normal_tex: Array[Texture2D] = []
 var enemy_normal_tex: Texture2D
+var fusion_bars: Array[ProgressBar] = []
+var hover_panel: PanelContainer
+var hover_label: Label
+var _hover_index := -1
 
 func _apply_textbox_style():
 	if textbox == null:
@@ -108,6 +126,8 @@ func setup(team_ref: TeamManager, nodes: Array[TextureRect], enemy_sprite: Textu
 
 	_build_turn_indicator()
 	_build_moves_menu()
+	_build_fusion_bars()
+	_build_hover_info()
 	textbox.hide()
 	_apply_textbox_style()
 	actions_panel.hide()
@@ -346,5 +366,174 @@ func show_moves(i: int):
 		if label:
 			_fit_label(label, move_icon_size.x)
 
+	# Fusion button: ONE per menu, after the loop
+	if team.fusion_full(i):
+		_add_fusion_button(row, i)
+
 	show_turn_indicator(i)
 	moves_menu.show()
+
+# --- Fusion bars and button ----------------------------------------------------------
+func _build_fusion_bars():
+	for i in party_nodes.size():
+		var bar := ProgressBar.new()
+		bar.name = "FusionBar"
+		bar.show_percentage = false
+		bar.custom_minimum_size = fusion_bar_size
+		bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var bg := StyleBoxFlat.new()
+		bg.bg_color = fusion_bar_bg_color
+		bar.add_theme_stylebox_override("background", bg)
+		party_nodes[i].get_node("VBoxContainerH").add_child(bar)   # sits under the HP bar
+		fusion_bars.append(bar)
+		set_fusion_bar(i, team.fusion_charge[i], team.members[i].fusion_max)
+
+func set_fusion_bar(i: int, charge: int, max_charge: int):
+	var bar := fusion_bars[i]
+	bar.max_value = max_charge
+	bar.value = charge
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = fusion_bar_full_color if charge >= max_charge else fusion_bar_color
+	bar.add_theme_stylebox_override("fill", fill)
+	if hover_panel != null and _hover_index != -1:
+		_refresh_hover()
+
+func _add_fusion_button(row: HBoxContainer, i: int):
+	var fusion := team.find_fusion(i)
+	var can_fuse := fusion != null
+	var b: BaseButton
+	var label: Label = null
+
+	if fusion_icon:
+		var tb := TextureButton.new()
+		tb.texture_normal = fusion_icon
+		tb.texture_disabled = fusion_icon
+		tb.ignore_texture_size = true
+		tb.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+		tb.custom_minimum_size = move_icon_size
+
+		label = Label.new()
+		label.text = fusion_button_text
+		label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		label.add_theme_color_override("font_color", fusion_text_color)
+		label.add_theme_color_override("font_outline_color", move_outline_color)
+		label.add_theme_constant_override("outline_size", move_outline_size)
+		tb.add_child(label)
+		b = tb
+	else:
+		var tb := Button.new()
+		tb.text = fusion_button_text
+		tb.add_theme_color_override("font_color", fusion_text_color)
+		b = tb
+
+	b.disabled = not can_fuse
+	if not can_fuse:
+		b.modulate = Color(0.5, 0.5, 0.5)
+		b.tooltip_text = "%s\nNeeds another ally with a full Fusion bar." % fusion_button_text
+	else:
+		var names := PackedStringArray()
+		for p in fusion.partners:
+			if p:
+				names.append(p.name)
+		b.tooltip_text = "%s\n%s\nWith: %s" % [fusion_button_text, fusion.name, ", ".join(names)]
+
+	b.pressed.connect(func(): fusion_chosen.emit())
+	row.add_child(b)
+	if label:
+		_fit_label(label, move_icon_size.x)
+
+
+# --- Hover info ------------------------------------------------------------------
+func _build_hover_info():
+	hover_panel = PanelContainer.new()
+	hover_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hover_panel.z_index = 10
+	var bg := StyleBoxFlat.new()
+	bg.bg_color = hover_bg_color
+	bg.set_content_margin_all(8)
+	bg.set_corner_radius_all(4)
+	hover_panel.add_theme_stylebox_override("panel", bg)
+
+	hover_label = Label.new()
+	hover_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hover_label.add_theme_font_size_override("font_size", hover_font_size)
+	hover_label.add_theme_color_override("font_color", hover_text_color)
+	hover_panel.add_child(hover_label)
+
+	hover_panel.hide()
+	add_child(hover_panel)
+
+# Polls the mouse instead of using mouse_entered, so it works without touching
+# the sprites' Mouse Filter settings and doesn't flicker over child nodes.
+func _process(_delta):
+	if team == null or hover_panel == null:
+		return
+	var mouse := get_global_mouse_position()
+	var found := -1
+	for i in party_nodes.size():
+		var rect := party_nodes[i].get_global_rect().merge(
+			(party_nodes[i].get_node("VBoxContainerH") as Control).get_global_rect())
+		if rect.has_point(mouse):
+			found = i
+			break
+	if found != _hover_index:
+		_hover_index = found
+		_refresh_hover()
+
+func _refresh_hover():
+	if _hover_index == -1:
+		hover_panel.hide()
+		return
+	hover_label.text = _fusion_info_text(_hover_index)
+	hover_panel.show()
+	hover_panel.reset_size()
+	var rect := party_nodes[_hover_index].get_global_rect()
+	var pos := Vector2(
+		rect.get_center().x - hover_panel.size.x / 2.0,
+		rect.position.y - hover_panel.size.y) + hover_offset
+	pos.x = clampf(pos.x, 0.0, maxf(0.0, get_viewport_rect().size.x - hover_panel.size.x))
+	pos.y = maxf(pos.y, 0.0)
+	hover_panel.global_position = pos
+
+func _partner_status(j: int) -> String:
+	var m := team.members[j]
+	if team.hp[j] <= 0:
+		return "%s (KO)" % m.name
+	if team.fusion_full(j):
+		return "%s READY" % m.name
+	return "%s %d/%d" % [m.name, team.fusion_charge[j], m.fusion_max]
+
+func _fusion_info_text(i: int) -> String:
+	var m := team.members[i]
+	if team.hp[i] <= 0:
+		return "%s is knocked out." % m.name
+
+	var lines := PackedStringArray()
+	var need := m.fusion_max - team.fusion_charge[i]
+	if need <= 0:
+		lines.append("%s: Fusion READY" % m.name)
+	else:
+		lines.append("%s: Fusion %d/%d (%d more damage)" % [
+			m.name, team.fusion_charge[i], m.fusion_max, need])
+
+	# Every fusion this ally is part of, and how ready each partner is
+	for f in team.fusions:
+		if f == null or f.partners.size() < 2:
+			continue
+		var involved := false
+		for p in f.partners:
+			if p and team.index_of(p) == i:
+				involved = true
+		if not involved:
+			continue
+		var parts := PackedStringArray()
+		for p in f.partners:
+			var j := team.index_of(p) if p else -1
+			if j != -1:
+				parts.append(_partner_status(j))
+		lines.append("- %s: %s" % [f.name, ", ".join(parts)])
+
+	return "\n".join(lines)

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FusionData" format=3 uid="uid://by88krig36smr"]
+
+[ext_resource type="Script" uid="uid://b5jenne8whshv" path="res://Separated Scenes/party_member_data.gd" id="1_8l4mj"]
+[ext_resource type="Resource" uid="uid://dl50ge4yfl7sl" path="res://Separated Scenes/data/party/tomato.tres" id="2_7ir7j"]
+[ext_resource type="Resource" uid="uid://bppxrnwm0j6ut" path="res://Separated Scenes/data/party/steak.tres" id="3_fc6bn"]
+[ext_resource type="Resource" uid="uid://bigdt071l75ft" path="res://Separated Scenes/data/party/soup.tres" id="4_d2v1d"]
+[ext_resource type="Script" uid="uid://lhno1hdya8ih" path="res://Separated Scenes/FusionData.gd" id="5_6dbcp"]
+
+[resource]
+script = ExtResource("5_6dbcp")
+partners = Array[ExtResource("1_8l4mj")]([ExtResource("2_7ir7j"), ExtResource("3_fc6bn"), ExtResource("4_d2v1d")])
+name = "Grand Feast"
+mult = 2.5
+text = "The whole party unleashes the last supper!"
+vfx_target = "enemy"

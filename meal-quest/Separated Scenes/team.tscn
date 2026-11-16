@@ -2,10 +2,16 @@
 
 [ext_resource type="Script" uid="uid://dufehktefyefp" path="res://Separated Scenes/team_manager.gd" id="1_k05yy"]
 [ext_resource type="Script" uid="uid://b5jenne8whshv" path="res://Separated Scenes/party_member_data.gd" id="2_ffi11"]
+[ext_resource type="Script" uid="uid://lhno1hdya8ih" path="res://Separated Scenes/FusionData.gd" id="2_lu4ws"]
 [ext_resource type="Resource" uid="uid://dl50ge4yfl7sl" path="res://Separated Scenes/data/party/tomato.tres" id="3_an7vn"]
+[ext_resource type="Resource" uid="uid://by88krig36smr" path="res://Separated Scenes/data/fusions/grand_feast.tres" id="3_fqjte"]
+[ext_resource type="Resource" uid="uid://byneld40lvpq1" path="res://Separated Scenes/data/fusions/steak_sauce_slide.tres" id="4_dhnyx"]
 [ext_resource type="Resource" uid="uid://bppxrnwm0j6ut" path="res://Separated Scenes/data/party/steak.tres" id="4_ihr2q"]
 [ext_resource type="Resource" uid="uid://bigdt071l75ft" path="res://Separated Scenes/data/party/soup.tres" id="5_08jp7"]
+[ext_resource type="Resource" uid="uid://bfj0m1iyug4ay" path="res://Separated Scenes/data/fusions/steak_stew_smash.tres" id="5_rwblx"]
+[ext_resource type="Resource" uid="uid://cg24psxs8gl4o" path="res://Separated Scenes/data/fusions/tomato_bisque_blast.tres" id="6_2oue7"]
 
 [node name="Team" type="Node" unique_id=1447434418]
 script = ExtResource("1_k05yy")
+fusions = Array[ExtResource("2_lu4ws")]([ExtResource("3_fqjte"), ExtResource("4_dhnyx"), ExtResource("5_rwblx"), ExtResource("6_2oue7")])
 members = Array[ExtResource("2_ffi11")]([ExtResource("3_an7vn"), ExtResource("4_ihr2q"), ExtResource("5_08jp7")])

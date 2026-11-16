@@ -11,3 +11,11 @@ extends Resource
 @export var icon: Texture2D          # button texture (optional)
 @export_multiline var text := ""     # battle text when the move is used
 @export_multiline var desc := ""     # tooltip text (blank = auto-generated)
+
+@export_group("Effect (VFX)")
+@export var vfx_frames: Array[Texture2D] = []   # effect that plays over the character this move affects
+@export_enum("default", "self", "all_allies", "enemy", "screen") var vfx_target := "default"   # default: heal = the healed ally, rally = every ally, others = the user. screen = one full-screen cutscene
+@export var vfx_fade_time := 0.15               # screen only: fade in/out seconds (0 = hard cut)
+@export var vfx_frame_time := 0.06              # seconds per frame
+@export var vfx_scale := 1.0                    # 1.0 = original image size
+@export var vfx_offset := Vector2.ZERO          # nudge the effect (+x right, +y down)

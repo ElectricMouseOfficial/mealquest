@@ -17,6 +17,10 @@ var enemy_hp := 0
 var active_index := 0     # party index of whoever is acting
 var turn_pos := 0         # position within team.turn_order
 var _ending := false      # true once a win or loss has started
+var enemy_dot_damage := 0
+var enemy_dot_turns := 0
+var shield_fusion: FusionData = null   # set while a party shield is up this round
+var enemy_dot_name := "burn"
 
 # --- Dev shortcuts (work only when running from the editor / debug builds) ---------
 @export var debug_shortcuts := true
@@ -43,6 +47,8 @@ func _ready():
 
 	team.health_changed.connect(ui.set_party_health)
 	ui.move_chosen.connect(_on_move_chosen)
+	team.fusion_changed.connect(ui.set_fusion_bar)
+	ui.fusion_chosen.connect(_on_fusion_chosen)
 
 	await ui.say("A determined %s appears!" % enemy.name.to_upper())
 	start_player_turn()
@@ -93,16 +99,21 @@ func _on_move_chosen(move_index: int):
 			await _do_attack(i, move)
 		"defend":
 			team.set_guard(i)
+			await _play_move_vfx(move, i)
 		"taunt":
 			team.set_taunt(i)
+			await _play_move_vfx(move, i)
 		"heal":
 			await _do_heal(i, move)
 		"rally":
 			team.set_rally(move.rally_bonus)
+			await _play_move_vfx(move, i)
 
 	if enemy_hp == 0:
 		return   # _do_attack already handled the victory
+	_advance_turn()
 
+func _advance_turn():
 	var next := team.next_living_pos(turn_pos + 1)
 	if next == -1:
 		await get_tree().create_timer(.25).timeout
@@ -114,8 +125,10 @@ func _on_move_chosen(move_index: int):
 
 
 # --- Player moves ------------------------------------------------------------
-func _apply_enemy_damage(dmg: int, attacker: String = ""):
+func _apply_enemy_damage(dmg: int, attacker: String = "", source: int = -1):
 	enemy_hp = maxi(0, enemy_hp - dmg)
+	if source != -1:
+		team.add_fusion_charge(source, dmg)   # dealing damage charges that ally's bar
 	ui.set_enemy_health(enemy_hp, enemy.health)
 	ui.show_enemy_damage_number(dmg)
 	
@@ -131,9 +144,9 @@ func _do_attack(i: int, move: MoveData):
 	var dmg := team.attack_damage(i, move)
 
 	if team.members[i].scene_node == "Hero":
-		await anim.play_tomato_attack(party_nodes[i], func(): _apply_enemy_damage(dmg, team.members[i].name))
+		await anim.play_tomato_attack(party_nodes[i], func(): _apply_enemy_damage(dmg, team.members[i].name, i))
 	else:
-		_apply_enemy_damage(dmg, team.members[i].name)
+		_apply_enemy_damage(dmg, team.members[i].name, i)
 		await anim.play_enemy_hit()
 
 	await ui.say("%s dealt %d damage!" % [team.members[i].name, dmg])
@@ -150,7 +163,41 @@ func _win_battle():
 	await get_tree().create_timer(.25).timeout
 	get_tree().quit()
 
+# Plays the move's effect. `user` is who used the move; `healed` is the ally a heal landed on.
+func _play_move_vfx(move: MoveData, user: int, healed: int = -1):
+	if move.vfx_frames.is_empty():
+		return
+	if move.vfx_target == "screen":
+		await anim.play_fullscreen_vfx(move.vfx_frames, move.vfx_frame_time, move.vfx_fade_time)
+		return
+		
+	var mode := move.vfx_target
+	if mode == "default":
+		if move.kind == "rally":
+			mode = "all_allies"
+		elif healed != -1:
+			mode = "healed"
+		else:
+			mode = "self"
+
+	var targets: Array = []
+	match mode:
+		"all_allies":
+			for k in party_nodes.size():
+				if team.is_alive(k):
+					targets.append(party_nodes[k])
+		"enemy":
+			targets.append(enemy_sprite)
+		"healed":
+			targets.append(party_nodes[healed])
+		_:
+			targets.append(party_nodes[user])
+
+	await anim.play_vfx(targets, move.vfx_frames, move.vfx_frame_time, move.vfx_scale, move.vfx_offset)
+
 func _do_heal(healer: int, move: MoveData):
+	var target := team.heal_target(healer)
+	await _play_move_vfx(move, healer, target)   # effect first, then the HP changes
 	var result := team.heal_lowest(healer, move.heal_amount)   # emits health_changed -> UI updates
 	ui.show_heal_number(result.index, move.heal_amount)
 	await ui.say("%s recovered %d HP!" % [team.members[result.index].name, result.healed])
@@ -160,6 +207,10 @@ func _do_heal(healer: int, move: MoveData):
 func enemy_turn():
 	if _ending:
 		return
+	if enemy_dot_turns > 0:
+		await _tick_enemy_dot()
+		if _ending:
+			return
 	var idx := team.pick_enemy_target()
 	var target := team.members[idx]
 
@@ -171,6 +222,8 @@ func enemy_turn():
 			puns.say_blocked(target.name)
 		await anim.play_mini_shake()
 		await ui.say("%s defended successfully!" % target.name)
+		if shield_fusion != null:
+			await _try_apply_dot(shield_fusion)
 	else:
 		# Impact: HP drops and the screen shakes immediately, then the text
 		team.damage_member(idx, enemy.damage)
@@ -184,6 +237,7 @@ func enemy_turn():
 			await anim.play_party_death(party_nodes[idx], team.members[idx].death_frames)
 			await ui.say("%s was knocked out!" % target.name)
 
+	shield_fusion = null
 	team.end_round()
 	start_player_turn()
 
@@ -195,3 +249,87 @@ func _party_wiped():
 	if ui.textbox.visible:
 		await ui.textbox_closed
 	get_tree().quit()
+
+func _on_fusion_chosen():
+	var i := active_index
+	var fusion := team.find_fusion(i)
+	if fusion == null:
+		return
+	var users := team.fusion_users(fusion)
+	team.spend_fusion(users, i)
+	ui.hide_moves()
+	await ui.say(fusion.text)
+	if _ending:
+		return
+
+	match fusion.fusion_effect:
+		"party_shield":
+			await _do_party_shield(i, fusion)
+		"heal_buff":
+			await _do_heal_buff(i, fusion)
+		_:
+			await _do_fusion_attack(i, users, fusion)
+	if enemy_hp == 0:
+		return
+	_advance_turn()
+
+func _do_fusion_attack(actor: int, users: Array[int], fusion: FusionData):
+	var dmg := team.fusion_damage(users, fusion)
+	await _play_move_vfx(fusion, actor)
+	_apply_enemy_damage(dmg, team.members[actor].name)   # no source, so a fusion doesn't recharge bars
+	await anim.play_enemy_hit()
+	await ui.say("%s dealt %d damage!" % [fusion.name, dmg])
+	if enemy_hp == 0:
+		await _win_battle()
+		return
+	if fusion.dot_damage > 0 and fusion.dot_turns > 0:
+		await _try_apply_dot(fusion)
+		
+func _do_party_shield(actor: int, fusion: FusionData):
+	for k in party_nodes.size():
+		if team.is_alive(k):
+			team.set_guard(k)          # whole party blocks the next enemy attack
+	shield_fusion = fusion
+	await _play_move_vfx(fusion, actor)
+func _do_heal_buff(actor: int, fusion: FusionData):
+	await _play_move_vfx(fusion, actor)
+
+	for r in team.heal_party(fusion.heal_amount):   # emits health_changed -> bars update
+		if r.healed > 0:
+			ui.show_heal_number(r.index, r.healed)
+
+	# If nobody is left to act this round, carry the buff into the next round
+	var rounds := fusion.buff_rounds
+	if team.next_living_pos(turn_pos + 1) == -1:
+		rounds += 1
+	team.set_rally(fusion.rally_bonus, rounds)
+
+	await ui.say("The party recovers %d HP and feels fired up!" % fusion.heal_amount)
+
+func _tick_enemy_dot():
+	enemy_dot_turns -= 1
+	enemy_hp = maxi(0, enemy_hp - enemy_dot_damage)
+	ui.set_enemy_health(enemy_hp, enemy.health)
+	ui.show_enemy_damage_number(enemy_dot_damage)
+	await anim.play_enemy_hit()
+	await ui.say("%s takes %d damage from the %s!" % [enemy.name, enemy_dot_damage, enemy_dot_name])
+	if enemy_hp == 0:
+		await _win_battle()
+
+# Returns true if the new DOT took effect. A weaker DOT never overrides a stronger one.
+func _apply_enemy_dot(dmg: int, turns: int, dot_name: String) -> bool:
+	if enemy_dot_turns > 0:
+		if dmg < enemy_dot_damage:
+			return false
+		if dmg == enemy_dot_damage and turns <= enemy_dot_turns:
+			return false
+	enemy_dot_damage = dmg
+	enemy_dot_turns = turns
+	enemy_dot_name = dot_name
+	return true
+
+func _try_apply_dot(fusion: FusionData):
+	if _apply_enemy_dot(fusion.dot_damage, fusion.dot_turns, fusion.dot_name):
+		await ui.say("%s is afflicted with %s!" % [enemy.name, fusion.dot_name])
+	else:
+		await ui.say("%s is already suffering a stronger effect!" % enemy.name)

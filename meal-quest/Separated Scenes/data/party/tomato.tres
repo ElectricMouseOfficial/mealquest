@@ -13,3 +13,4 @@ scene_node = "Hero"
 use_global_state = true
 damaged_tex = ExtResource("1_oh8eo")
 moves = Array[ExtResource("1_an6dk")]([ExtResource("3_nic0c"), ExtResource("4_tytok")])
+fusion_max = 36

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="FusionData" format=3 uid="uid://cg24psxs8gl4o"]
+
+[ext_resource type="Script" uid="uid://b5jenne8whshv" path="res://Separated Scenes/party_member_data.gd" id="1_8olho"]
+[ext_resource type="Resource" uid="uid://dl50ge4yfl7sl" path="res://Separated Scenes/data/party/tomato.tres" id="2_fbwx0"]
+[ext_resource type="Resource" uid="uid://bigdt071l75ft" path="res://Separated Scenes/data/party/soup.tres" id="3_66gyq"]
+[ext_resource type="Script" uid="uid://lhno1hdya8ih" path="res://Separated Scenes/FusionData.gd" id="4_knwqd"]
+
+[resource]
+script = ExtResource("4_knwqd")
+partners = Array[ExtResource("1_8olho")]([ExtResource("2_fbwx0"), ExtResource("3_66gyq")])
+dot_damage = 3
+dot_turns = 3
+name = "Tomato Bisque Blast"
+mult = 1.5
+text = "Tomato and Soup combine to make a fine acidic broth!"
+vfx_target = "enemy"

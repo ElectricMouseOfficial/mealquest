@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="FusionData" format=3 uid="uid://byneld40lvpq1"]
+
+[ext_resource type="Script" uid="uid://b5jenne8whshv" path="res://Separated Scenes/party_member_data.gd" id="1_ksj7h"]
+[ext_resource type="Resource" uid="uid://dl50ge4yfl7sl" path="res://Separated Scenes/data/party/tomato.tres" id="2_3x4de"]
+[ext_resource type="Resource" uid="uid://bppxrnwm0j6ut" path="res://Separated Scenes/data/party/steak.tres" id="3_2qdpq"]
+[ext_resource type="Script" uid="uid://lhno1hdya8ih" path="res://Separated Scenes/FusionData.gd" id="4_glb8h"]
+
+[resource]
+script = ExtResource("4_glb8h")
+partners = Array[ExtResource("1_ksj7h")]([ExtResource("2_3x4de"), ExtResource("3_2qdpq")])
+fusion_effect = "party_shield"
+dot_damage = 2
+dot_turns = 2
+name = "Steak Sauce Slide"
+kind = "defend"
+text = "Tomato and Steak combine to make an acidic blockade!"
+vfx_target = "all_allies"
