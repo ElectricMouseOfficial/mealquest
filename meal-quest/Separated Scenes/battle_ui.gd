@@ -52,6 +52,8 @@ var _indicator_frame := 0
 @export var hover_text_color := Color.WHITE
 @export var hover_bg_color := Color(0, 0, 0, 0.8)
 @export var hover_offset := Vector2(0, -8)              # nudge the hover panel (+x right, +y down)
+@export var fusion_not_ready_icon: Texture2D
+@export var fusion_not_ready_tint := Color(0.5, 0.5, 0.5)
 
 var team: TeamManager                 # read-only queries (cooldowns, damage preview)
 var party_nodes: Array[TextureRect] = []
@@ -429,7 +431,11 @@ func _add_fusion_button(row: HBoxContainer, i: int):
 	# Show the fusion's own name; fall back to "Fusion!" when no partner is ready yet
 	var btn_text := fusion.name if can_fuse else fusion_button_text
 	# Use the fusion's own icon if it has one, otherwise the shared Fusion Icon
-	var icon_tex: Texture2D = fusion.icon if (can_fuse and fusion.icon) else fusion_icon
+	var icon_tex: Texture2D
+	if can_fuse:
+		icon_tex = fusion.icon if fusion.icon else fusion_icon
+	else:
+		icon_tex = fusion_not_ready_icon if fusion_not_ready_icon else fusion_icon
 
 	var b: BaseButton
 	var label: Label = null
@@ -463,7 +469,7 @@ func _add_fusion_button(row: HBoxContainer, i: int):
 	if can_fuse:
 		b.tooltip_text = "%s\n%s" % [fusion.name, describe_fusion(fusion)]
 	else:
-		b.modulate = Color(0.5, 0.5, 0.5)
+		b.modulate = fusion_not_ready_tint
 		b.tooltip_text = "%s\nNeeds another ally with a full Fusion bar." % fusion_button_text
 
 	b.pressed.connect(func(): fusion_chosen.emit())
