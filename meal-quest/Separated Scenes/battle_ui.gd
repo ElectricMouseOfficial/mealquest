@@ -291,7 +291,7 @@ func describe_move(i: int, move: MoveData) -> String:
 				text += " Lowers the enemy's next attack by %d%%." % int(move.enemy_attack_down * 100)
 			return text
 		"defend":
-			return "Blocks the next enemy attack on %s." % member.name
+			return "Blocks an attack for the next enemy turn. %s." % member.name
 		"taunt":
 			return "Draws the enemy's attack to %s." % member.name
 		"heal":
@@ -301,7 +301,7 @@ func describe_move(i: int, move: MoveData) -> String:
 	return ""
 func describe_fusion(f: FusionData) -> String:
 	if f.desc != "":
-		return f.desc   # your own text from the Inspector wins
+		return f.desc   
 
 	match f.fusion_effect:
 		"party_shield":
