@@ -21,6 +21,7 @@ var enemy_dot_damage := 0
 var enemy_dot_turns := 0
 var shield_fusion: FusionData = null   # set while a party shield is up this round
 var enemy_dot_name := "burn"
+var audio: BattleAudio   # found in _ready(), however the audio scene is named or nested
 
 # --- Dev shortcuts (work only when running from the editor / debug builds) ---------
 @export var debug_shortcuts := true
@@ -42,6 +43,13 @@ func _ready():
 		add_child(puns)
 		push_warning("No Puns node with spectator_puns.gd found, created one with the default puns.")
 	puns.setup(get_node_or_null("Background/Spectators"), self)
+	audio = _find_audio(self)
+	if audio == null:
+		audio = BattleAudio.new()
+		audio.name = "Audio"
+		add_child(audio)
+		push_warning("No BattleAudio node found, created a silent one.")
+	audio.play_music()
 	ui.setup(team, party_nodes, enemy_sprite, enemy, $Textbox, $ActionsPanel)
 	ui.set_enemy_health(enemy_hp, enemy.health)
 
@@ -131,6 +139,7 @@ func _apply_enemy_damage(dmg: int, attacker: String = "", source: int = -1):
 		team.add_fusion_charge(source, dmg)   # dealing damage charges that ally's bar
 	ui.set_enemy_health(enemy_hp, enemy.health)
 	ui.show_enemy_damage_number(dmg)
+	audio.play_damage()
 	
 	# Automatically finds the Spectators node inside Background folder
 	var bg_manager = get_node_or_null("Background/Spectators")
@@ -200,6 +209,7 @@ func _do_heal(healer: int, move: MoveData):
 	await _play_move_vfx(move, healer, target)   # effect first, then the HP changes
 	var result := team.heal_lowest(healer, move.heal_amount)   # emits health_changed -> UI updates
 	ui.show_heal_number(result.index, move.heal_amount)
+	audio.play_heal()
 	await ui.say("%s recovered %d HP!" % [team.members[result.index].name, result.healed])
 
 
@@ -228,6 +238,7 @@ func enemy_turn():
 		# Impact: HP drops and the screen shakes immediately, then the text
 		team.damage_member(idx, enemy.damage)
 		ui.show_party_damage_number(idx, enemy.damage)
+		audio.play_damage()
 		if puns:
 			puns.say_taken(target.name)
 		await anim.play_shake()
@@ -291,12 +302,17 @@ func _do_party_shield(actor: int, fusion: FusionData):
 			team.set_guard(k)          # whole party blocks the next enemy attack
 	shield_fusion = fusion
 	await _play_move_vfx(fusion, actor)
+
 func _do_heal_buff(actor: int, fusion: FusionData):
 	await _play_move_vfx(fusion, actor)
 
+	var any_healed := false
 	for r in team.heal_party(fusion.heal_amount):   # emits health_changed -> bars update
 		if r.healed > 0:
 			ui.show_heal_number(r.index, r.healed)
+			any_healed = true
+	if any_healed:
+		audio.play_heal()
 
 	# If nobody is left to act this round, carry the buff into the next round
 	var rounds := fusion.buff_rounds
@@ -311,6 +327,7 @@ func _tick_enemy_dot():
 	enemy_hp = maxi(0, enemy_hp - enemy_dot_damage)
 	ui.set_enemy_health(enemy_hp, enemy.health)
 	ui.show_enemy_damage_number(enemy_dot_damage)
+	audio.play_damage()
 	await anim.play_enemy_hit()
 	await ui.say("%s takes %d damage from the %s!" % [enemy.name, enemy_dot_damage, enemy_dot_name])
 	if enemy_hp == 0:
@@ -333,3 +350,13 @@ func _try_apply_dot(fusion: FusionData):
 		await ui.say("%s is afflicted with %s!" % [enemy.name, fusion.dot_name])
 	else:
 		await ui.say("%s is already suffering a stronger effect!" % enemy.name)
+
+# Searches every child (and their children) for the node running battle_audio.gd.
+func _find_audio(node: Node) -> BattleAudio:
+	for c in node.get_children():
+		if c is BattleAudio:
+			return c
+		var found := _find_audio(c)
+		if found != null:
+			return found
+	return null

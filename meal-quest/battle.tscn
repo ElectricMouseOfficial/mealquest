@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://pgvbttqh0dqv" path="res://Separated Scenes/puns.tscn" id="16_slotg"]
 [ext_resource type="Texture2D" uid="uid://7ex5y2koj8jo" path="res://Turn Indicator Ring_r2.png" id="17_22sa7"]
 [ext_resource type="Texture2D" uid="uid://btcdt2b5hibk1" path="res://T-Bone PNG.png" id="17_bx4lf"]
+[ext_resource type="PackedScene" uid="uid://bq84p8cc4k8wu" path="res://audio.tscn" id="20_aacmo"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8lcdg"]
 bg_color = Color(1, 1, 1, 1)
@@ -574,5 +575,4 @@ turn_indicator_offset = Vector2(0, -100)
 
 [node name="Puns" parent="." unique_id=1723135082 instance=ExtResource("16_slotg")]
 
-[connection signal="pressed" from="ActionsPanel/Actions/Button" to="." method="_on_Attack_pressed"]
-[connection signal="pressed" from="ActionsPanel/Actions/Button2" to="." method="_on_Defend_pressed"]
+[node name="Audio" parent="." unique_id=1620446832 instance=ExtResource("20_aacmo")]
