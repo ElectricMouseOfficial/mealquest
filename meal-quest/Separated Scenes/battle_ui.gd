@@ -44,7 +44,7 @@ var _indicator_frame := 0
 @export var fusion_button_text := "Fusion!"
 @export var fusion_icon: Texture2D                      # drag your Fusion button art here
 @export var fusion_text_color := Color.GOLD
-@export var fusion_bar_size := Vector2(60, 8)
+@export var fusion_bar_size := Vector2(60, 16)
 @export var fusion_bar_color := Color("#3aa0ff")
 @export var fusion_bar_full_color := Color.GOLD
 @export var fusion_bar_bg_color := Color(0, 0, 0, 0.6)
@@ -53,7 +53,14 @@ var _indicator_frame := 0
 @export var hover_bg_color := Color(0, 0, 0, 0.8)
 @export var hover_offset := Vector2(0, -8)              # nudge the hover panel (+x right, +y down)
 @export var fusion_not_ready_icon: Texture2D
-@export var fusion_not_ready_tint := Color(0.5, 0.5, 0.5)
+@export var fusion_not_ready_tint := Color(0.5, 0.5, 0.5)         # taller than before so the text fits
+@export var fusion_bar_text := "Fusion!"
+@export var fusion_bar_font_size := 11
+@export var fusion_bar_text_color := Color.WHITE
+@export var fusion_bar_text_outline_color := Color.BLACK
+@export var fusion_bar_text_outline_size := 3
+@export var fusion_bar_border_color := Color.BLACK
+@export var fusion_bar_border_width := 2
 
 var team: TeamManager                 # read-only queries (cooldowns, damage preview)
 var party_nodes: Array[TextureRect] = []
@@ -408,6 +415,33 @@ func _build_fusion_bars():
 		var bg := StyleBoxFlat.new()
 		bg.bg_color = fusion_bar_bg_color
 		bar.add_theme_stylebox_override("background", bg)
+
+		# Border: drawn on top of the bar so the fill can't cover it
+		var border := Panel.new()
+		border.name = "Border"
+		border.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var border_style := StyleBoxFlat.new()
+		border_style.draw_center = false
+		border_style.set_border_width_all(fusion_bar_border_width)
+		border_style.border_color = fusion_bar_border_color
+		border.add_theme_stylebox_override("panel", border_style)
+		bar.add_child(border)
+		border.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+		# Text inside the bar
+		var text := Label.new()
+		text.name = "Text"
+		text.text = fusion_bar_text
+		text.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		text.add_theme_font_size_override("font_size", fusion_bar_font_size)
+		text.add_theme_color_override("font_color", fusion_bar_text_color)
+		text.add_theme_color_override("font_outline_color", fusion_bar_text_outline_color)
+		text.add_theme_constant_override("outline_size", fusion_bar_text_outline_size)
+		bar.add_child(text)
+		text.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
 		party_nodes[i].get_node("VBoxContainerH").add_child(bar)   # sits under the HP bar
 		fusion_bars.append(bar)
 		set_fusion_bar(i, team.fusion_charge[i], team.members[i].fusion_max)
