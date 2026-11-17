@@ -576,3 +576,4 @@ turn_indicator_offset = Vector2(0, -100)
 [node name="Puns" parent="." unique_id=1723135082 instance=ExtResource("16_slotg")]
 
 [node name="Audio" parent="." unique_id=1620446832 instance=ExtResource("20_aacmo")]
+music_volume_db = -8.0
