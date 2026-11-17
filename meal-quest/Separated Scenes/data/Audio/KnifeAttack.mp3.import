@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://07o5rv15u1s"
+path="res://.godot/imported/KnifeAttack.mp3-9f52cf22144b6ec7b92f12e964538dfd.mp3str"
+
+[deps]
+
+source_file="res://Separated Scenes/data/Audio/KnifeAttack.mp3"
+dest_files=["res://.godot/imported/KnifeAttack.mp3-9f52cf22144b6ec7b92f12e964538dfd.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
