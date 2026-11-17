@@ -162,6 +162,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ip7xm")
 enemy = ExtResource("2_6t8i5")
+double_attack_text = "Out of desperation it attacks again! I wouldn't want to be that food!"
+double_attack_damage_ratio = 0.6
 
 [node name="Background" type="TextureRect" parent="." unique_id=803507479]
 layout_mode = 0

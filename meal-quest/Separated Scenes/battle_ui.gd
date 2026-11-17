@@ -44,7 +44,7 @@ var _indicator_frame := 0
 @export var fusion_button_text := "Fusion!"
 @export var fusion_icon: Texture2D                      # drag your Fusion button art here
 @export var fusion_text_color := Color.GOLD
-@export var fusion_bar_size := Vector2(60, 8)
+@export var fusion_bar_size := Vector2(60, 16)
 @export var fusion_bar_color := Color("#3aa0ff")
 @export var fusion_bar_full_color := Color.GOLD
 @export var fusion_bar_bg_color := Color(0, 0, 0, 0.6)
@@ -52,6 +52,15 @@ var _indicator_frame := 0
 @export var hover_text_color := Color.WHITE
 @export var hover_bg_color := Color(0, 0, 0, 0.8)
 @export var hover_offset := Vector2(0, -8)              # nudge the hover panel (+x right, +y down)
+@export var fusion_not_ready_icon: Texture2D
+@export var fusion_not_ready_tint := Color(0.5, 0.5, 0.5)         # taller than before so the text fits
+@export var fusion_bar_text := "Fusion!"
+@export var fusion_bar_font_size := 11
+@export var fusion_bar_text_color := Color.WHITE
+@export var fusion_bar_text_outline_color := Color.BLACK
+@export var fusion_bar_text_outline_size := 3
+@export var fusion_bar_border_color := Color.BLACK
+@export var fusion_bar_border_width := 2
 
 var team: TeamManager                 # read-only queries (cooldowns, damage preview)
 var party_nodes: Array[TextureRect] = []
@@ -282,7 +291,7 @@ func describe_move(i: int, move: MoveData) -> String:
 				text += " Lowers the enemy's next attack by %d%%." % int(move.enemy_attack_down * 100)
 			return text
 		"defend":
-			return "Blocks the next enemy attack on %s." % member.name
+			return "Blocks an attack for the next enemy turn. %s." % member.name
 		"taunt":
 			return "Draws the enemy's attack to %s." % member.name
 		"heal":
@@ -292,7 +301,7 @@ func describe_move(i: int, move: MoveData) -> String:
 	return ""
 func describe_fusion(f: FusionData) -> String:
 	if f.desc != "":
-		return f.desc   # your own text from the Inspector wins
+		return f.desc   
 
 	match f.fusion_effect:
 		"party_shield":
@@ -406,6 +415,33 @@ func _build_fusion_bars():
 		var bg := StyleBoxFlat.new()
 		bg.bg_color = fusion_bar_bg_color
 		bar.add_theme_stylebox_override("background", bg)
+
+		# Border: drawn on top of the bar so the fill can't cover it
+		var border := Panel.new()
+		border.name = "Border"
+		border.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var border_style := StyleBoxFlat.new()
+		border_style.draw_center = false
+		border_style.set_border_width_all(fusion_bar_border_width)
+		border_style.border_color = fusion_bar_border_color
+		border.add_theme_stylebox_override("panel", border_style)
+		bar.add_child(border)
+		border.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+		# Text inside the bar
+		var text := Label.new()
+		text.name = "Text"
+		text.text = fusion_bar_text
+		text.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		text.add_theme_font_size_override("font_size", fusion_bar_font_size)
+		text.add_theme_color_override("font_color", fusion_bar_text_color)
+		text.add_theme_color_override("font_outline_color", fusion_bar_text_outline_color)
+		text.add_theme_constant_override("outline_size", fusion_bar_text_outline_size)
+		bar.add_child(text)
+		text.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
 		party_nodes[i].get_node("VBoxContainerH").add_child(bar)   # sits under the HP bar
 		fusion_bars.append(bar)
 		set_fusion_bar(i, team.fusion_charge[i], team.members[i].fusion_max)
@@ -429,7 +465,11 @@ func _add_fusion_button(row: HBoxContainer, i: int):
 	# Show the fusion's own name; fall back to "Fusion!" when no partner is ready yet
 	var btn_text := fusion.name if can_fuse else fusion_button_text
 	# Use the fusion's own icon if it has one, otherwise the shared Fusion Icon
-	var icon_tex: Texture2D = fusion.icon if (can_fuse and fusion.icon) else fusion_icon
+	var icon_tex: Texture2D
+	if can_fuse:
+		icon_tex = fusion.icon if fusion.icon else fusion_icon
+	else:
+		icon_tex = fusion_not_ready_icon if fusion_not_ready_icon else fusion_icon
 
 	var b: BaseButton
 	var label: Label = null
@@ -463,7 +503,7 @@ func _add_fusion_button(row: HBoxContainer, i: int):
 	if can_fuse:
 		b.tooltip_text = "%s\n%s" % [fusion.name, describe_fusion(fusion)]
 	else:
-		b.modulate = Color(0.5, 0.5, 0.5)
+		b.modulate = fusion_not_ready_tint
 		b.tooltip_text = "%s\nNeeds another ally with a full Fusion bar." % fusion_button_text
 
 	b.pressed.connect(func(): fusion_chosen.emit())

@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="FusionData" format=3 uid="uid://cg24psxs8gl4o"]
 
 [ext_resource type="Script" uid="uid://b5jenne8whshv" path="res://Separated Scenes/party_member_data.gd" id="1_8olho"]
+[ext_resource type="Texture2D" uid="uid://ckn535b0166ud" path="res://UI_Move_Buttons/Rainbow.png" id="1_fbwx0"]
 [ext_resource type="Resource" uid="uid://dl50ge4yfl7sl" path="res://Separated Scenes/data/party/tomato.tres" id="2_fbwx0"]
 [ext_resource type="Resource" uid="uid://bigdt071l75ft" path="res://Separated Scenes/data/party/soup.tres" id="3_66gyq"]
 [ext_resource type="Script" uid="uid://lhno1hdya8ih" path="res://Separated Scenes/FusionData.gd" id="4_knwqd"]
@@ -12,6 +13,7 @@ dot_damage = 3
 dot_turns = 3
 name = "Tomato Bisque Blast"
 mult = 1.5
+icon = ExtResource("1_fbwx0")
 text = "Tomato and Soup combine to make a fine acidic broth!"
 desc = "Do a small amount of damage and apply a stronger DOT effect to the enemy!"
 vfx_target = "enemy"

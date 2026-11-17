@@ -5,6 +5,7 @@ extends Control
 ##   UI         (battle_ui.gd)          menus, bars, text
 
 @export var enemy: Resource
+@export_multiline var double_attack_text := "Out of desperation it attacks again!"   # shown before the second slash ({enemy} = the enemy's name)
 
 @onready var team: TeamManager = $Team
 @onready var anim: BattleAnimations = $Animations
@@ -256,14 +257,13 @@ func enemy_turn():
 	var dmg := base_dmg
 	if targets.size() == 2:
 		dmg = maxi(1, int(base_dmg * double_attack_damage_ratio))
-		await ui.say("%s swings wide at %s and %s OWCH!" % [
-			enemy.name, team.members[targets[0]].name, team.members[targets[1]].name])
-	else:
-		await ui.say("%s slices at %s OWCH!" % [enemy.name, team.members[targets[0]].name])
+	await ui.say("%s slices at %s OWCH!" % [enemy.name, team.members[targets[0]].name])
 
 	_shield_dot_done = false
-	for idx in targets:
-		await _enemy_strike(idx, dmg)
+	for n in targets.size():
+		if n > 0:
+			await ui.say(double_attack_text.replace("{enemy}", enemy.name))
+		await _enemy_strike(targets[n], dmg)
 
 	enemy_attack_mult = 1.0      # a Locular Lob weakening only lasts for this one attack
 	shield_fusion = null

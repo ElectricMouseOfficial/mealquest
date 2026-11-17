@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cs3vmvvucvnlu" path="res://Separated Scenes/move_data.gd" id="1_0bdvo"]
 [ext_resource type="Texture2D" uid="uid://b3yov3dtm4w6l" path="res://UI_Move_Buttons/Red_Button.png" id="1_8gpl7"]
+[ext_resource type="Texture2D" uid="uid://g8ia4n0xqy0f" path="res://Animation_VFX_Import/Tomato Splat VFX Proto.png" id="3_iuvl4"]
 
 [resource]
 script = ExtResource("1_0bdvo")
@@ -11,6 +12,12 @@ cooldown = 2
 icon = ExtResource("1_8gpl7")
 text = "The tomato shoots its corrosive insides at the knife! EWWW!"
 desc = "Shoots fluid at the enemy that does small damage and applies a 30% dmg reduction to the enemy!"
+vfx_frames = Array[Texture2D]([ExtResource("3_iuvl4")])
+vfx_target = "enemy"
+vfx_fade_time = 0.7
+vfx_frame_time = 0.7
+vfx_scale = 0.35
+vfx_offset = Vector2(-225, 0)
 enemy_attack_down = 0.3
 attack_anim = "vfx_only"
 metadata/_custom_type_script = "uid://cs3vmvvucvnlu"

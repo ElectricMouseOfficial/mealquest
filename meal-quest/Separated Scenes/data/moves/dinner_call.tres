@@ -2,9 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://oq41ng1btht5" path="res://UI_Move_Buttons/Soup_UI.png" id="1_5gv2t"]
 [ext_resource type="Script" uid="uid://cs3vmvvucvnlu" path="res://Separated Scenes/move_data.gd" id="1_ffkdy"]
-[ext_resource type="Texture2D" uid="uid://cem7s4r0oafha" path="res://Animation_VFX_Import/atk_up_animations/atk_boost-0001_0000.png" id="3_37n22"]
-[ext_resource type="Texture2D" uid="uid://q52ud1p3mj1" path="res://Animation_VFX_Import/atk_up_animations/atk_boost-0001_0001.png" id="4_ix8fg"]
-[ext_resource type="Texture2D" uid="uid://wje27dhv7buj" path="res://Animation_VFX_Import/atk_up_animations/atk_boost-0001_0002.png" id="5_31g5a"]
+[ext_resource type="Texture2D" uid="uid://bdqf0y5lricl0" path="res://Animation_VFX_Import/vfx_sprites/vfx-atk_up_fire1.png" id="3_1oroy"]
+[ext_resource type="Texture2D" uid="uid://cx11qpdwfm23o" path="res://Animation_VFX_Import/vfx_sprites/vfx-atk_up_fire2.png" id="4_37n22"]
 
 [resource]
 script = ExtResource("1_ffkdy")
@@ -13,7 +12,7 @@ kind = "rally"
 cooldown = 2
 icon = ExtResource("1_5gv2t")
 text = "A nice meal makes your party feel fired up!"
-vfx_frames = Array[Texture2D]([ExtResource("3_37n22"), ExtResource("4_ix8fg"), ExtResource("5_31g5a")])
+vfx_frames = Array[Texture2D]([ExtResource("3_1oroy"), ExtResource("4_37n22"), ExtResource("3_1oroy"), ExtResource("4_37n22"), ExtResource("3_1oroy"), ExtResource("4_37n22"), ExtResource("3_1oroy"), ExtResource("4_37n22")])
 vfx_target = "all_allies"
 vfx_frame_time = 0.2
 vfx_scale = 0.2
