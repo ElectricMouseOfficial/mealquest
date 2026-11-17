@@ -4,10 +4,20 @@
 [ext_resource type="AudioStream" uid="uid://cxwa7416n37yt" path="res://Separated Scenes/data/Audio/Battle_Theme_V1.mp3" id="2_q45hi"]
 [ext_resource type="AudioStream" uid="uid://07o5rv15u1s" path="res://Separated Scenes/data/Audio/KnifeAttack.mp3" id="3_p423y"]
 [ext_resource type="AudioStream" uid="uid://cllwtwqy2ef58" path="res://Separated Scenes/data/Audio/Healing.mp3" id="4_8w7rj"]
+[ext_resource type="AudioStream" uid="uid://cedmvb8kg2j5q" path="res://Separated Scenes/data/Audio/FoodAttack.mp3" id="5_0svpk"]
+[ext_resource type="AudioStream" uid="uid://cjrkh1p58bq3x" path="res://Separated Scenes/data/Audio/SoupDie.mp3" id="6_5olcg"]
+[ext_resource type="AudioStream" uid="uid://ca42ymsfai2iq" path="res://Separated Scenes/data/Audio/CheerA.mp3" id="7_pgqns"]
+[ext_resource type="AudioStream" uid="uid://xxooo0vd0mq0" path="res://Separated Scenes/data/Audio/JeerA.mp3" id="8_cqcg1"]
 
 [node name="Audio" type="Node" unique_id=1620446832]
 script = ExtResource("1_qc0l7")
 music = ExtResource("2_q45hi")
+music_volume_db = 3.0
 music_loop_start = 8.0
 damage_sfx = ExtResource("3_p423y")
 heal_sfx = ExtResource("4_8w7rj")
+slice_sfx = ExtResource("3_p423y")
+hit_sfx = ExtResource("5_0svpk")
+death_sfx = ExtResource("6_5olcg")
+cheer_sfx = ExtResource("7_pgqns")
+jeer_sfx = ExtResource("8_cqcg1")

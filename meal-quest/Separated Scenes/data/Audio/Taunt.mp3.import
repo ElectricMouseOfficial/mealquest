@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dbhrlfypidn4v"
+path="res://.godot/imported/Taunt.mp3-93c8d90c0a1d30edc15d9dadf5e3f1c3.mp3str"
+
+[deps]
+
+source_file="res://Separated Scenes/data/Audio/Taunt.mp3"
+dest_files=["res://.godot/imported/Taunt.mp3-93c8d90c0a1d30edc15d9dadf5e3f1c3.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
