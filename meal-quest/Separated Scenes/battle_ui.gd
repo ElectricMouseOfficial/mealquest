@@ -287,6 +287,25 @@ func describe_move(i: int, move: MoveData) -> String:
 		"rally":
 			return "Boosts the party's damage by %d%% this round." % int((move.rally_bonus - 1.0) * 100)
 	return ""
+func describe_fusion(f: FusionData) -> String:
+	if f.desc != "":
+		return f.desc   # your own text from the Inspector wins
+
+	match f.fusion_effect:
+		"party_shield":
+			var text := "Shields the whole party from the next enemy attack."
+			if f.dot_damage > 0 and f.dot_turns > 0:
+				text += " The enemy takes %d damage a turn for %d turns if it hits the shield." % [f.dot_damage, f.dot_turns]
+			return text
+		"heal_buff":
+			return "Heals the whole party for %d HP and boosts damage by %d%% for %d round(s)." % [
+				f.heal_amount, int((f.rally_bonus - 1.0) * 100), f.buff_rounds]
+		_:
+			var dmg := team.fusion_damage(team.fusion_users(f), f)
+			var text := "Deals about %d damage to the enemy." % dmg
+			if f.dot_damage > 0 and f.dot_turns > 0:
+				text += " Then %d damage a turn for %d turns." % [f.dot_damage, f.dot_turns]
+			return text
 
 func _widest_line(text: String, font: Font, font_px: int) -> float:
 	var widest := 0.0
@@ -399,21 +418,29 @@ func set_fusion_bar(i: int, charge: int, max_charge: int):
 		_refresh_hover()
 
 func _add_fusion_button(row: HBoxContainer, i: int):
+	if row.get_node_or_null("FusionButton") != null:
+		return   # already has one
+
 	var fusion := team.find_fusion(i)
 	var can_fuse := fusion != null
+	# Show the fusion's own name; fall back to "Fusion!" when no partner is ready yet
+	var btn_text := fusion.name if can_fuse else fusion_button_text
+	# Use the fusion's own icon if it has one, otherwise the shared Fusion Icon
+	var icon_tex: Texture2D = fusion.icon if (can_fuse and fusion.icon) else fusion_icon
+
 	var b: BaseButton
 	var label: Label = null
 
-	if fusion_icon:
+	if icon_tex:
 		var tb := TextureButton.new()
-		tb.texture_normal = fusion_icon
-		tb.texture_disabled = fusion_icon
+		tb.texture_normal = icon_tex
+		tb.texture_disabled = icon_tex
 		tb.ignore_texture_size = true
 		tb.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		tb.custom_minimum_size = move_icon_size
 
 		label = Label.new()
-		label.text = fusion_button_text
+		label.text = btn_text
 		label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -425,22 +452,19 @@ func _add_fusion_button(row: HBoxContainer, i: int):
 		b = tb
 	else:
 		var tb := Button.new()
-		tb.text = fusion_button_text
+		tb.text = btn_text
 		tb.add_theme_color_override("font_color", fusion_text_color)
 		b = tb
 
 	b.disabled = not can_fuse
-	if not can_fuse:
+	if can_fuse:
+		b.tooltip_text = "%s\n%s" % [fusion.name, describe_fusion(fusion)]
+	else:
 		b.modulate = Color(0.5, 0.5, 0.5)
 		b.tooltip_text = "%s\nNeeds another ally with a full Fusion bar." % fusion_button_text
-	else:
-		var names := PackedStringArray()
-		for p in fusion.partners:
-			if p:
-				names.append(p.name)
-		b.tooltip_text = "%s\n%s\nWith: %s" % [fusion_button_text, fusion.name, ", ".join(names)]
 
 	b.pressed.connect(func(): fusion_chosen.emit())
+	b.name = "FusionButton"
 	row.add_child(b)
 	if label:
 		_fit_label(label, move_icon_size.x)

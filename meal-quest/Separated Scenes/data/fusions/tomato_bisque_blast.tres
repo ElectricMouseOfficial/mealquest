@@ -13,4 +13,5 @@ dot_turns = 3
 name = "Tomato Bisque Blast"
 mult = 1.5
 text = "Tomato and Soup combine to make a fine acidic broth!"
+desc = "Do a small amount of damage and apply a stronger DOT effect to the enemy!"
 vfx_target = "enemy"
