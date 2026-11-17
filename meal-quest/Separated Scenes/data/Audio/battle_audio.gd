@@ -32,6 +32,7 @@ var _music_player: AudioStreamPlayer
 
 
 func _ready():
+	print("BattleAudio ready at ", get_path(), " has_music=", music != null)
 	_music_player = AudioStreamPlayer.new()
 	_music_player.name = "MusicPlayer"
 	add_child(_music_player)
@@ -39,6 +40,7 @@ func _ready():
 
 
 func play_music():
+	print("play_music called on ", get_path(), " has_music=", music != null)
 	if music == null:
 		return
 	_music_player.stream = music

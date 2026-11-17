@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://buw4bykd7t35n" path="res://Separated Scenes/battle_ui.gd" id="1_xlb7i"]
 [ext_resource type="Texture2D" uid="uid://cpwxosk4c8bfw" path="res://Damaged Knife PNG.png" id="2_lcxs2"]
-[ext_resource type="Script" uid="uid://bi0pbowxkox4i" path="res://Separated Scenes/data/Audio/battle_audio.gd" id="3_lcxs2"]
 
 [node name="UI" type="Control" unique_id=872549265]
 visible = false
@@ -18,7 +17,3 @@ turn_indicator_offset = Vector2(0, -20)
 enemy_damaged_tex = ExtResource("2_lcxs2")
 menu_shift = Vector2(0, 30)
 textbox_font_size = 24
-
-[node name="BattleAudio" type="Node" parent="." unique_id=1282617556]
-script = ExtResource("3_lcxs2")
-metadata/_custom_type_script = "uid://bi0pbowxkox4i"

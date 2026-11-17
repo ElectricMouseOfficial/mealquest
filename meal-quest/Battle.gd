@@ -50,6 +50,7 @@ func _ready():
 	puns.setup(get_node_or_null("Background/Spectators"), self)
 	audio = _find_audio(self)
 	if audio == null:
+		print("Battle is using audio node: ", audio.get_path())
 		audio = BattleAudio.new()
 		audio.name = "Audio"
 		add_child(audio)
