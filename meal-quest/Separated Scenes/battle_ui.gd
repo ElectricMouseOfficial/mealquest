@@ -277,7 +277,10 @@ func describe_move(i: int, move: MoveData) -> String:
 	var member := team.members[i]
 	match move.kind:
 		"attack":
-			return "Deals about %d damage to the enemy." % team.attack_damage(i, move)
+			var text := "Deals about %d damage to the enemy." % team.attack_damage(i, move)
+			if move.enemy_attack_down > 0.0:
+				text += " Lowers the enemy's next attack by %d%%." % int(move.enemy_attack_down * 100)
+			return text
 		"defend":
 			return "Blocks the next enemy attack on %s." % member.name
 		"taunt":
@@ -467,7 +470,7 @@ func _add_fusion_button(row: HBoxContainer, i: int):
 	b.name = "FusionButton"
 	row.add_child(b)
 	if label:
-		_fit_label(label, move_icon_size.x)
+		_fit_label(label, move_icon_size.x) 
 
 
 # --- Hover info ------------------------------------------------------------------

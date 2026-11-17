@@ -22,11 +22,16 @@ var enemy_dot_turns := 0
 var shield_fusion: FusionData = null   # set while a party shield is up this round
 var enemy_dot_name := "burn"
 var audio: BattleAudio   # found in _ready(), however the audio scene is named or nested
+var enemy_attack_mult := 1.0       # Locular Lob lowers this; it resets after the enemy's next attack
+var _shield_dot_done := false      # so a shield only applies its DOT once per enemy turn
 
 # --- Dev shortcuts (work only when running from the editor / debug builds) ---------
 @export var debug_shortcuts := true
 @export var debug_win_key: Key = KEY_W     # instantly win the battle
 @export var debug_lose_key: Key = KEY_L    # instantly lose the battle
+@export_group("Enemy attacks")
+@export_range(0.0, 1.0, 0.05) var double_attack_chance := 0.35      # chance the Knife swings at 2 allies
+@export_range(0.1, 1.0, 0.05) var double_attack_damage_ratio := 0.5 # each target takes this share of the normal damage
 
 
 func _ready():
@@ -139,7 +144,8 @@ func _apply_enemy_damage(dmg: int, attacker: String = "", source: int = -1):
 		team.add_fusion_charge(source, dmg)   # dealing damage charges that ally's bar
 	ui.set_enemy_health(enemy_hp, enemy.health)
 	ui.show_enemy_damage_number(dmg)
-	audio.play_damage()
+	audio.play_hit()
+	audio.play_cheer()
 	
 	# Automatically finds the Spectators node inside Background folder
 	var bg_manager = get_node_or_null("Background/Spectators")
@@ -151,21 +157,34 @@ func _apply_enemy_damage(dmg: int, attacker: String = "", source: int = -1):
 
 func _do_attack(i: int, move: MoveData):
 	var dmg := team.attack_damage(i, move)
+	var attacker := team.members[i].name
 
-	if team.members[i].scene_node == "Hero":
-		await anim.play_tomato_attack(party_nodes[i], func(): _apply_enemy_damage(dmg, team.members[i].name, i))
+	if move.attack_anim == "vfx_only":
+		await _play_move_vfx(move, i)                 # this move's own frames, no tomato roll
+		_apply_enemy_damage(dmg, attacker, i)
+		await anim.play_enemy_hit()
+	elif team.members[i].scene_node == "Hero":
+		await anim.play_tomato_attack(party_nodes[i], func(): _apply_enemy_damage(dmg, attacker, i))
 	else:
-		_apply_enemy_damage(dmg, team.members[i].name, i)
+		_apply_enemy_damage(dmg, attacker, i)
 		await anim.play_enemy_hit()
 
-	await ui.say("%s dealt %d damage!" % [team.members[i].name, dmg])
+	await ui.say("%s dealt %d damage!" % [attacker, dmg])
 
 	if enemy_hp == 0:
 		await _win_battle()
+		return
+	if move.enemy_attack_down > 0.0:
+		await _apply_enemy_attack_down(move.enemy_attack_down)
 
+func _apply_enemy_attack_down(amount: float):
+	enemy_attack_mult = minf(enemy_attack_mult, 1.0 - amount)   # the strongest weakening wins; they don't stack
+	await ui.say("%s's next attack is weakened!" % enemy.name)
+	
 func _win_battle():
 	_ending = true
 	ui.show_text("%s was defeated!" % enemy.name)
+	audio.play_cheer(true)
 	await anim.play_enemy_death()
 	if puns:
 		await puns.play_victory()   # all spectators cheer and jump
@@ -186,6 +205,8 @@ func _play_move_vfx(move: MoveData, user: int, healed: int = -1):
 			mode = "all_allies"
 		elif healed != -1:
 			mode = "healed"
+		elif move.kind == "attack":
+			mode = "enemy"
 		else:
 			mode = "self"
 
@@ -221,10 +242,37 @@ func enemy_turn():
 		await _tick_enemy_dot()
 		if _ending:
 			return
-	var idx := team.pick_enemy_target()
-	var target := team.members[idx]
 
-	await ui.say("%s slices at %s OWCH!" % [enemy.name, target.name])
+	# Usually one ally, sometimes a wide swing at two
+	var targets: Array[int] = []
+	if randf() < double_attack_chance:
+		targets = team.pick_enemy_targets(2)
+	if targets.size() < 2:
+		targets.clear()
+		targets.append(team.pick_enemy_target())
+
+	var base_dmg := maxi(1, int(enemy.damage * enemy_attack_mult))
+	var dmg := base_dmg
+	if targets.size() == 2:
+		dmg = maxi(1, int(base_dmg * double_attack_damage_ratio))
+		await ui.say("%s swings wide at %s and %s OWCH!" % [
+			enemy.name, team.members[targets[0]].name, team.members[targets[1]].name])
+	else:
+		await ui.say("%s slices at %s OWCH!" % [enemy.name, team.members[targets[0]].name])
+
+	_shield_dot_done = false
+	for idx in targets:
+		await _enemy_strike(idx, dmg)
+
+	enemy_attack_mult = 1.0      # a Locular Lob weakening only lasts for this one attack
+	shield_fusion = null
+	team.end_round()
+	start_player_turn()
+
+# One slash on one ally: animation, then block or damage.
+func _enemy_strike(idx: int, dmg: int):
+	var target := team.members[idx]
+	audio.play_slice()
 	await anim.play_knife_attack(party_nodes[idx])
 
 	if team.is_guarding(idx):
@@ -232,20 +280,23 @@ func enemy_turn():
 			puns.say_blocked(target.name)
 		await anim.play_mini_shake()
 		await ui.say("%s defended successfully!" % target.name)
-		if shield_fusion != null:
+		if shield_fusion != null and not _shield_dot_done:
+			_shield_dot_done = true
 			await _try_apply_dot(shield_fusion)
 	else:
 		# Impact: HP drops and the screen shakes immediately, then the text
-		team.damage_member(idx, enemy.damage)
-		ui.show_party_damage_number(idx, enemy.damage)
+		team.damage_member(idx, dmg)
+		ui.show_party_damage_number(idx, dmg)
 		audio.play_damage()
+		audio.play_jeer()
 		if puns:
 			puns.say_taken(target.name)
 		await anim.play_shake()
-		await ui.say("%s dealt %d damage to %s!" % [enemy.name, enemy.damage, target.name])
+		await ui.say("%s dealt %d damage to %s!" % [enemy.name, dmg, target.name])
 
 		if not team.is_alive(idx):
-			await anim.play_party_death(party_nodes[idx], team.members[idx].death_frames)
+			audio.play_death(target.death_sfx)
+			await anim.play_party_death(party_nodes[idx], target.death_frames)
 			await ui.say("%s was knocked out!" % target.name)
 
 	shield_fusion = null
@@ -255,6 +306,7 @@ func enemy_turn():
 func _party_wiped():
 	_ending = true
 	ui.show_text("Your party was defeated...")
+	audio.play_jeer(true)
 	if puns:
 		await puns.play_defeat()   # all spectators cry
 	if ui.textbox.visible:

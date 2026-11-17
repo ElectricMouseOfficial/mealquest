@@ -19,3 +19,7 @@ extends Resource
 @export var vfx_frame_time := 0.06              # seconds per frame
 @export var vfx_scale := 1.0                    # 1.0 = original image size
 @export var vfx_offset := Vector2.ZERO          # nudge the effect (+x right, +y down)
+@export_group("Debuff")
+@export_range(0.0, 0.9, 0.05) var enemy_attack_down := 0.0   # attack: lowers the enemy's NEXT attack by this fraction (0.3 = 30% less)
+@export_group("Attack animation")
+@export_enum("default", "vfx_only") var attack_anim := "default"   # default = the character's usual attack animation; vfx_only = just play this move's Effect (VFX) frames

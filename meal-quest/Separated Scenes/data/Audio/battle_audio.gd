@@ -14,6 +14,19 @@ extends Node
 @export_range(0.0, 0.5, 0.01) var damage_pitch_variation := 0.08   # random pitch so repeats don't sound identical
 @export var heal_sfx: AudioStream                           # played whenever healing lands
 @export_range(-40.0, 6.0, 0.5, "suffix:dB") var heal_volume_db := 0.0
+@export var slice_sfx: AudioStream                          # the Knife starts its attack
+@export_range(-40.0, 6.0, 0.5, "suffix:dB") var slice_volume_db := 0.0
+@export var hit_sfx: AudioStream                            # a food hits the Knife (blank = uses Damage Sfx)
+@export_range(-40.0, 6.0, 0.5, "suffix:dB") var hit_volume_db := 0.0
+@export var death_sfx: AudioStream                          # generic knock-out sound (a member's own sound wins)
+@export_range(-40.0, 6.0, 0.5, "suffix:dB") var death_volume_db := 0.0
+
+@export_group("Crowd")
+@export var cheer_sfx: AudioStream                          # the food lands a hit / wins
+@export_range(-40.0, 6.0, 0.5, "suffix:dB") var cheer_volume_db := -6.0
+@export var jeer_sfx: AudioStream                           # the food gets hit / loses
+@export_range(-40.0, 6.0, 0.5, "suffix:dB") var jeer_volume_db := -6.0
+@export_range(0.0, 1.0, 0.05) var crowd_react_chance := 0.4   # chance the crowd reacts to a normal hit (win/lose always react)
 
 var _music_player: AudioStreamPlayer
 
@@ -58,6 +71,26 @@ func play_damage():
 
 func play_heal():
 	_play_sfx(heal_sfx, heal_volume_db)
+	
+func play_slice():
+	_play_sfx(slice_sfx, slice_volume_db, 0.05)
+
+func play_hit():
+	if hit_sfx != null:
+		_play_sfx(hit_sfx, hit_volume_db, damage_pitch_variation)
+	else:
+		play_damage()          # no hit sound assigned: fall back to the generic one
+
+func play_death(member_sfx: AudioStream = null):
+	_play_sfx(member_sfx if member_sfx != null else death_sfx, death_volume_db)
+
+func play_cheer(always := false):
+	if always or randf() < crowd_react_chance:
+		_play_sfx(cheer_sfx, cheer_volume_db)
+
+func play_jeer(always := false):
+	if always or randf() < crowd_react_chance:
+		_play_sfx(jeer_sfx, jeer_volume_db)
 
 # Each sound gets its own player, so quick repeats overlap instead of cutting each other off.
 func _play_sfx(stream: AudioStream, volume_db: float, pitch_variation := 0.0):

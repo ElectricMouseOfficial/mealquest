@@ -125,6 +125,22 @@ func pick_enemy_target() -> int:
 			living.append(i)
 	return living.pick_random()
 
+# Up to `count` different living allies. A taunting ally is always picked first.
+func pick_enemy_targets(count: int) -> Array[int]:
+	var living: Array[int] = []
+	for i in members.size():
+		if hp[i] > 0:
+			living.append(i)
+	living.shuffle()
+
+	var picked: Array[int] = []
+	if taunt_target != -1 and hp[taunt_target] > 0:
+		picked.append(taunt_target)
+		living.erase(taunt_target)
+	while picked.size() < count and not living.is_empty():
+		picked.append(living.pop_back())
+	return picked
+	
 func end_round():
 	for i in members.size():
 		guarding[i] = false

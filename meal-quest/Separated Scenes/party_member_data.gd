@@ -11,3 +11,4 @@ extends Resource
 @export var death_frames: Array[Texture2D] = []   # optional death animation; the last frame is held, then it fades
 @export var moves: Array[MoveData] = []
 @export var fusion_max := 30   # damage this member must deal to fill their Fusion bar
+@export var death_sfx: AudioStream      # this member's own knock-out sound (blank = the generic one)

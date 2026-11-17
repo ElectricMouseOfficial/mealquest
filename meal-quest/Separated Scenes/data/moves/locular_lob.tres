@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MoveData" format=3 uid="uid://daojednln6quy"]
+
+[ext_resource type="Script" uid="uid://cs3vmvvucvnlu" path="res://Separated Scenes/move_data.gd" id="1_0bdvo"]
+[ext_resource type="Texture2D" uid="uid://b3yov3dtm4w6l" path="res://UI_Move_Buttons/Red_Button.png" id="1_8gpl7"]
+
+[resource]
+script = ExtResource("1_0bdvo")
+name = "Locular Lob"
+mult = 0.6
+cooldown = 2
+icon = ExtResource("1_8gpl7")
+text = "The tomato shoots its corrosive insides at the knife! EWWW!"
+desc = "Shoots fluid at the enemy that does small damage and applies a 30% dmg reduction to the enemy!"
+enemy_attack_down = 0.3
+attack_anim = "vfx_only"
+metadata/_custom_type_script = "uid://cs3vmvvucvnlu"
