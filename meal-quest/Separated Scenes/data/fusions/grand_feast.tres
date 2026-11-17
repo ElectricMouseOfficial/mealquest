@@ -12,4 +12,5 @@ partners = Array[ExtResource("1_8l4mj")]([ExtResource("2_7ir7j"), ExtResource("3
 name = "Grand Feast"
 mult = 2.5
 text = "The whole party unleashes the last supper!"
+desc = "All of the foods combine their strength for one big attack!"
 vfx_target = "enemy"

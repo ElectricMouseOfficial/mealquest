@@ -14,4 +14,5 @@ dot_turns = 2
 name = "Steak Sauce Slide"
 kind = "defend"
 text = "Tomato and Steak combine to make an acidic blockade!"
+desc = "Get a team wide shield that protects from damage for 1 turn and applies a small DOT."
 vfx_target = "all_allies"
