@@ -18,6 +18,12 @@ var _indicator_frame := 0
 @export var enemy_damaged_tex: Texture2D
 @export var bar_green := Color("#36b729")
 
+enum Expire { OWN_TURN, HIT, TURNS }
+@export_group("Status Effects")
+@export var defend_icon: Texture2D
+@export var taunt_icon: Texture2D
+@export var dmg_up_icon: Texture2D
+
 @export_group("Move button text")
 @export var move_font: Font                       # optional custom font (blank = project default)
 @export var move_font_size := 16                  # maximum size
@@ -604,3 +610,18 @@ func _fusion_info_text(i: int) -> String:
 		lines.append("- %s: %s" % [f.name, ", ".join(parts)])
 
 	return "\n".join(lines)
+
+
+#Status Effects script:
+const STATUS_ICON_SIZE := Vector2(24, 24)
+
+var _status_icons := {}   # id -> Texture2D, filled in _setup_status_icons()
+# unit -> { "bar": HBoxContainer, "active": { id: { "icon", "expire", "remaining" } } }
+var _status_units := {}
+
+func _ready() -> void:
+	_status_icons = {
+		&"defend": defend_icon,
+		&"taunt": taunt_icon,
+		&"dmg_up": dmg_up_icon,
+	}
