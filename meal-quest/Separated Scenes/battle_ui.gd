@@ -664,7 +664,7 @@ func _ready() -> void:
 # --- Status icons ---
 func status_register(unit: Control) -> void:
 	var bar := HBoxContainer.new()
-	bar.add_theme_constant_override("separation", -40)
+	bar.add_theme_constant_override("separation", -25)
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	bar.alignment = BoxContainer.ALIGNMENT_CENTER
 	unit.add_child(bar)
