@@ -18,11 +18,12 @@ var _indicator_frame := 0
 @export var enemy_damaged_tex: Texture2D
 @export var bar_green := Color("#36b729")
 
-enum Expire { OWN_TURN, HIT, TURNS }
+enum Expire { OWN_TURN = 1, HIT = 2, TURNS = 4, TURN_END = 8 }
 @export_group("Status Effects")
 @export var defend_icon: Texture2D
 @export var taunt_icon: Texture2D
 @export var dmg_up_icon: Texture2D
+var _party_hp := {}   # hero index -> last HP sent to set_party_health
 
 @export_group("Move button text")
 @export var move_font: Font                       # optional custom font (blank = project default)
@@ -613,7 +614,7 @@ func _fusion_info_text(i: int) -> String:
 
 
 #Status Effects script:
-const STATUS_ICON_SIZE := Vector2(24, 24)
+const STATUS_ICON_SIZE := Vector2(100, 100)
 
 var _status_icons := {}   # id -> Texture2D, filled in _setup_status_icons()
 # unit -> { "bar": HBoxContainer, "active": { id: { "icon", "expire", "remaining" } } }
@@ -625,3 +626,104 @@ func _ready() -> void:
 		&"taunt": taunt_icon,
 		&"dmg_up": dmg_up_icon,
 	}
+	
+# --- Status icons ---
+func status_register(unit: Control) -> void:
+	var bar := HBoxContainer.new()
+	bar.add_theme_constant_override("separation", -40)
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bar.alignment = BoxContainer.ALIGNMENT_CENTER
+	unit.add_child(bar)
+	bar.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP, Control.PRESET_MODE_MINSIZE)
+	bar.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	bar.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	bar.offset_top = -4
+	_status_units[unit] = { "bar": bar, "active": {} }
+
+func status_has(unit: Control, id: StringName) -> bool:
+	return _status_units.has(unit) and _status_units[unit]["active"].has(id)
+
+func status_add(unit: Control, id: StringName, expire: int = Expire.OWN_TURN, turns := 1) -> void:
+	if not _status_units.has(unit) or not _status_icons.has(id):
+		return
+	var active: Dictionary = _status_units[unit]["active"]
+	if active.has(id):
+		active[id]["expire"] = expire
+		active[id]["remaining"] = turns
+		_status_pulse(active[id]["icon"])
+		return
+	var icon := TextureRect.new()
+	icon.texture = _status_icons[id]
+	icon.custom_minimum_size = STATUS_ICON_SIZE
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	icon.pivot_offset = STATUS_ICON_SIZE / 2.0
+	_status_units[unit]["bar"].add_child(icon)
+	active[id] = { "icon": icon, "expire": expire, "remaining": turns }
+	icon.scale = Vector2.ZERO
+	create_tween().tween_property(icon, "scale", Vector2.ONE, 0.2) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+func status_remove(unit: Control, id: StringName) -> void:
+	if not status_has(unit, id):
+		return
+	var icon: TextureRect = _status_units[unit]["active"][id]["icon"]
+	_status_units[unit]["active"].erase(id)
+	var t := create_tween().set_parallel(true)
+	t.tween_property(icon, "modulate:a", 0.0, 0.2)
+	t.tween_property(icon, "scale", Vector2.ZERO, 0.2)
+	t.chain().tween_callback(icon.queue_free)
+
+func status_turn_start(unit: Control) -> void:
+	if not _status_units.has(unit):
+		return
+	var active: Dictionary = _status_units[unit]["active"]
+	for id in active.keys():
+		var e: int = active[id]["expire"]
+		if e & Expire.OWN_TURN:
+			status_remove(unit, id)
+		elif e & Expire.TURNS:
+			active[id]["remaining"] -= 1
+			if active[id]["remaining"] <= 0:
+				status_remove(unit, id)
+
+func status_hit(unit: Control) -> void:
+	if not _status_units.has(unit):
+		return
+	for id in _status_units[unit]["active"].keys():
+		var e: int = _status_units[unit]["active"][id]["expire"]
+		if e & Expire.HIT:
+			status_remove(unit, id)
+
+func status_turn_end(unit: Control) -> void:
+	if not _status_units.has(unit):
+		return
+	for id in _status_units[unit]["active"].keys():
+		if _status_units[unit]["active"][id]["expire"] & Expire.TURN_END:
+			status_remove(unit, id)
+
+func _status_pulse(icon: TextureRect) -> void:
+	var t := create_tween()
+	t.tween_property(icon, "scale", Vector2(1.3, 1.3), 0.08)
+	t.tween_property(icon, "scale", Vector2.ONE, 0.12)
+
+# Give the same effect to any list of nodes
+func status_add_many(units: Array, id: StringName, expire: int = Expire.OWN_TURN, turns := 1) -> void:
+	for u in units:
+		status_add(u, id, expire, turns)
+
+# Give it to every party member except the one at user_index
+func status_add_to_others(user_index: int, id: StringName, expire: int = Expire.OWN_TURN, turns := 1) -> void:
+	for idx in party_nodes.size():
+		if idx == user_index:
+			continue
+		if _party_hp.get(idx, 1) <= 0:   # skip dead allies
+			continue
+		status_add(party_nodes[idx], id, expire, turns)
+
+func status_clear(unit: Control) -> void:
+	if not _status_units.has(unit):
+		return
+	for id in _status_units[unit]["active"].keys():
+		status_remove(unit, id)
