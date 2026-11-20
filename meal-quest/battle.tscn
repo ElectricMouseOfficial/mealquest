@@ -19,7 +19,10 @@
 [ext_resource type="PackedScene" uid="uid://pgvbttqh0dqv" path="res://Separated Scenes/puns.tscn" id="16_slotg"]
 [ext_resource type="Texture2D" uid="uid://7ex5y2koj8jo" path="res://Turn Indicator Ring_r2.png" id="17_22sa7"]
 [ext_resource type="Texture2D" uid="uid://btcdt2b5hibk1" path="res://T-Bone PNG.png" id="17_bx4lf"]
+[ext_resource type="Texture2D" uid="uid://35t5c6xlg512" path="res://Defend_Icon_1.png" id="19_s5g7e"]
 [ext_resource type="PackedScene" uid="uid://bq84p8cc4k8wu" path="res://audio.tscn" id="20_aacmo"]
+[ext_resource type="Texture2D" uid="uid://b7weh0g3iq6g1" path="res://Taunt_Icon_1.png" id="20_j128n"]
+[ext_resource type="Texture2D" uid="uid://cwcm40vqwk25y" path="res://Dmg_Up_1.png" id="21_nt5qs"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8lcdg"]
 bg_color = Color(1, 1, 1, 1)
@@ -574,6 +577,9 @@ layout_mode = 1
 turn_indicator_frames = Array[Texture2D]([ExtResource("16_22sa7"), ExtResource("16_bx4lf"), ExtResource("17_22sa7")])
 turn_indicator_scale = 0.15
 turn_indicator_offset = Vector2(0, -100)
+defend_icon = ExtResource("19_s5g7e")
+taunt_icon = ExtResource("20_j128n")
+dmg_up_icon = ExtResource("21_nt5qs")
 
 [node name="Puns" parent="." unique_id=1723135082 instance=ExtResource("16_slotg")]
 

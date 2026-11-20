@@ -39,6 +39,7 @@ func _ready():
 	team.setup()
 	for m in team.members:
 		party_nodes.append(get_node(m.scene_node) as TextureRect)
+		ui.status_register(get_node(m.scene_node) as TextureRect)
 	enemy_hp = enemy.health
 
 	anim.setup($AnimationPlayer, enemy_sprite, self)
@@ -97,6 +98,7 @@ func start_player_turn():
 		await _party_wiped()
 		return
 	active_index = team.turn_order[turn_pos]
+	ui.status_turn_start(ui.party_nodes[active_index])
 	ui.show_moves(active_index)
 
 func _on_move_chosen(move_index: int):
@@ -115,14 +117,17 @@ func _on_move_chosen(move_index: int):
 		"defend":
 			team.set_guard(i)
 			await _play_move_vfx(move, i)
+			ui.status_add(ui.party_nodes[i], &"defend", ui.Expire.OWN_TURN | ui.Expire.HIT)
 		"taunt":
 			team.set_taunt(i)
 			await _play_move_vfx(move, i)
+			ui.status_add(ui.party_nodes[i], &"taunt")
 		"heal":
 			await _do_heal(i, move)
 		"rally":
 			team.set_rally(move.rally_bonus)
 			await _play_move_vfx(move, i)
+			ui.status_add_to_others(i, &"dmg_up", ui.Expire.TURN_END)
 
 	if enemy_hp == 0:
 		return   # _do_attack already handled the victory
@@ -131,11 +136,14 @@ func _on_move_chosen(move_index: int):
 func _advance_turn():
 	var next := team.next_living_pos(turn_pos + 1)
 	if next == -1:
+		ui.status_turn_end(ui.party_nodes[active_index])
 		await get_tree().create_timer(.25).timeout
 		enemy_turn()
 	else:
 		turn_pos = next
+		ui.status_turn_end(ui.party_nodes[active_index])
 		active_index = team.turn_order[turn_pos]
+		ui.status_turn_start(ui.party_nodes[active_index])
 		ui.show_moves(active_index)
 
 
@@ -281,6 +289,7 @@ func _enemy_strike(idx: int, dmg: int):
 			puns.say_blocked(target.name)
 		await anim.play_mini_shake()
 		await ui.say("%s defended successfully!" % target.name)
+		ui.status_hit(ui.party_nodes[idx])
 		if shield_fusion != null and not _shield_dot_done:
 			_shield_dot_done = true
 			await _try_apply_dot(shield_fusion)
@@ -299,6 +308,7 @@ func _enemy_strike(idx: int, dmg: int):
 			audio.play_death(target.death_sfx)
 			await anim.play_party_death(party_nodes[idx], target.death_frames)
 			await ui.say("%s was knocked out!" % target.name)
+			ui.status_clear(ui.party_nodes[idx])
 
 	shield_fusion = null
 	team.end_round()
