@@ -24,6 +24,16 @@ enum Expire { OWN_TURN = 1, HIT = 2, TURNS = 4, TURN_END = 8 }
 @export var taunt_icon: Texture2D
 @export var dmg_up_icon: Texture2D
 var _party_hp := {}   # hero index -> last HP sent to set_party_health
+@export_subgroup("Hover text")
+@export var defend_name := "Guarded"
+@export_multiline var defend_desc := "Blocks the next enemy attack."
+@export var taunt_name := "Taunting"
+@export_multiline var taunt_desc := "The enemy must attack this ally on its next turn."
+@export var dmg_up_name := "Damage Up"
+@export_multiline var dmg_up_desc := "Deals extra damage."
+@export var status_hover_width := 220.0                 # box width in pixels (long text wraps)
+@export var status_hover_offset := Vector2(0, -6)       # nudge the box (+x right, +y down)
+@export var status_title_color := Color.GOLD
 
 @export_group("Move button text")
 @export var move_font: Font                       # optional custom font (blank = project default)
@@ -546,6 +556,18 @@ func _process(_delta):
 	if team == null or hover_panel == null:
 		return
 	var mouse := get_global_mouse_position()
+
+	# Buff icons take priority over the ally info panel
+	var sid := _status_id_under_mouse(mouse)
+	if sid != _hover_status:
+		_hover_status = sid
+		_refresh_status_hover()
+	if sid != &"":
+		if _hover_index != -1:
+			_hover_index = -1
+			_refresh_hover()
+		return
+		
 	var found := -1
 	for i in party_nodes.size():
 		var rect := party_nodes[i].get_global_rect().merge(
@@ -614,11 +636,17 @@ func _fusion_info_text(i: int) -> String:
 
 
 #Status Effects script:
-const STATUS_ICON_SIZE := Vector2(100, 100)
+const STATUS_ICON_SIZE := Vector2(70, 70)
 
 var _status_icons := {}   # id -> Texture2D, filled in _setup_status_icons()
 # unit -> { "bar": HBoxContainer, "active": { id: { "icon", "expire", "remaining" } } }
 var _status_units := {}
+var _status_info := {}                  # id -> { "name", "desc" }
+var status_panel: PanelContainer
+var status_name_label: Label
+var status_desc_label: Label
+var _hover_status: StringName = &""
+var _hover_status_rect := Rect2()
 
 func _ready() -> void:
 	_status_icons = {
@@ -626,6 +654,12 @@ func _ready() -> void:
 		&"taunt": taunt_icon,
 		&"dmg_up": dmg_up_icon,
 	}
+	_status_info = {
+		&"defend": {"name": defend_name, "desc": defend_desc},
+		&"taunt": {"name": taunt_name, "desc": taunt_desc},
+		&"dmg_up": {"name": dmg_up_name, "desc": dmg_up_desc},
+	}
+	_build_status_hover()
 	
 # --- Status icons ---
 func status_register(unit: Control) -> void:
@@ -727,3 +761,68 @@ func status_clear(unit: Control) -> void:
 		return
 	for id in _status_units[unit]["active"].keys():
 		status_remove(unit, id)
+		
+		# --- Status hover box ----------------------------------------------------------------
+func _build_status_hover():
+	status_panel = PanelContainer.new()
+	status_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	status_panel.z_index = 10
+	var bg := StyleBoxFlat.new()
+	bg.bg_color = hover_bg_color
+	bg.set_content_margin_all(8)
+	bg.set_corner_radius_all(4)
+	status_panel.add_theme_stylebox_override("panel", bg)
+
+	var box := VBoxContainer.new()
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_theme_constant_override("separation", 2)
+	status_panel.add_child(box)
+
+	status_name_label = Label.new()
+	status_name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	status_name_label.add_theme_font_size_override("font_size", hover_font_size + 2)
+	status_name_label.add_theme_color_override("font_color", status_title_color)
+	box.add_child(status_name_label)
+
+	status_desc_label = Label.new()
+	status_desc_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	status_desc_label.add_theme_font_size_override("font_size", hover_font_size)
+	status_desc_label.add_theme_color_override("font_color", hover_text_color)
+	status_desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	status_desc_label.custom_minimum_size = Vector2(status_hover_width, 0)
+	box.add_child(status_desc_label)
+
+	status_panel.hide()
+	add_child(status_panel)
+
+# Returns the id of the buff icon under the mouse (or &"" for none) and remembers its rect.
+func _status_id_under_mouse(mouse: Vector2) -> StringName:
+	for unit in _status_units:
+		var active: Dictionary = _status_units[unit]["active"]
+		var ids := active.keys()
+		ids.reverse()                       # later icons are drawn on top
+		for id in ids:
+			var icon: TextureRect = active[id]["icon"]
+			if is_instance_valid(icon) and icon.is_visible_in_tree() \
+					and icon.get_global_rect().has_point(mouse):
+				_hover_status_rect = icon.get_global_rect()
+				return id
+	return &""
+
+func _refresh_status_hover():
+	if _hover_status == &"" or not _status_info.has(_hover_status):
+		status_panel.hide()
+		return
+	var info: Dictionary = _status_info[_hover_status]
+	status_name_label.text = info["name"]
+	status_desc_label.text = info["desc"]
+	status_panel.show()
+	status_panel.reset_size()
+
+	var r := _hover_status_rect
+	var pos := Vector2(r.get_center().x - status_panel.size.x / 2.0,
+		r.position.y - status_panel.size.y) + status_hover_offset
+	if pos.y < 0.0:                          # no room above: put it below the icon instead
+		pos.y = r.end.y - status_hover_offset.y
+	pos.x = clampf(pos.x, 0.0, maxf(0.0, get_viewport_rect().size.x - status_panel.size.x))
+	status_panel.global_position = pos
